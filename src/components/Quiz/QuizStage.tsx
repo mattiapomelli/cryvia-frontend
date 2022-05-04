@@ -1,53 +1,41 @@
-import { useEffect, useRef, useState } from 'react'
+import useMounted from '@hooks/useMounted'
+import { useRef } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
-
-import Quiz from './Quiz'
+import { useQuiz } from './QuizProvider'
 
 const QuizStage = () => {
-  const [startTime, setStartTime] = useState<Date | null>(null)
+  const [{ quiz }, dispatch] = useQuiz()
   const fetchedQuestions = useRef(false)
-
-  useEffect(() => {
-    setStartTime(new Date('2022-05-04T08:00:40'))
-  }, [])
-
-  const renderer = ({
-    hours,
-    minutes,
-    seconds,
-    completed,
-  }: CountdownRenderProps) => {
-    if (completed) {
-      return <Quiz />
-    }
-
-    return (
-      <span>
-        {hours}:{minutes}:{seconds}
-      </span>
-    )
-  }
+  const mounted = useMounted()
 
   const startQuiz = () => {
-    console.log('Quiz starteeeed!')
+    dispatch({ type: 'INIT' })
   }
 
   const onTick = () => {
     if (
-      startTime &&
       !fetchedQuestions.current &&
-      startTime.getTime() - Date.now() < 5000
+      new Date(quiz.startTime).getTime() - Date.now() < 1000 // TODO: change with about 5 seconds
     ) {
       console.log('Fetch questions')
       fetchedQuestions.current = true
     }
   }
 
+  const renderer = ({ hours, minutes, seconds }: CountdownRenderProps) => {
+    return (
+      <span className="text-3xl font-bold">
+        {hours}:{minutes}:{seconds}
+      </span>
+    )
+  }
+
   return (
     <div className="flex justify-center mt-4">
-      {startTime && (
+      {/* We need to show countdown only when component mounted, to match server and client content  */}
+      {mounted && (
         <Countdown
-          date={startTime}
+          date={quiz.startTime}
           renderer={renderer}
           onComplete={startQuiz}
           onTick={onTick}
