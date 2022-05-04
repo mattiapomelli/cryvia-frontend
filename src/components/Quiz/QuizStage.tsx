@@ -4,7 +4,7 @@ import Countdown, { CountdownRenderProps } from 'react-countdown'
 import { useQuiz } from './QuizProvider'
 
 const QuizStage = () => {
-  const [{ quiz }, dispatch] = useQuiz()
+  const [{ quiz, playersCount }, dispatch] = useQuiz()
   const fetchedQuestions = useRef(false)
   const mounted = useMounted()
 
@@ -31,7 +31,7 @@ const QuizStage = () => {
   }
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className="flex flex-col items-center mt-4">
       {/* We need to show countdown only when component mounted, to match server and client content  */}
       {mounted && (
         <Countdown
@@ -41,6 +41,7 @@ const QuizStage = () => {
           onTick={onTick}
         />
       )}
+      <div>People waiting: {playersCount}</div>
     </div>
   )
 }
