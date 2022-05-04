@@ -1,7 +1,9 @@
 import type { NextPage } from 'next'
 
+import QuizStage from '@components/Quiz/QuizStage'
+
 const Home: NextPage = () => {
-  return <div>Home</div>
+  return <QuizStage />
 }
 
 export default Home
