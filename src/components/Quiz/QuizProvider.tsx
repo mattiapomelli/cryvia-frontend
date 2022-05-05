@@ -29,12 +29,14 @@ interface QuizState {
   questionDeadline: number
   answers: (number | null)[]
   playersCount: number
+  leaderboard: number[]
 }
 
 type QuizAction =
   | { type: 'INIT' }
   | { type: 'NEXT_QUESTION'; answer?: number }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
+  | { type: 'SET_LEADERBOARD'; leadeboard: number[] }
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
   switch (action.type) {
@@ -70,6 +72,11 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         ...state,
         playersCount: action.count,
       }
+    case 'SET_LEADERBOARD':
+      return {
+        ...state,
+        leaderboard: action.leadeboard,
+      }
     default:
       return state
   }
@@ -88,6 +95,7 @@ const QuizProvider = ({ quiz, children }: QuizProviderProps) => {
     questionDeadline: Date.now(),
     answers: [],
     playersCount: 0,
+    leaderboard: [],
   })
 
   const ws = useRef<WebSocket>()
@@ -102,7 +110,16 @@ const QuizProvider = ({ quiz, children }: QuizProviderProps) => {
     }
 
     ws.current.onmessage = (message: MessageEvent) => {
-      dispatch({ type: 'SET_PLAYERS_COUNT', count: Number(message.data) })
+      const messageData = JSON.parse(message.data.toString())
+      console.log('From server: ', messageData)
+
+      if (messageData.type === 'roomSize') {
+        dispatch({ type: 'SET_PLAYERS_COUNT', count: messageData.value })
+      }
+
+      if (messageData.type === 'leaderboard') {
+        dispatch({ type: 'SET_LEADERBOARD', leadeboard: messageData.value })
+      }
     }
   }, [])
 

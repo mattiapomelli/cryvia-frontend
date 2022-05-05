@@ -1,7 +1,8 @@
-import useMounted from '@hooks/useMounted'
 import { useRef } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
+
 import { useQuiz } from './QuizProvider'
+import useMounted from '@hooks/useMounted'
 
 const QuizStage = () => {
   const [{ quiz, playersCount }, dispatch] = useQuiz()

@@ -1,4 +1,5 @@
 import Quiz from './Quiz'
+import QuizEndedStage from './QuizEndedStage'
 import { QuizStatus, useQuiz } from './QuizProvider'
 import QuizStage from './QuizStage'
 
@@ -13,7 +14,7 @@ const QuizContainer = () => {
     return <Quiz />
   }
 
-  return <div>Quiz Ended</div>
+  return <QuizEndedStage />
 }
 
 export default QuizContainer
