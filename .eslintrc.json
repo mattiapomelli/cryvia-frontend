@@ -40,6 +40,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "jsx-a11y/anchor-is-valid": "off",
-    "react/prop-types": "off" // We will use TypeScript's types for component props instead
+    "react/prop-types": "off", // We will use TypeScript's types for component props instead
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

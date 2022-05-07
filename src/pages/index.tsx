@@ -1,7 +1,11 @@
-import type { NextPage } from 'next'
+import Container from '@components/Layout/Container'
+import { getDefaultLayout } from '@layouts/DefaultLayout'
+import { PageWithLayout } from 'types'
 
-const Home: NextPage = () => {
-  return <div>Home</div>
+const HomePage: PageWithLayout = () => {
+  return <Container>Home</Container>
 }
 
-export default Home
+HomePage.getLayout = getDefaultLayout
+
+export default HomePage
