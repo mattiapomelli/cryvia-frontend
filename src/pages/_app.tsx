@@ -6,6 +6,7 @@ import { Web3Provider } from '@ethersproject/providers'
 
 import Web3ContextProvider from '@contexts/Web3Provider'
 import { PageWithLayout } from 'types'
+import AuthProvider from '@contexts/AuthProvider'
 
 const getLibrary = (provider: any) => {
   return new Web3Provider(provider)
@@ -17,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ContextProvider>
-        {getLayout(<Component {...pageProps} />)}
+        <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
       </Web3ContextProvider>
     </Web3ReactProvider>
   )

@@ -1,4 +1,5 @@
 import ApiService from './api-service'
+import { User } from './users'
 
 interface SignResponse {
   message: string
@@ -6,51 +7,61 @@ interface SignResponse {
 
 interface LoginBody {
   address: string
+}
+
+interface VerifyBody {
+  address: string
   signature: string
 }
 
-interface TokenResponse {
+interface VerifyReponse {
   token: string
+  user: User
 }
 
 class AuthService extends ApiService {
+  // Create or get user with a given address
+  async login(address: string) {
+    return await this.http.post<LoginBody, User>(`${this.baseUrl}/login`, {
+      address,
+    })
+  }
+
+  // Get a message to sign
   async sign(address: string) {
-    // Get a message to sign
     return await this.http.get<SignResponse>(`${this.baseUrl}/sign/${address}`)
   }
 
-  async login(credentials: LoginBody) {
-    // Login and get a token
-    const { data } = await this.http.post<LoginBody, TokenResponse>(
-      `${this.baseUrl}/login`,
+  async verify(credentials: VerifyBody) {
+    const { data } = await this.http.post<VerifyBody, VerifyReponse>(
+      `${this.baseUrl}/verify`,
       credentials,
     )
-    const { token } = data
+
+    const { token, user } = data
 
     // Save obtained token
-    this.setToken({ token })
+    this.setToken(credentials.address, token)
 
     // Set default Auth header
     this.setAuthHeader(token)
 
-    // Get user information
-    return await this.client.users.me()
+    // Return user information
+    return user
   }
 
   /**
    * @returns the user that is currently logged in, based on the token stored in lcaolstorage.
    *          null if no user is currently logged in
    */
-  async getLoggedUser() {
+  async getLoggedUser(address: string) {
     // Get the token from local storage
-    const storedToken = this.getToken()
+    const token = this.getToken(address)
 
     // Check is the token exists
-    if (!storedToken) {
+    if (!token) {
       return null
     }
-
-    const { token } = storedToken
 
     // Save the token in the authorization header
     this.setAuthHeader(token)
@@ -64,30 +75,69 @@ class AuthService extends ApiService {
     }
   }
 
-  logout() {
-    this.removeToken()
+  logout(address: string) {
+    this.removeToken(address)
   }
 
-  private setToken(token: TokenResponse) {
-    localStorage.setItem('auth-token', JSON.stringify(token))
+  private setToken(address: string, token: string) {
+    const users = localStorage.getItem('connected-users')
+
+    let parsedUsers: Record<string, any> = {}
+
+    if (users) {
+      try {
+        parsedUsers = JSON.parse(users)
+      } catch (error) {
+        parsedUsers = {}
+      }
+    }
+
+    const user = parsedUsers[address] || {}
+    const updatedUsers = { ...parsedUsers, [address]: { ...user, token } }
+
+    localStorage.setItem('connected-users', JSON.stringify(updatedUsers))
   }
 
-  private getToken() {
+  private getToken(address: string) {
     try {
-      const token = localStorage.getItem('auth-token')
+      const users = localStorage.getItem('connected-users')
 
-      if (!token) {
+      if (!users) {
         return null
       }
 
-      return JSON.parse(token) as TokenResponse
+      const parsedUsers = JSON.parse(users)
+      const user = parsedUsers[address]
+
+      if (!user?.token) {
+        return null
+      }
+
+      return user.token
     } catch {
       return null
     }
   }
 
-  private removeToken() {
-    localStorage.removeItem('auth-token')
+  private removeToken(address: string) {
+    const users = localStorage.getItem('connected-users')
+
+    let parsedUsers: Record<string, any> = {}
+
+    if (users) {
+      try {
+        parsedUsers = JSON.parse(users)
+      } catch (error) {
+        parsedUsers = {}
+      }
+    }
+
+    const user = parsedUsers[address] || {}
+    delete user?.token
+
+    const updatedUsers = { ...parsedUsers, [address]: { ...user } }
+
+    localStorage.setItem('connected-users', JSON.stringify(updatedUsers))
   }
 
   private setAuthHeader(token: string) {

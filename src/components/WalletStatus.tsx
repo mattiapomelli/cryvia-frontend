@@ -4,9 +4,12 @@ import jazzicon from '@metamask/jazzicon'
 import { useWeb3Context } from '../contexts/Web3Provider'
 import { UnsupportedChainIdError } from '@web3-react/core'
 import Address from './Address'
+import { useApiClient, useUser } from '@contexts/AuthProvider'
 
 const WalletStatus = () => {
-  const { active, account, connect, error } = useWeb3Context()
+  const { active, account, connect, error, provider } = useWeb3Context()
+  const { user, setUser, setLoading } = useUser()
+  const apiClient = useApiClient()
 
   const iconRef = useRef<HTMLSpanElement>(null)
   const icon = useMemo(
@@ -27,6 +30,20 @@ const WalletStatus = () => {
     }
   }, [icon, iconRef])
 
+  const verifyAddress = async () => {
+    if (!account) return
+    const { data } = await apiClient.auth.sign(account)
+
+    const signer = provider?.getSigner()
+    if (!signer) return
+
+    const signature = await signer.signMessage(data.message)
+
+    const user = await apiClient.auth.verify({ address: account, signature })
+    setUser(user)
+    setLoading(false)
+  }
+
   if (error && error instanceof UnsupportedChainIdError) {
     return <div className="text-red-500">Wrong network</div>
   }
@@ -34,7 +51,14 @@ const WalletStatus = () => {
   if (active && account) {
     return (
       <div className="flex items-center gap-2">
-        <Address address={account} />
+        <span>
+          <Address address={account} />
+          {!user && (
+            <button className="ml-2" onClick={verifyAddress}>
+              Verify address
+            </button>
+          )}
+        </span>
         <span ref={iconRef} className="inline-flex" />
       </div>
     )
