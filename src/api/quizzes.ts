@@ -22,6 +22,10 @@ class QuizService extends ApiService {
     return await this.http.get<Quiz[]>(this.baseUrl)
   }
 
+  async next() {
+    return await this.http.get<Quiz>(`${this.baseUrl}/next`)
+  }
+
   async suscribe(id: Id) {
     return await this.http.post<Quiz[]>(`${this.baseUrl}/${id}/suscribe`)
   }
