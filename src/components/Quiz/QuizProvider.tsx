@@ -14,9 +14,10 @@ type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
 export enum QuizPlayingStatus {
-  Waiting,
-  Started,
-  Ended,
+  Waiting, // the quiz hasn't started yet
+  Started, // the quiz has started
+  Ended, // the player has finished the quiz but still have to wait for other players to finish
+  ResultsAvailable, // all players have finished the quiz, so results are available
 }
 
 interface QuizState {
@@ -38,6 +39,7 @@ type QuizAction =
   | { type: 'SET_PLAYERS_COUNT'; count: number }
   | { type: 'SET_LEADERBOARD'; leadeboard: number[] }
   | { type: 'SET_QUESTIONS'; questions: QuizQuestion[] }
+  | { type: 'SET_RESULTS_AVAILABLE' }
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
   switch (action.type) {
@@ -84,6 +86,11 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       return {
         ...state,
         questions: action.questions,
+      }
+    case 'SET_RESULTS_AVAILABLE':
+      return {
+        ...state,
+        status: QuizPlayingStatus.ResultsAvailable,
       }
     default:
       return state

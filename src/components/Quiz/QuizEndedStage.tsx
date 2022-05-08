@@ -1,9 +1,9 @@
 import Button from '@components/Button'
 import Link from 'next/link'
-import { useQuiz } from './QuizProvider'
+import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const QuizEndedStage = () => {
-  const [{ quiz, leaderboard }] = useQuiz()
+  const [{ quiz, status, leaderboard }] = useQuiz()
 
   return (
     <div className="flex flex-col items-center mt-4">
@@ -13,11 +13,15 @@ const QuizEndedStage = () => {
           <div key={user}>User: {user}</div>
         ))}
       </div>
-      <Link href={`/quiz/${quiz.id}`}>
-        <a>
-          <Button>See results</Button>
-        </a>
-      </Link>
+      {status === QuizPlayingStatus.ResultsAvailable ? (
+        <Link href={`/quiz/${quiz.id}`}>
+          <a>
+            <Button>See results</Button>
+          </a>
+        </Link>
+      ) : (
+        <div>Waiting for other users to finish...</div>
+      )}
     </div>
   )
 }

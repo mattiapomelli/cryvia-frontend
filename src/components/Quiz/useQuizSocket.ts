@@ -21,6 +21,10 @@ const useQuizSocket = () => {
       if (messageData.type === 'leaderboard') {
         dispatch({ type: 'SET_LEADERBOARD', leadeboard: messageData.payload })
       }
+
+      if (messageData.type === 'quizFinished') {
+        dispatch({ type: 'SET_RESULTS_AVAILABLE' })
+      }
     }
   }, [dispatch])
 
