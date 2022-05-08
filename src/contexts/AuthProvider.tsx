@@ -16,13 +16,17 @@ import { useWeb3Context } from './Web3Provider'
 
 const ApiClientContext = createContext<ApiClient | undefined>(undefined)
 
+export enum UserStatus {
+  Loading, // Either loading the account from wallet or the user from api
+  Disconnected, // Account loaded and wallett is not connected
+  Connected, // Wallet connected but address not verified
+  Logged, // Wallet connected and address verified, properly logged in the application
+}
+
 interface UserContextValue {
   user: User | null
   setUser: Dispatch<SetStateAction<User | null>>
-  loading: boolean
-  setLoading: Dispatch<SetStateAction<boolean>>
-  redirect: string | null
-  setRedirect: (redirect: string | null) => void
+  status: UserStatus
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined)
@@ -32,11 +36,10 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [redirect, setRedirect] = useState<string | null>(null)
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [status, setStatus] = useState(UserStatus.Loading)
 
-  const { account } = useWeb3Context()
+  const { account, active, loading: loadingAccount } = useWeb3Context()
 
   const handleUnauthorizedError = async () => {
     setUser(null)
@@ -54,8 +57,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   )
 
   useEffect(() => {
-    setUser(null)
-    if (!account) return
+    if (loadingAccount) return
+
+    if (!active || !account) {
+      setStatus(UserStatus.Disconnected)
+      return
+    }
 
     const getUser = async () => {
       try {
@@ -63,20 +70,26 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
         if (user) {
           setUser(user)
+          setStatus(UserStatus.Logged)
           return
         }
 
         // Create user if not exists
         await apiClientRef.current.auth.login(account)
+        setStatus(UserStatus.Connected)
       } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
+        setStatus(UserStatus.Connected)
       }
     }
 
     getUser()
-  }, [account])
+  }, [loadingAccount, active, account])
+
+  useEffect(() => {
+    if (user) {
+      setStatus(UserStatus.Logged)
+    }
+  }, [user])
 
   return (
     <ApiClientContext.Provider value={apiClientRef.current}>
@@ -84,10 +97,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         value={{
           user,
           setUser,
-          loading,
-          setLoading,
-          redirect,
-          setRedirect,
+          status,
         }}
       >
         {children}
