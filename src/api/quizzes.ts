@@ -13,6 +13,27 @@ export interface Quiz {
   categories: Category[]
 }
 
+export enum QuizStatus {
+  Subscription,
+  WaitingStart,
+  Ended,
+}
+
+export const getQuizStatus = (startTime: string) => {
+  const start = new Date(startTime).getTime()
+  const now = Date.now()
+
+  if (start <= now) {
+    return QuizStatus.Ended
+  }
+
+  if (start - 1000 * 60 * 10 > now) {
+    return QuizStatus.Subscription
+  }
+
+  return QuizStatus.WaitingStart
+}
+
 class QuizService extends ApiService {
   async read(id: Id) {
     return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
