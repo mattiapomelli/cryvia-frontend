@@ -2,8 +2,10 @@ import Countdown from 'react-countdown'
 import { useQuiz } from './QuizProvider'
 
 const Quiz = () => {
-  const [{ quiz, questionDeadline, currentQuestion, playersCount }, dispatch] =
-    useQuiz()
+  const [
+    { questionDeadline, currentQuestion, playersCount, questions },
+    dispatch,
+  ] = useQuiz()
 
   const onSelectAnswer = (answerId: number) => {
     dispatch({ type: 'NEXT_QUESTION', answer: answerId })
@@ -24,10 +26,10 @@ const Quiz = () => {
         />
       </div>
       <h1 className="text-3xl font-bold mb-8 text-center">
-        {quiz.questions[currentQuestion].text}
+        {questions[currentQuestion]?.question.text}
       </h1>
       <div className="flex flex-col gap-4">
-        {quiz.questions[currentQuestion].answers.map((answer, index) => (
+        {questions[currentQuestion]?.question.answers.map((answer, index) => (
           <button
             key={answer.text}
             className="p-2 bg-gray-100 w-[300px] rounded-lg hover:bg-gray-200"

@@ -1,6 +1,6 @@
 import ApiService from './api-service'
 import { QuizSubmission } from './submissions'
-import { Category, Id } from './types'
+import { Answer, Category, Id, Question } from './types'
 
 export interface Quiz {
   id: Id
@@ -11,6 +11,12 @@ export interface Quiz {
   createdAt: string
   image: string | null
   categories: Category[]
+}
+
+export interface QuizQuestion {
+  question: Question & {
+    answers: Omit<Answer, 'correct'>[]
+  }
 }
 
 export enum QuizStatus {
@@ -54,6 +60,12 @@ class QuizService extends ApiService {
   async submissions(id: Id) {
     return await this.http.get<Pick<QuizSubmission, 'user' | 'submittedAt'>[]>(
       `${this.baseUrl}/${id}/submissions`,
+    )
+  }
+
+  async questions(id: Id) {
+    return await this.http.get<QuizQuestion[]>(
+      `${this.baseUrl}/${id}/questions`,
     )
   }
 }

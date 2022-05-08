@@ -10,7 +10,7 @@ import {
 import WebSocket from 'isomorphic-ws'
 import { MessageEvent } from 'ws'
 
-import { Quiz } from 'types'
+import { Quiz, QuizQuestion } from '@api/quizzes'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
@@ -30,6 +30,7 @@ interface QuizState {
   answers: (number | null)[]
   playersCount: number
   leaderboard: number[]
+  questions: QuizQuestion[]
 }
 
 type QuizAction =
@@ -37,6 +38,7 @@ type QuizAction =
   | { type: 'NEXT_QUESTION'; answer?: number }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
   | { type: 'SET_LEADERBOARD'; leadeboard: number[] }
+  | { type: 'SET_QUESTIONS'; questions: QuizQuestion[] }
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
   switch (action.type) {
@@ -51,7 +53,7 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       const answer = action.answer || null
       const newAnswers = [...state.answers, answer]
 
-      if (state.currentQuestion === state.quiz.questions.length - 1) {
+      if (state.currentQuestion === state.questions.length - 1) {
         return {
           ...state,
           status: QuizStatus.Ended,
@@ -77,6 +79,11 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         ...state,
         leaderboard: action.leadeboard,
       }
+    case 'SET_QUESTIONS':
+      return {
+        ...state,
+        questions: action.questions,
+      }
     default:
       return state
   }
@@ -96,6 +103,7 @@ const QuizProvider = ({ quiz, children }: QuizProviderProps) => {
     answers: [],
     playersCount: 0,
     leaderboard: [],
+    questions: [],
   })
 
   const ws = useRef<WebSocket>()
