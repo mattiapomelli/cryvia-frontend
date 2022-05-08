@@ -29,11 +29,11 @@ const Quiz = () => {
         {questions[currentQuestion]?.question.text}
       </h1>
       <div className="flex flex-col gap-4">
-        {questions[currentQuestion]?.question.answers.map((answer, index) => (
+        {questions[currentQuestion]?.question.answers.map((answer) => (
           <button
             key={answer.text}
             className="p-2 bg-gray-100 w-[300px] rounded-lg hover:bg-gray-200"
-            onClick={() => onSelectAnswer(index)}
+            onClick={() => onSelectAnswer(answer.id)}
           >
             {answer.text}
           </button>

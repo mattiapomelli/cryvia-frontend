@@ -29,6 +29,7 @@ interface QuizState {
   leaderboard: number[]
   questions: QuizQuestion[]
   isLive: boolean
+  time: number | null
 }
 
 type QuizAction =
@@ -52,11 +53,13 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       const newAnswers = [...state.answers, answer]
 
       if (state.currentQuestion === state.questions.length - 1) {
+        const time = Date.now() - new Date(state.quiz.startTime).getTime()
         return {
           ...state,
           status: QuizPlayingStatus.Ended,
           questionDeadline: Date.now(),
           answers: newAnswers,
+          time,
         }
       }
 
@@ -114,6 +117,7 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     leaderboard: [],
     questions: [],
     isLive,
+    time: null,
   })
 
   return (

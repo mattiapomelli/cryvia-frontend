@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const useQuizSocket = () => {
-  const [quizState, dispatch] = useQuiz()
+  const [{ currentQuestion, status, answers, time }, dispatch] = useQuiz()
   const ws = useRef<WebSocket>()
 
   useEffect(() => {
@@ -15,11 +15,11 @@ const useQuizSocket = () => {
       console.log('From server: ', messageData)
 
       if (messageData.type === 'roomSize') {
-        dispatch({ type: 'SET_PLAYERS_COUNT', count: messageData.value })
+        dispatch({ type: 'SET_PLAYERS_COUNT', count: messageData.payload })
       }
 
       if (messageData.type === 'leaderboard') {
-        dispatch({ type: 'SET_LEADERBOARD', leadeboard: messageData.value })
+        dispatch({ type: 'SET_LEADERBOARD', leadeboard: messageData.payload })
       }
     }
   }, [dispatch])
@@ -30,25 +30,29 @@ const useQuizSocket = () => {
       ws.current.send(
         JSON.stringify({
           type: 'questionRoom',
-          value: quizState.currentQuestion,
+          payload: currentQuestion,
         }),
       )
     }
-  }, [quizState.currentQuestion])
+  }, [currentQuestion])
 
   useEffect(() => {
     if (
-      quizState.status === QuizPlayingStatus.Ended &&
+      status === QuizPlayingStatus.Ended &&
       ws.current?.readyState === WebSocket.OPEN
     ) {
       // Tell server the user has finished the quiz
       ws.current.send(
         JSON.stringify({
           type: 'finishedQuiz',
+          payload: {
+            answers,
+            time,
+          },
         }),
       )
     }
-  }, [quizState.status])
+  }, [status, answers, time])
 }
 
 export default useQuizSocket

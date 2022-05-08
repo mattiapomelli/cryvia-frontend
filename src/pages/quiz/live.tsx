@@ -13,7 +13,7 @@ const QuizPage: NextPage = () => {
 
   if (!quiz) return null
 
-  // quiz.startTime = '2022-05-08T16:06:55'
+  // quiz.startTime = new Date(Date.now() + 2000).toISOString()
 
   return (
     <QuizProvider quiz={quiz} isLive>
