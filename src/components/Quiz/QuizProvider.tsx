@@ -3,20 +3,17 @@ import {
   Dispatch,
   ReactNode,
   useContext,
-  useEffect,
   useReducer,
-  useRef,
 } from 'react'
-import WebSocket from 'isomorphic-ws'
-import { MessageEvent } from 'ws'
 
 import { Quiz, QuizQuestion } from '@api/quizzes'
+import useQuizSocket from './useQuizSocket'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
-export enum QuizStatus {
+export enum QuizPlayingStatus {
   Waiting,
   Started,
   Ended,
@@ -24,13 +21,14 @@ export enum QuizStatus {
 
 interface QuizState {
   quiz: Quiz
-  status: QuizStatus
+  status: QuizPlayingStatus
   currentQuestion: number
   questionDeadline: number
   answers: (number | null)[]
   playersCount: number
   leaderboard: number[]
   questions: QuizQuestion[]
+  isLive: boolean
 }
 
 type QuizAction =
@@ -47,7 +45,7 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         ...state,
         currentQuestion: 0,
         questionDeadline: Date.now() + 10000,
-        status: QuizStatus.Started,
+        status: QuizPlayingStatus.Started,
       }
     case 'NEXT_QUESTION': {
       const answer = action.answer || null
@@ -56,7 +54,7 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       if (state.currentQuestion === state.questions.length - 1) {
         return {
           ...state,
-          status: QuizStatus.Ended,
+          status: QuizPlayingStatus.Ended,
           questionDeadline: Date.now(),
           answers: newAnswers,
         }
@@ -89,77 +87,42 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
   }
 }
 
+interface QuizSocketConnectionProps {
+  children: ReactNode
+}
+
+const QuizSocketConnection = ({ children }: QuizSocketConnectionProps) => {
+  useQuizSocket()
+
+  return <>{children}</>
+}
+
 interface QuizProviderProps {
   children: ReactNode
   quiz: Quiz
+  isLive: boolean
 }
 
-const QuizProvider = ({ quiz, children }: QuizProviderProps) => {
+const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
   const [quizState, dispatch] = useReducer(quizReducer, {
     quiz,
-    status: QuizStatus.Waiting,
+    status: QuizPlayingStatus.Waiting,
     currentQuestion: -1,
     questionDeadline: Date.now(),
     answers: [],
     playersCount: 0,
     leaderboard: [],
     questions: [],
+    isLive,
   })
-
-  const ws = useRef<WebSocket>()
-
-  useEffect(() => {
-    ws.current = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${Math.random()}`,
-    )
-
-    ws.current.onopen = () => {
-      console.log('connected')
-    }
-
-    ws.current.onmessage = (message: MessageEvent) => {
-      const messageData = JSON.parse(message.data.toString())
-      console.log('From server: ', messageData)
-
-      if (messageData.type === 'roomSize') {
-        dispatch({ type: 'SET_PLAYERS_COUNT', count: messageData.value })
-      }
-
-      if (messageData.type === 'leaderboard') {
-        dispatch({ type: 'SET_LEADERBOARD', leadeboard: messageData.value })
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (ws.current?.readyState === WebSocket.OPEN) {
-      // Update server on current question room
-      ws.current.send(
-        JSON.stringify({
-          type: 'questionRoom',
-          value: quizState.currentQuestion,
-        }),
-      )
-    }
-  }, [quizState.currentQuestion])
-
-  useEffect(() => {
-    if (
-      quizState.status === QuizStatus.Ended &&
-      ws.current?.readyState === WebSocket.OPEN
-    ) {
-      // Tell server the user has finished the quiz
-      ws.current.send(
-        JSON.stringify({
-          type: 'finishedQuiz',
-        }),
-      )
-    }
-  }, [quizState.status])
 
   return (
     <QuizContext.Provider value={[quizState, dispatch]}>
-      {children}
+      {isLive ? (
+        <QuizSocketConnection>{children}</QuizSocketConnection>
+      ) : (
+        <>{children}</>
+      )}
     </QuizContext.Provider>
   )
 }

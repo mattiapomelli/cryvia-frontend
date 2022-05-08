@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 
 import { useQuiz } from './QuizProvider'
@@ -11,6 +11,8 @@ const QuizStage = () => {
   const mounted = useMounted()
   const apiClient = useApiClient()
 
+  const [intervalDelay, setIntervalDelay] = useState(1000)
+
   const startQuiz = () => {
     dispatch({ type: 'INIT' })
   }
@@ -18,11 +20,15 @@ const QuizStage = () => {
   const onTick = async () => {
     if (
       !fetchedQuestions.current &&
-      new Date(quiz.startTime).getTime() - Date.now() < 5000 // TODO: change with about 5 seconds
+      new Date(quiz.startTime).getTime() - Date.now() < 5000
     ) {
+      // When less than 5 seconds are left for start, set interval precision to a 100th of a second
+      // so that all user's countdowns get syncrhonized and end at the same exact time
+      setIntervalDelay(10)
       fetchedQuestions.current = true
 
       try {
+        // Fetch quiz questions
         const { data: questions } = await apiClient.quizzes.questions(quiz.id)
         dispatch({ type: 'SET_QUESTIONS', questions })
       } catch (error) {
@@ -32,6 +38,7 @@ const QuizStage = () => {
   }
 
   const renderer = ({ hours, minutes, seconds }: CountdownRenderProps) => {
+    console.log('render')
     return (
       <span className="text-3xl font-bold">
         {hours}:{minutes}:{seconds}
@@ -50,6 +57,8 @@ const QuizStage = () => {
           renderer={renderer}
           onComplete={startQuiz}
           onTick={onTick}
+          intervalDelay={intervalDelay}
+          key={intervalDelay}
         />
       )}
       <div className="mt-2">People waiting: {playersCount}</div>

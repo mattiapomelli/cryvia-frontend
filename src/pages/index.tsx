@@ -66,7 +66,6 @@ const HomePage: PageWithLayout = () => {
                       <span key={category.id}>{category.name} </span>
                     ))}
                   </div>
-                  <Button>Take for free</Button>
                 </a>
               </Link>
             ))}

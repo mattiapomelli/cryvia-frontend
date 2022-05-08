@@ -1,16 +1,16 @@
 import Quiz from './Quiz'
 import QuizEndedStage from './QuizEndedStage'
-import { QuizStatus, useQuiz } from './QuizProvider'
+import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 import QuizStage from './QuizStage'
 
 const QuizContainer = () => {
   const [{ status }] = useQuiz()
 
-  if (status === QuizStatus.Waiting) {
+  if (status === QuizPlayingStatus.Waiting) {
     return <QuizStage />
   }
 
-  if (status === QuizStatus.Started) {
+  if (status === QuizPlayingStatus.Started) {
     return <Quiz />
   }
 

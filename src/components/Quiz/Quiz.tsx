@@ -3,7 +3,7 @@ import { useQuiz } from './QuizProvider'
 
 const Quiz = () => {
   const [
-    { questionDeadline, currentQuestion, playersCount, questions },
+    { questionDeadline, currentQuestion, playersCount, questions, isLive },
     dispatch,
   ] = useQuiz()
 
@@ -18,7 +18,7 @@ const Quiz = () => {
   return (
     <div className="flex flex-col items-center">
       <div className="flex justify-between w-full">
-        <span>{playersCount}</span>
+        {isLive && <span>{playersCount}</span>}
         <Countdown
           date={questionDeadline}
           onComplete={onDeadlineReached}

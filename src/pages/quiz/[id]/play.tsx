@@ -1,10 +1,43 @@
 import type { NextPage } from 'next'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
 
-import QuizProvider from '@components/Quiz/QuizProvider'
-import QuizContainer from '@components/Quiz/QuizContainer'
+import QuizProvider, {
+  QuizPlayingStatus,
+  useQuiz,
+} from '@components/Quiz/QuizProvider'
 import { useApiClient } from '@contexts/AuthProvider'
+import Button from '@components/Button'
+import Quiz from '@components/Quiz/Quiz'
+
+const QuizPageInner = () => {
+  const [{ quiz, status }, dispatch] = useQuiz()
+  const apiClient = useApiClient()
+  const { data: questions } = useQuery(`quiz${quiz.id}-questions`, () =>
+    apiClient.quizzes.questions(quiz.id).then((data) => data.data),
+  )
+
+  useEffect(() => {
+    if (questions) {
+      dispatch({ type: 'SET_QUESTIONS', questions })
+    }
+  }, [questions, dispatch])
+
+  const startQuiz = () => {
+    dispatch({ type: 'INIT' })
+  }
+
+  if (status === QuizPlayingStatus.Waiting) {
+    return <Button onClick={startQuiz}>Start quiz</Button>
+  }
+
+  if (status === QuizPlayingStatus.Started) {
+    return <Quiz />
+  }
+
+  return <div>Ended: results</div>
+}
 
 const QuizPage: NextPage = () => {
   const router = useRouter()
@@ -22,12 +55,10 @@ const QuizPage: NextPage = () => {
 
   if (!quiz) return null
 
-  quiz.startTime = '2022-05-08T14:17:10'
-
   return (
-    <QuizProvider quiz={quiz}>
+    <QuizProvider quiz={quiz} isLive={false}>
       <div className="flex justify-center mt-20">
-        <QuizContainer />
+        <QuizPageInner />
       </div>
     </QuizProvider>
   )

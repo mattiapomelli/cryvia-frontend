@@ -7,11 +7,14 @@ import { getDefaultLayout } from '@layouts/DefaultLayout'
 import { PageWithLayout } from 'types'
 import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
-import { getQuizStatus, QuizStatus } from '@api/quizzes'
+import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
 import { useState } from 'react'
+import Link from 'next/link'
 
-const QuizStatusSection = ({ startTime }: { startTime: string }) => {
-  const [status, setStatus] = useState<QuizStatus>(getQuizStatus(startTime))
+const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
+  const [status, setStatus] = useState<QuizStatus>(
+    getQuizStatus(quiz.startTime),
+  )
 
   const onSubscriptionCountdownComplete = () => {
     setStatus(QuizStatus.WaitingStart)
@@ -23,7 +26,7 @@ const QuizStatusSection = ({ startTime }: { startTime: string }) => {
         <div>
           Subscriptions close in:{' '}
           <Countdown
-            date={new Date(startTime).getTime() - 1000 * 60 * 10}
+            date={new Date(quiz.startTime).getTime() - 1000 * 60 * 10}
             onComplete={onSubscriptionCountdownComplete}
           />
           <Button>Suscribe</Button>
@@ -31,14 +34,22 @@ const QuizStatusSection = ({ startTime }: { startTime: string }) => {
       )}
       {status === QuizStatus.WaitingStart && (
         <div>
-          Quiz starts in <Countdown date={startTime} />{' '}
+          Quiz starts in <Countdown date={quiz.startTime} />{' '}
           {/* TODO: show only if user has suscribed */}
-          <Button>Go to stage</Button>
+          <Link href="/quiz/live">
+            <a>
+              <Button>Go to stage</Button>
+            </a>
+          </Link>
         </div>
       )}
       {status === QuizStatus.Ended && (
         <div>
-          <Button>Take for free</Button>
+          <Link href={`/quiz/${quiz.id}/play`}>
+            <a>
+              <Button>Take for free</Button>
+            </a>
+          </Link>
           <div>Leaderboard</div>
         </div>
       )}
@@ -60,12 +71,6 @@ const QuizPage: PageWithLayout = () => {
     },
   )
 
-  console.log('render')
-
-  if (quiz) {
-    quiz.startTime = '2022-05-08T09:41:40.000Z'
-  }
-
   return (
     <Container className="mt-10 flex justify-center">
       {quiz && (
@@ -86,7 +91,7 @@ const QuizPage: PageWithLayout = () => {
               <span key={category.id}>{category.name} </span>
             ))}
           </div>
-          <QuizStatusSection startTime={quiz.startTime} />
+          <QuizStatusSection quiz={quiz} />
         </div>
       )}
     </Container>
