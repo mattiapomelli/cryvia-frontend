@@ -1,7 +1,9 @@
 import ApiService from './api-service'
+import { QuizSubmission } from './submissions'
+import { Id } from './types'
 
 export interface User {
-  id: number
+  id: Id
   address: string
   username: string | null
   createdAt: string
@@ -10,6 +12,8 @@ export interface User {
 type UserCreateBody = Pick<User, 'address'>
 
 type UserUpdateBody = Pick<User, 'username'>
+
+type UserSubmission = Pick<QuizSubmission, 'id' | 'quiz' | 'submittedAt'>
 
 class UserService extends ApiService {
   async create(data: UserCreateBody) {
@@ -21,11 +25,17 @@ class UserService extends ApiService {
   }
 
   async list() {
-    return await this.http.getPaginated<User[]>(this.baseUrl)
+    return await this.http.get<User[]>(this.baseUrl)
   }
 
   async update(data: UserUpdateBody) {
     return await this.http.put<UserUpdateBody, User>(`${this.baseUrl}/me`, data)
+  }
+
+  async submissions(id: Id) {
+    return await this.http.get<UserSubmission[]>(
+      `${this.baseUrl}/${id}/submissions`,
+    )
   }
 }
 

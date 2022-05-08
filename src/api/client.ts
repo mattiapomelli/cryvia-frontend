@@ -3,6 +3,8 @@ import { ForbiddenError, UnauthorizedError, ValidationError } from './errors'
 import AuthService from './auth'
 import UserService from './users'
 import { ApiErrorResponse } from './types'
+import QuizService from './quizzes'
+import SubmissionService from './submissions'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -18,6 +20,8 @@ class ApiClient {
 
   auth: AuthService
   users: UserService
+  quizzes: QuizService
+  submissions: SubmissionService
 
   constructor(options: Options = {}) {
     this.options = options
@@ -29,6 +33,8 @@ class ApiClient {
 
     this.auth = new AuthService(this, '/auth')
     this.users = new UserService(this, '/users')
+    this.quizzes = new QuizService(this, '/quizzes')
+    this.submissions = new SubmissionService(this, '/submissions')
   }
 
   private handleResponseError(errorRes: ApiErrorResponse) {

@@ -22,3 +22,20 @@ export interface ApiErrorResponse {
 export type QueryParams = Record<string, string | number | boolean | undefined>
 
 export type Id = number
+
+// Models
+export interface Question {
+  id: Id
+  text: string
+}
+
+export interface Answer {
+  id: Id
+  text: string
+  correct: boolean
+}
+
+export interface Category {
+  id: Id
+  name: string
+}
