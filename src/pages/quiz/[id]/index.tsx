@@ -64,8 +64,16 @@ const QuizPage: PageWithLayout = () => {
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
-    `quiz${quizId}`,
+    `quiz-${quizId}`,
     () => apiClient.quizzes.read(quizId).then((data) => data.data),
+    {
+      enabled: id !== undefined,
+    },
+  )
+
+  const { data: submissions } = useQuery(
+    `quiz-${quizId}-submissions`,
+    () => apiClient.quizzes.submissions(quizId).then((data) => data.data),
     {
       enabled: id !== undefined,
     },
@@ -92,6 +100,11 @@ const QuizPage: PageWithLayout = () => {
             ))}
           </div>
           <QuizStatusSection quiz={quiz} />
+          <div>
+            {submissions?.map((submission) => (
+              <div key={submission.id}>{submission.user.address}</div>
+            ))}
+          </div>
         </div>
       )}
     </Container>

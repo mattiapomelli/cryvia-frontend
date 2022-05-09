@@ -5,6 +5,7 @@ import jazzicon from '@metamask/jazzicon'
 import Address from '@components/Address'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
+import Link from 'next/link'
 
 const WalletStatus = () => {
   const { account, connect, error, provider } = useWeb3Context()
@@ -68,12 +69,14 @@ const WalletStatus = () => {
 
   if (status === UserStatus.Logged && user) {
     return (
-      <div className="flex items-center gap-2">
-        <span>
-          <Address address={user.address} />
-        </span>
-        <span ref={iconRef} className="inline-flex" />
-      </div>
+      <Link href="/profile">
+        <a className="flex items-center gap-2">
+          <span>
+            <Address address={user.address} />
+          </span>
+          <span ref={iconRef} className="inline-flex" />
+        </a>
+      </Link>
     )
   }
 
