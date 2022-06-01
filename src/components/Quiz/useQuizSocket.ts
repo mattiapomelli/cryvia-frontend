@@ -1,13 +1,17 @@
+import { useUser } from '@contexts/AuthProvider'
 import { useEffect, useRef } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const useQuizSocket = () => {
+  const { user } = useUser()
   const [{ currentQuestion, status, answers, time }, dispatch] = useQuiz()
   const ws = useRef<WebSocket>()
 
   useEffect(() => {
+    if (!user) return
+
     ws.current = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${Math.random()}`,
+      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${user.id}`,
     )
 
     ws.current.onmessage = (message: MessageEvent) => {
@@ -26,7 +30,7 @@ const useQuizSocket = () => {
         dispatch({ type: 'SET_RESULTS_AVAILABLE' })
       }
     }
-  }, [dispatch])
+  }, [dispatch, user])
 
   useEffect(() => {
     if (ws.current?.readyState === WebSocket.OPEN) {
@@ -48,7 +52,7 @@ const useQuizSocket = () => {
       // Tell server the user has finished the quiz
       ws.current.send(
         JSON.stringify({
-          type: 'finishedQuiz',
+          type: 'submitQuiz',
           payload: {
             answers,
             time,

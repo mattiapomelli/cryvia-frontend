@@ -38,7 +38,6 @@ const QuizStage = () => {
   }
 
   const renderer = ({ hours, minutes, seconds }: CountdownRenderProps) => {
-    console.log('render')
     return (
       <span className="text-3xl font-bold">
         {hours}:{minutes}:{seconds}
