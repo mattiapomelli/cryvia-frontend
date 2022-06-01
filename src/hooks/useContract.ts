@@ -4,8 +4,10 @@ import { Contract } from '@ethersproject/contracts'
 
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { Quiz } from '@abis/types'
-import quizContractAbi from '@abis/contracts/Quiz.json'
-import { QUIZ_CONTRACT_ADDRESS } from '@constants/addresses'
+import QuizContractAbi from '@abis/contracts/Quiz.json'
+import ERC20Abi from '@abis/contracts/ERC20.json'
+import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
+import { ERC20 } from '@abis/types/contracts/ERC20'
 
 const useContract = <T extends Contract = Contract>(
   address: string,
@@ -35,7 +37,11 @@ export default useContract
 export const useQuizContract = (withSigner = true) => {
   return useContract<Quiz>(
     QUIZ_CONTRACT_ADDRESS,
-    quizContractAbi.abi,
+    QuizContractAbi.abi,
     withSigner,
   )
+}
+
+export const useTokenContract = (withSigner = true) => {
+  return useContract<ERC20>(TOKEN_ADDRESS, ERC20Abi.abi, withSigner)
 }

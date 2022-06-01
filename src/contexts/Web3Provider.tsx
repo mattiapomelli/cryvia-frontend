@@ -9,6 +9,8 @@ import { ethers, providers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 
 import { injected } from '@utils/connectors'
+import { TOKEN_ADDRESS } from '@constants/addresses'
+import ERC20Abi from '@abis/contracts/ERC20.json'
 
 interface Web3ContextValue {
   provider?: providers.Web3Provider
@@ -39,6 +41,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     error,
   } = useWeb3React<providers.Web3Provider>()
 
+  // const tokenContract = useTokenContract()
   const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
   const [balance, setBalance] = useState(0)
@@ -63,19 +66,26 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     }
   }, [active, activate, disconnected])
 
-  // Get account balance
+  // Get account token balance
   useEffect(() => {
+    if (!account) return
+
     const getBalance = async () => {
-      if (provider && account) {
-        const signer = provider.getSigner()
-        const balance = await signer.getBalance()
-        const formattedBalance = Number(ethers.utils.formatEther(balance))
-        setBalance(formattedBalance)
+      try {
+        const tokenContract = new ethers.Contract(
+          TOKEN_ADDRESS,
+          ERC20Abi.abi,
+          provider,
+        )
+        const balance = await tokenContract.balanceOf(account)
+        setBalance(balance.toNumber())
+      } catch (err) {
+        console.error('Something went wrong getting user balance: ', err)
       }
     }
 
     getBalance()
-  }, [provider, active, account])
+  }, [account, provider])
 
   // Connect to wallet
   const connect = async () => {

@@ -1,14 +1,15 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
+import Link from 'next/link'
+import { ethers } from 'ethers'
 import { UnsupportedChainIdError } from '@web3-react/core'
 import jazzicon from '@metamask/jazzicon'
 
 import Address from '@components/Address'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
-import Link from 'next/link'
 
 const WalletStatus = () => {
-  const { account, connect, error, provider } = useWeb3Context()
+  const { account, connect, error, provider, balance } = useWeb3Context()
   const { user, setUser, status } = useUser()
   const apiClient = useApiClient()
 
@@ -54,6 +55,7 @@ const WalletStatus = () => {
   if (status === UserStatus.Connected && account) {
     return (
       <div className="flex items-center gap-2">
+        <span>{ethers.utils.formatUnits(balance, 18)}</span>
         <span>
           <Address address={account} />
           {status === UserStatus.Connected && (
@@ -71,6 +73,7 @@ const WalletStatus = () => {
     return (
       <Link href="/profile">
         <a className="flex items-center gap-2">
+          <span>{ethers.utils.formatUnits(balance, 18)}</span>
           <span>
             <Address address={user.address} />
           </span>
