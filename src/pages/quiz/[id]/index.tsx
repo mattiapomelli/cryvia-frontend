@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { ethers } from 'ethers'
 import { useQuery } from 'react-query'
 import Countdown from 'react-countdown'
 
@@ -8,16 +11,45 @@ import { PageWithLayout } from 'types'
 import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
-import { useState } from 'react'
-import Link from 'next/link'
+import { useQuizContract, useTokenContract } from '@hooks/useContract'
+import useTransaction from '@hooks/useTransaction'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState<QuizStatus>(
     getQuizStatus(quiz.startTime),
   )
+  const [hasApprovedSpending, setHasApprovedSpending] = useState(false)
+
+  const quizContract = useQuizContract(true)
+  const tokenContract = useTokenContract(true)
+
+  // TODO: use only one hook?
+  const { handleTransaction, pending } = useTransaction()
 
   const onSubscriptionCountdownComplete = () => {
     setStatus(QuizStatus.WaitingStart)
+  }
+
+  const approveSpending = async () => {
+    if (!tokenContract || !quizContract) return
+
+    const res = await handleTransaction(() =>
+      tokenContract.approve(
+        quizContract.address,
+        ethers.utils.parseUnits('1.0', 18),
+      ),
+    )
+
+    if (res) {
+      setHasApprovedSpending(true)
+    }
+  }
+
+  const suscribe = async () => {
+    if (!quizContract) return
+
+    const res = await handleTransaction(() => quizContract.subscribe(1))
+    console.log(res)
   }
 
   return (
@@ -29,7 +61,15 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
             date={new Date(quiz.startTime).getTime() - 1000 * 60 * 10}
             onComplete={onSubscriptionCountdownComplete}
           />
-          <Button>Suscribe</Button>
+          <Button onClick={hasApprovedSpending ? suscribe : approveSpending}>
+            {hasApprovedSpending
+              ? pending
+                ? 'Loading'
+                : 'Subscribe'
+              : pending
+              ? 'Loading'
+              : 'Approve'}
+          </Button>
         </div>
       )}
       {status === QuizStatus.WaitingStart && (

@@ -21,6 +21,7 @@ const useTransaction = () => {
 
       return res
     } catch (error) {
+      setPending(false)
       setError(error as Error)
       return null
     }

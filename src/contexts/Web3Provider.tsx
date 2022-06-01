@@ -5,12 +5,13 @@ import {
   ReactNode,
   useContext,
 } from 'react'
-import { ethers, providers } from 'ethers'
+import { BigNumber, ethers, providers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 
 import { injected } from '@utils/connectors'
 import { TOKEN_ADDRESS } from '@constants/addresses'
 import ERC20Abi from '@abis/contracts/ERC20.json'
+import { ERC20 } from '@abis/types/contracts/ERC20'
 
 interface Web3ContextValue {
   provider?: providers.Web3Provider
@@ -18,7 +19,7 @@ interface Web3ContextValue {
   account?: null | string
   active: boolean
   error?: Error
-  balance: number
+  balance: BigNumber
   connect: () => void
   disconnect: () => void
   loading: boolean
@@ -44,7 +45,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
   // const tokenContract = useTokenContract()
   const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
-  const [balance, setBalance] = useState(0)
+  const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0))
 
   // Connect wallet on load
   useEffect(() => {
@@ -76,9 +77,9 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
           TOKEN_ADDRESS,
           ERC20Abi.abi,
           provider,
-        )
+        ) as ERC20
         const balance = await tokenContract.balanceOf(account)
-        setBalance(balance.toNumber())
+        setBalance(balance)
       } catch (err) {
         console.error('Something went wrong getting user balance: ', err)
       }
