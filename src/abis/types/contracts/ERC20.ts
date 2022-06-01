@@ -26,7 +26,7 @@ import type {
   OnEvent,
 } from '../common'
 
-export interface MyTokenInterface extends utils.Interface {
+export interface ERC20Interface extends utils.Interface {
   functions: {
     'allowance(address,address)': FunctionFragment
     'approve(address,uint256)': FunctionFragment
@@ -143,12 +143,12 @@ export type TransferEvent = TypedEvent<
 
 export type TransferEventFilter = TypedEventFilter<TransferEvent>
 
-export interface MyToken extends BaseContract {
+export interface ERC20 extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this
   attach(addressOrName: string): this
   deployed(): Promise<this>
 
-  interface: MyTokenInterface
+  interface: ERC20Interface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
