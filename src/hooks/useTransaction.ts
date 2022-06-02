@@ -11,11 +11,10 @@ const useTransaction = () => {
 
   const handleTransaction = async (transaction: Transaction) => {
     if (!active) return
+    setPending(true)
 
     try {
       const tx = await transaction()
-
-      setPending(true)
       const res = await tx.wait()
       setPending(false)
 

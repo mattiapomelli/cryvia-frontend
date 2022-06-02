@@ -14,21 +14,31 @@ import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
 import { useQuizContract, useTokenContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
 
-const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  const [status, setStatus] = useState<QuizStatus>(
-    getQuizStatus(quiz.startTime),
+enum SubscriptionStatus {
+  NotApproved,
+  Approved,
+  Subscribed,
+}
+
+interface QuizSubscriptionSectionProps {
+  quiz: Quiz
+  onCountdownComplete: () => void
+}
+
+const QuizSubscriptionSection = ({
+  quiz,
+  onCountdownComplete,
+}: QuizSubscriptionSectionProps) => {
+  const [subscriptionStatus, setSubscriptionStatus] = useState(
+    SubscriptionStatus.NotApproved,
   )
-  const [hasApprovedSpending, setHasApprovedSpending] = useState(false)
+
+  // Subscription closes 10 minutes before the beginning of the quiz
+  const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
 
   const quizContract = useQuizContract(true)
   const tokenContract = useTokenContract(true)
-
-  // TODO: use only one hook?
   const { handleTransaction, pending } = useTransaction()
-
-  const onSubscriptionCountdownComplete = () => {
-    setStatus(QuizStatus.WaitingStart)
-  }
 
   const approveSpending = async () => {
     if (!tokenContract || !quizContract) return
@@ -41,7 +51,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
     )
 
     if (res) {
-      setHasApprovedSpending(true)
+      setSubscriptionStatus(SubscriptionStatus.Approved)
     }
   }
 
@@ -49,28 +59,52 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
     if (!quizContract) return
 
     const res = await handleTransaction(() => quizContract.subscribe(1))
-    console.log(res)
+    if (res) {
+      setSubscriptionStatus(SubscriptionStatus.Subscribed)
+    }
+  }
+
+  return (
+    <div>
+      Subscriptions close in:{' '}
+      <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
+      {subscriptionStatus === SubscriptionStatus.NotApproved && (
+        <div>
+          <p>
+            You first have to approve the spending of your tokens to be able to
+            subscribe
+          </p>
+          <Button onClick={approveSpending} loading={pending}>
+            Approve
+          </Button>
+        </div>
+      )}
+      {subscriptionStatus === SubscriptionStatus.Approved && (
+        <Button onClick={suscribe} loading={pending}>
+          Subscribe
+        </Button>
+      )}
+      {subscriptionStatus === SubscriptionStatus.Subscribed && (
+        <p>You are subscribed to this quiz!</p>
+      )}
+    </div>
+  )
+}
+
+const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
+  const [status, setStatus] = useState(getQuizStatus(quiz.startTime))
+
+  const onSubscriptionCountdownComplete = () => {
+    setStatus(QuizStatus.WaitingStart)
   }
 
   return (
     <div>
       {status === QuizStatus.Subscription && (
-        <div>
-          Subscriptions close in:{' '}
-          <Countdown
-            date={new Date(quiz.startTime).getTime() - 1000 * 60 * 10}
-            onComplete={onSubscriptionCountdownComplete}
-          />
-          <Button onClick={hasApprovedSpending ? suscribe : approveSpending}>
-            {hasApprovedSpending
-              ? pending
-                ? 'Loading'
-                : 'Subscribe'
-              : pending
-              ? 'Loading'
-              : 'Approve'}
-          </Button>
-        </div>
+        <QuizSubscriptionSection
+          quiz={quiz}
+          onCountdownComplete={onSubscriptionCountdownComplete}
+        />
       )}
       {status === QuizStatus.WaitingStart && (
         <div>
