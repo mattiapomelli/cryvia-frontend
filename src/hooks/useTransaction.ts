@@ -17,6 +17,7 @@ const useTransaction = () => {
       const tx = await transaction()
       const res = await tx.wait()
       setPending(false)
+      setError(null)
 
       return res
     } catch (error) {
