@@ -27,6 +27,7 @@ interface UserContextValue {
   user: User | null
   setUser: Dispatch<SetStateAction<User | null>>
   status: UserStatus
+  verifyAddress: () => void
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined)
@@ -39,7 +40,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState(UserStatus.Loading)
 
-  const { account, active, loading: loadingAccount } = useWeb3Context()
+  const {
+    account,
+    active,
+    loading: loadingAccount,
+    provider,
+  } = useWeb3Context()
 
   const handleUnauthorizedError = async () => {
     setUser(null)
@@ -85,11 +91,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     getUser()
   }, [loadingAccount, active, account])
 
-  useEffect(() => {
-    if (user) {
-      setStatus(UserStatus.Logged)
-    }
-  }, [user])
+  const verifyAddress = async () => {
+    if (!account) return
+    const { data } = await apiClientRef.current.auth.sign(account)
+
+    const signer = provider?.getSigner()
+    if (!signer) return
+
+    const signature = await signer.signMessage(data.message)
+
+    const user = await apiClientRef.current.auth.verify({
+      address: account,
+      signature,
+    })
+
+    setUser(user)
+    setStatus(UserStatus.Logged)
+  }
 
   return (
     <ApiClientContext.Provider value={apiClientRef.current}>
@@ -98,6 +116,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           user,
           setUser,
           status,
+          verifyAddress,
         }}
       >
         {children}

@@ -6,12 +6,11 @@ import jazzicon from '@metamask/jazzicon'
 
 import Address from '@components/Address'
 import { useWeb3Context } from '@contexts/Web3Provider'
-import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
+import { useUser, UserStatus } from '@contexts/AuthProvider'
 
 const WalletStatus = () => {
-  const { account, connect, error, provider, balance } = useWeb3Context()
-  const { user, setUser, status } = useUser()
-  const apiClient = useApiClient()
+  const { account, connect, error, balance } = useWeb3Context()
+  const { user, status, verifyAddress } = useUser()
 
   const iconRef = useRef<HTMLSpanElement>(null)
   const icon = useMemo(
@@ -34,19 +33,6 @@ const WalletStatus = () => {
       }
     }
   }, [icon, iconRef, status])
-
-  const verifyAddress = async () => {
-    if (!account) return
-    const { data } = await apiClient.auth.sign(account)
-
-    const signer = provider?.getSigner()
-    if (!signer) return
-
-    const signature = await signer.signMessage(data.message)
-
-    const user = await apiClient.auth.verify({ address: account, signature })
-    setUser(user)
-  }
 
   if (error && error instanceof UnsupportedChainIdError) {
     return <div className="text-red-500">Wrong network</div>
