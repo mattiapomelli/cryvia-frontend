@@ -23,7 +23,7 @@ const QuizSubscription = ({
   quiz,
   onCountdownComplete,
 }: QuizSubscriptionProps) => {
-  const { account } = useWeb3Context()
+  const { account, updateBalance } = useWeb3Context()
   const [loading, setLoading] = useState(true)
   const [subscriptionStatus, setSubscriptionStatus] = useState(
     SubscriptionStatus.NotApproved,
@@ -93,6 +93,7 @@ const QuizSubscription = ({
     const res = await handleTransaction(() => quizContract.subscribe(1)) // TODO: replace with actual quiz id
     if (res) {
       setSubscriptionStatus(SubscriptionStatus.Subscribed)
+      updateBalance()
     }
   }
 

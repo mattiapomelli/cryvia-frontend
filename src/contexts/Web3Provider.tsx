@@ -4,6 +4,7 @@ import {
   createContext,
   ReactNode,
   useContext,
+  useCallback,
 } from 'react'
 import { BigNumber, ethers, providers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
@@ -22,6 +23,7 @@ interface Web3ContextValue {
   balance: BigNumber
   connect: () => void
   disconnect: () => void
+  updateBalance: () => void
   loading: boolean
 }
 
@@ -67,27 +69,27 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     }
   }, [active, activate, disconnected])
 
-  // Get account token balance
-  useEffect(() => {
+  const updateBalance = useCallback(async () => {
     if (!account) return
 
-    const getBalance = async () => {
-      try {
-        const tokenContract = new ethers.Contract(
-          TOKEN_ADDRESS,
-          ERC20Abi.abi,
-          provider,
-        ) as ERC20
+    try {
+      const tokenContract = new ethers.Contract(
+        TOKEN_ADDRESS,
+        ERC20Abi.abi,
+        provider,
+      ) as ERC20
 
-        const balance = await tokenContract.balanceOf(account)
-        setBalance(balance)
-      } catch (err) {
-        console.error('Something went wrong getting user balance: ', err)
-      }
+      const balance = await tokenContract.balanceOf(account)
+      setBalance(balance)
+    } catch (err) {
+      console.error('Something went wrong getting user balance: ', err)
     }
-
-    getBalance()
   }, [account, provider])
+
+  // Get account token balance
+  useEffect(() => {
+    updateBalance()
+  }, [updateBalance])
 
   // Connect to wallet
   const connect = async () => {
@@ -112,6 +114,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
         disconnect,
         balance,
         loading,
+        updateBalance,
       }}
     >
       {children}
