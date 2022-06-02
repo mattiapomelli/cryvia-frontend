@@ -11,7 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { injected } from '@utils/connectors'
 import { TOKEN_ADDRESS } from '@constants/addresses'
 import ERC20Abi from '@abis/contracts/ERC20.json'
-import { ERC20 } from '@abis/types/contracts/ERC20'
+import { ERC20 } from '@abis/types'
 
 interface Web3ContextValue {
   provider?: providers.Web3Provider
@@ -78,6 +78,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
           ERC20Abi.abi,
           provider,
         ) as ERC20
+
         const balance = await tokenContract.balanceOf(account)
         setBalance(balance)
       } catch (err) {

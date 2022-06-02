@@ -3,11 +3,10 @@ import { ContractInterface, ethers } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 
 import { useWeb3Context } from '@contexts/Web3Provider'
-import { Quiz } from '@abis/types'
+import { Quiz, ERC20 } from '@abis/types'
 import QuizContractAbi from '@abis/contracts/Quiz.json'
 import ERC20Abi from '@abis/contracts/ERC20.json'
 import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
-import { ERC20 } from '@abis/types/contracts/ERC20'
 
 const useContract = <T extends Contract = Contract>(
   address: string,

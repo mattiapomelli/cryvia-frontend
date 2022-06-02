@@ -4,7 +4,6 @@
 import type * as contracts from './contracts'
 export type { contracts }
 export * as factories from './factories'
-export type { MyToken } from './contracts/MyToken'
-export { MyToken__factory } from './factories/MyToken__factory'
 export type { Quiz } from './contracts/Quiz'
 export { Quiz__factory } from './factories/Quiz__factory'
+export type { ERC20 } from './contracts/ERC20'

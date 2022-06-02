@@ -12,508 +12,496 @@ import type {
   PopulatedTransaction,
   Signer,
   utils,
-} from "ethers";
+} from 'ethers'
 import type {
   FunctionFragment,
   Result,
   EventFragment,
-} from "@ethersproject/abi";
-import type { Listener, Provider } from "@ethersproject/providers";
+} from '@ethersproject/abi'
+import type { Listener, Provider } from '@ethersproject/providers'
 import type {
   TypedEventFilter,
   TypedEvent,
   TypedListener,
   OnEvent,
-} from "../common";
+} from '../common'
 
 export interface QuizInterface extends utils.Interface {
   functions: {
-    "createQuiz(uint256,uint256)": FunctionFragment;
-    "owner()": FunctionFragment;
-    "ownerBalance()": FunctionFragment;
-    "platformFee()": FunctionFragment;
-    "quizFund(uint256)": FunctionFragment;
-    "quizParticipants(uint256,address)": FunctionFragment;
-    "quizPrice(uint256)": FunctionFragment;
-    "redeem(uint256)": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "subscribe(uint256)": FunctionFragment;
-    "token()": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "updateWinBalance(uint256,address[])": FunctionFragment;
-    "winBalance(uint256,address)": FunctionFragment;
-    "withdraw()": FunctionFragment;
-  };
+    'createQuiz(uint256,uint256)': FunctionFragment
+    'isSubscribed(uint256,address)': FunctionFragment
+    'owner()': FunctionFragment
+    'ownerBalance()': FunctionFragment
+    'platformFee()': FunctionFragment
+    'quizFund(uint256)': FunctionFragment
+    'quizPrice(uint256)': FunctionFragment
+    'redeem(uint256)': FunctionFragment
+    'renounceOwnership()': FunctionFragment
+    'subscribe(uint256)': FunctionFragment
+    'token()': FunctionFragment
+    'transferOwnership(address)': FunctionFragment
+    'updateWinBalance(uint256,address[])': FunctionFragment
+    'winBalance(uint256,address)': FunctionFragment
+    'withdraw()': FunctionFragment
+  }
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "createQuiz"
-      | "owner"
-      | "ownerBalance"
-      | "platformFee"
-      | "quizFund"
-      | "quizParticipants"
-      | "quizPrice"
-      | "redeem"
-      | "renounceOwnership"
-      | "subscribe"
-      | "token"
-      | "transferOwnership"
-      | "updateWinBalance"
-      | "winBalance"
-      | "withdraw"
-  ): FunctionFragment;
+      | 'createQuiz'
+      | 'isSubscribed'
+      | 'owner'
+      | 'ownerBalance'
+      | 'platformFee'
+      | 'quizFund'
+      | 'quizPrice'
+      | 'redeem'
+      | 'renounceOwnership'
+      | 'subscribe'
+      | 'token'
+      | 'transferOwnership'
+      | 'updateWinBalance'
+      | 'winBalance'
+      | 'withdraw',
+  ): FunctionFragment
 
   encodeFunctionData(
-    functionFragment: "createQuiz",
-    values: [BigNumberish, BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+    functionFragment: 'createQuiz',
+    values: [BigNumberish, BigNumberish],
+  ): string
   encodeFunctionData(
-    functionFragment: "ownerBalance",
-    values?: undefined
-  ): string;
+    functionFragment: 'isSubscribed',
+    values: [BigNumberish, string],
+  ): string
+  encodeFunctionData(functionFragment: 'owner', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "platformFee",
-    values?: undefined
-  ): string;
+    functionFragment: 'ownerBalance',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "quizFund",
-    values: [BigNumberish]
-  ): string;
+    functionFragment: 'platformFee',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "quizParticipants",
-    values: [BigNumberish, string]
-  ): string;
+    functionFragment: 'quizFund',
+    values: [BigNumberish],
+  ): string
   encodeFunctionData(
-    functionFragment: "quizPrice",
-    values: [BigNumberish]
-  ): string;
+    functionFragment: 'quizPrice',
+    values: [BigNumberish],
+  ): string
+  encodeFunctionData(functionFragment: 'redeem', values: [BigNumberish]): string
   encodeFunctionData(
-    functionFragment: "redeem",
-    values: [BigNumberish]
-  ): string;
+    functionFragment: 'renounceOwnership',
+    values?: undefined,
+  ): string
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined
-  ): string;
+    functionFragment: 'subscribe',
+    values: [BigNumberish],
+  ): string
+  encodeFunctionData(functionFragment: 'token', values?: undefined): string
   encodeFunctionData(
-    functionFragment: "subscribe",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(functionFragment: "token", values?: undefined): string;
+    functionFragment: 'transferOwnership',
+    values: [string],
+  ): string
   encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string]
-  ): string;
+    functionFragment: 'updateWinBalance',
+    values: [BigNumberish, string[]],
+  ): string
   encodeFunctionData(
-    functionFragment: "updateWinBalance",
-    values: [BigNumberish, string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "winBalance",
-    values: [BigNumberish, string]
-  ): string;
-  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
+    functionFragment: 'winBalance',
+    values: [BigNumberish, string],
+  ): string
+  encodeFunctionData(functionFragment: 'withdraw', values?: undefined): string
 
-  decodeFunctionResult(functionFragment: "createQuiz", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: 'createQuiz', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "ownerBalance",
-    data: BytesLike
-  ): Result;
+    functionFragment: 'isSubscribed',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "platformFee",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "quizFund", data: BytesLike): Result;
+    functionFragment: 'ownerBalance',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'platformFee', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'quizFund', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'quizPrice', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'redeem', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "quizParticipants",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "quizPrice", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
+    functionFragment: 'renounceOwnership',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'subscribe', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'token', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "subscribe", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "token", data: BytesLike): Result;
+    functionFragment: 'transferOwnership',
+    data: BytesLike,
+  ): Result
   decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updateWinBalance",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "winBalance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+    functionFragment: 'updateWinBalance',
+    data: BytesLike,
+  ): Result
+  decodeFunctionResult(functionFragment: 'winBalance', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: 'withdraw', data: BytesLike): Result
 
   events: {
-    "OwnershipTransferred(address,address)": EventFragment;
-  };
+    'OwnershipTransferred(address,address)': EventFragment
+  }
 
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment
 }
 
 export interface OwnershipTransferredEventObject {
-  previousOwner: string;
-  newOwner: string;
+  previousOwner: string
+  newOwner: string
 }
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string],
   OwnershipTransferredEventObject
->;
+>
 
 export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>;
+  TypedEventFilter<OwnershipTransferredEvent>
 
 export interface Quiz extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this;
-  attach(addressOrName: string): this;
-  deployed(): Promise<this>;
+  connect(signerOrProvider: Signer | Provider | string): this
+  attach(addressOrName: string): this
+  deployed(): Promise<this>
 
-  interface: QuizInterface;
+  interface: QuizInterface
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>;
+    toBlock?: string | number | undefined,
+  ): Promise<Array<TEvent>>
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>;
-  listeners(eventName?: string): Array<Listener>;
+    eventFilter?: TypedEventFilter<TEvent>,
+  ): Array<TypedListener<TEvent>>
+  listeners(eventName?: string): Array<Listener>
   removeAllListeners<TEvent extends TypedEvent>(
-    eventFilter: TypedEventFilter<TEvent>
-  ): this;
-  removeAllListeners(eventName?: string): this;
-  off: OnEvent<this>;
-  on: OnEvent<this>;
-  once: OnEvent<this>;
-  removeListener: OnEvent<this>;
+    eventFilter: TypedEventFilter<TEvent>,
+  ): this
+  removeAllListeners(eventName?: string): this
+  off: OnEvent<this>
+  on: OnEvent<this>
+  once: OnEvent<this>
+  removeListener: OnEvent<this>
 
   functions: {
     createQuiz(
       _id: BigNumberish,
       _price: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
-    owner(overrides?: CallOverrides): Promise<[string]>;
+    isSubscribed(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>
 
-    ownerBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
+    owner(overrides?: CallOverrides): Promise<[string]>
 
-    platformFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+    ownerBalance(overrides?: CallOverrides): Promise<[BigNumber]>
+
+    platformFee(overrides?: CallOverrides): Promise<[BigNumber]>
 
     quizFund(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    quizParticipants(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     quizPrice(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     redeem(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
     subscribe(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
-    token(overrides?: CallOverrides): Promise<[string]>;
+    token(overrides?: CallOverrides): Promise<[string]>
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
     updateWinBalance(
       _quizId: BigNumberish,
       _winners: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
 
     winBalance(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+      overrides?: CallOverrides,
+    ): Promise<[BigNumber]>
 
     withdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-  };
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
+  }
 
   createQuiz(
     _id: BigNumberish,
     _price: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  ownerBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-  platformFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-  quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-  quizParticipants(
+  isSubscribed(
     arg0: BigNumberish,
     arg1: string,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
+    overrides?: CallOverrides,
+  ): Promise<boolean>
 
-  quizPrice(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+  owner(overrides?: CallOverrides): Promise<string>
+
+  ownerBalance(overrides?: CallOverrides): Promise<BigNumber>
+
+  platformFee(overrides?: CallOverrides): Promise<BigNumber>
+
+  quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
+
+  quizPrice(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
 
   redeem(
     _quizId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
   renounceOwnership(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
   subscribe(
     _quizId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
-  token(overrides?: CallOverrides): Promise<string>;
+  token(overrides?: CallOverrides): Promise<string>
 
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
   updateWinBalance(
     _quizId: BigNumberish,
     _winners: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
   winBalance(
     arg0: BigNumberish,
     arg1: string,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+    overrides?: CallOverrides,
+  ): Promise<BigNumber>
 
   withdraw(
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
 
   callStatic: {
     createQuiz(
       _id: BigNumberish,
       _price: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
-    owner(overrides?: CallOverrides): Promise<string>;
-
-    ownerBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    platformFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    quizParticipants(
+    isSubscribed(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
+      overrides?: CallOverrides,
+    ): Promise<boolean>
 
-    quizPrice(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    owner(overrides?: CallOverrides): Promise<string>
 
-    redeem(_quizId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    ownerBalance(overrides?: CallOverrides): Promise<BigNumber>
 
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+    platformFee(overrides?: CallOverrides): Promise<BigNumber>
 
-    subscribe(_quizId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
 
-    token(overrides?: CallOverrides): Promise<string>;
+    quizPrice(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
+
+    redeem(_quizId: BigNumberish, overrides?: CallOverrides): Promise<void>
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>
+
+    subscribe(_quizId: BigNumberish, overrides?: CallOverrides): Promise<void>
+
+    token(overrides?: CallOverrides): Promise<string>
 
     transferOwnership(
       newOwner: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     updateWinBalance(
       _quizId: BigNumberish,
       _winners: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
+      overrides?: CallOverrides,
+    ): Promise<void>
 
     winBalance(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    withdraw(overrides?: CallOverrides): Promise<void>;
-  };
+    withdraw(overrides?: CallOverrides): Promise<void>
+  }
 
   filters: {
-    "OwnershipTransferred(address,address)"(
+    'OwnershipTransferred(address,address)'(
       previousOwner?: string | null,
-      newOwner?: string | null
-    ): OwnershipTransferredEventFilter;
+      newOwner?: string | null,
+    ): OwnershipTransferredEventFilter
     OwnershipTransferred(
       previousOwner?: string | null,
-      newOwner?: string | null
-    ): OwnershipTransferredEventFilter;
-  };
+      newOwner?: string | null,
+    ): OwnershipTransferredEventFilter
+  }
 
   estimateGas: {
     createQuiz(
       _id: BigNumberish,
       _price: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    ownerBalance(overrides?: CallOverrides): Promise<BigNumber>;
-
-    platformFee(overrides?: CallOverrides): Promise<BigNumber>;
-
-    quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
-    quizParticipants(
+    isSubscribed(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
-    quizPrice(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    owner(overrides?: CallOverrides): Promise<BigNumber>
+
+    ownerBalance(overrides?: CallOverrides): Promise<BigNumber>
+
+    platformFee(overrides?: CallOverrides): Promise<BigNumber>
+
+    quizFund(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
+
+    quizPrice(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>
 
     redeem(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
     subscribe(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
-    token(overrides?: CallOverrides): Promise<BigNumber>;
+    token(overrides?: CallOverrides): Promise<BigNumber>
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
     updateWinBalance(
       _quizId: BigNumberish,
       _winners: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
 
     winBalance(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>
 
     withdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-  };
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
+  }
 
   populateTransaction: {
     createQuiz(
       _id: BigNumberish,
       _price: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    isSubscribed(
+      arg0: BigNumberish,
+      arg1: string,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
-    ownerBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
-    platformFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    ownerBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>
+
+    platformFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     quizFund(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    quizParticipants(
-      arg0: BigNumberish,
-      arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     quizPrice(
       arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     redeem(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
     renounceOwnership(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
     subscribe(
       _quizId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
-    token(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    token(overrides?: CallOverrides): Promise<PopulatedTransaction>
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
     updateWinBalance(
       _quizId: BigNumberish,
       _winners: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
 
     winBalance(
       arg0: BigNumberish,
       arg1: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>
 
     withdraw(
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-  };
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
+  }
 }
