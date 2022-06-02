@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { ethers } from 'ethers'
 import { useQuery } from 'react-query'
 import Countdown from 'react-countdown'
 
@@ -11,113 +10,7 @@ import { PageWithLayout } from 'types'
 import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
-import { useQuizContract, useTokenContract } from '@hooks/useContract'
-import useTransaction from '@hooks/useTransaction'
-import { useWeb3Context } from '@contexts/Web3Provider'
-
-enum SubscriptionStatus {
-  NotApproved,
-  Approved,
-  Subscribed,
-}
-
-interface QuizSubscriptionSectionProps {
-  quiz: Quiz
-  onCountdownComplete: () => void
-}
-
-const QuizSubscriptionSection = ({
-  quiz,
-  onCountdownComplete,
-}: QuizSubscriptionSectionProps) => {
-  const { account } = useWeb3Context()
-  const [subscriptionStatus, setSubscriptionStatus] = useState(
-    SubscriptionStatus.NotApproved,
-  )
-
-  // Subscription closes 10 minutes before the beginning of the quiz
-  const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
-
-  const quizContract = useQuizContract(true)
-  const tokenContract = useTokenContract(true)
-  const { handleTransaction, pending, error } = useTransaction()
-
-  useEffect(() => {
-    if (!quizContract || !tokenContract || !account) return
-
-    const getSubscriptionStatus = async () => {
-      const isSubscribed = await quizContract.isSubscribed(1, account) // TODO: replace with actual quiz id
-
-      if (isSubscribed) {
-        setSubscriptionStatus(SubscriptionStatus.Subscribed)
-      } else {
-        const allowance = await tokenContract.allowance(
-          account,
-          quizContract.address,
-        )
-        // TODO: replace with actual quiz price
-        if (allowance.gte(1)) {
-          setSubscriptionStatus(SubscriptionStatus.Approved)
-        } else {
-          setSubscriptionStatus(SubscriptionStatus.NotApproved)
-        }
-      }
-    }
-
-    getSubscriptionStatus()
-  }, [quizContract, tokenContract, account])
-
-  const approveSpending = async () => {
-    if (!tokenContract || !quizContract) return
-
-    const res = await handleTransaction(() =>
-      tokenContract.approve(
-        quizContract.address,
-        ethers.utils.parseUnits('1.0', 18), // TODO: replace with actual quiz price
-      ),
-    )
-
-    if (res) {
-      setSubscriptionStatus(SubscriptionStatus.Approved)
-    }
-  }
-
-  const suscribe = async () => {
-    if (!quizContract) return
-
-    const res = await handleTransaction(() => quizContract.subscribe(1)) // TODO: replace with actual quiz id
-    if (res) {
-      setSubscriptionStatus(SubscriptionStatus.Subscribed)
-    }
-  }
-
-  return (
-    <div>
-      Subscriptions close in:{' '}
-      <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
-      {subscriptionStatus === SubscriptionStatus.NotApproved && (
-        <div>
-          <p>
-            You first have to approve the spending of your tokens to be able to
-            subscribe
-          </p>
-          <Button onClick={approveSpending} loading={pending}>
-            Approve
-          </Button>
-        </div>
-      )}
-      {subscriptionStatus === SubscriptionStatus.Approved && (
-        <Button onClick={suscribe} loading={pending}>
-          Subscribe
-        </Button>
-      )}
-      {subscriptionStatus === SubscriptionStatus.Subscribed && (
-        <p>You are subscribed to this quiz!</p>
-      )}
-      {error && <p className="text-red-500">Something went wrong</p>}
-    </div>
-  )
-}
+import QuizSubscription from '@components/Quiz/QuizSubscription'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState(getQuizStatus(quiz.startTime))
@@ -129,7 +22,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   return (
     <div>
       {status === QuizStatus.Subscription && (
-        <QuizSubscriptionSection
+        <QuizSubscription
           quiz={quiz}
           onCountdownComplete={onSubscriptionCountdownComplete}
         />
