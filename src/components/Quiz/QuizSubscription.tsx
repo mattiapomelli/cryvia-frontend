@@ -24,6 +24,7 @@ const QuizSubscription = ({
   onCountdownComplete,
 }: QuizSubscriptionProps) => {
   const { account } = useWeb3Context()
+  const [loading, setLoading] = useState(true)
   const [subscriptionStatus, setSubscriptionStatus] = useState(
     SubscriptionStatus.NotApproved,
   )
@@ -36,9 +37,13 @@ const QuizSubscription = ({
   const { handleTransaction, pending, error } = useTransaction()
 
   useEffect(() => {
-    if (!quizContract || !tokenContract || !account) return
+    if (!quizContract || !tokenContract || !account) {
+      setLoading(false)
+      return
+    }
 
     const getSubscriptionStatus = async () => {
+      setLoading(true)
       const isSubscribed = await quizContract.isSubscribed(1, account) // TODO: replace with actual quiz id
 
       if (isSubscribed) {
@@ -55,12 +60,19 @@ const QuizSubscription = ({
           setSubscriptionStatus(SubscriptionStatus.NotApproved)
         }
       }
+
+      setLoading(false)
     }
 
     getSubscriptionStatus()
   }, [quizContract, tokenContract, account])
 
   const approveSpending = async () => {
+    if (!account) {
+      // TODO: show message/modal telling to connect wallet
+      return
+    }
+
     if (!tokenContract || !quizContract) return
 
     const res = await handleTransaction(() =>
@@ -88,26 +100,30 @@ const QuizSubscription = ({
     <div>
       Subscriptions close in:{' '}
       <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
-      {subscriptionStatus === SubscriptionStatus.NotApproved && (
-        <div>
-          <p>
-            You first have to approve the spending of your tokens to be able to
-            subscribe
-          </p>
-          <Button onClick={approveSpending} loading={pending}>
-            Approve
-          </Button>
-        </div>
+      {!loading && (
+        <>
+          {subscriptionStatus === SubscriptionStatus.NotApproved && (
+            <div>
+              <p>
+                You first have to approve the spending of your tokens to be able
+                to subscribe
+              </p>
+              <Button onClick={approveSpending} loading={pending}>
+                Approve
+              </Button>
+            </div>
+          )}
+          {subscriptionStatus === SubscriptionStatus.Approved && (
+            <Button onClick={suscribe} loading={pending}>
+              Subscribe
+            </Button>
+          )}
+          {subscriptionStatus === SubscriptionStatus.Subscribed && (
+            <p>You are subscribed to this quiz!</p>
+          )}
+          {error && <p className="text-red-500">Something went wrong</p>}
+        </>
       )}
-      {subscriptionStatus === SubscriptionStatus.Approved && (
-        <Button onClick={suscribe} loading={pending}>
-          Subscribe
-        </Button>
-      )}
-      {subscriptionStatus === SubscriptionStatus.Subscribed && (
-        <p>You are subscribed to this quiz!</p>
-      )}
-      {error && <p className="text-red-500">Something went wrong</p>}
     </div>
   )
 }
