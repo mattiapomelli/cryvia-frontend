@@ -4,7 +4,7 @@ import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const useQuizSocket = () => {
   const { user } = useUser()
-  const [{ currentQuestion, status, answers, time }, dispatch] = useQuiz()
+  const [{ currentQuestion, status, answers }, dispatch] = useQuiz()
   const ws = useRef<WebSocket>()
 
   useEffect(() => {
@@ -55,12 +55,11 @@ const useQuizSocket = () => {
           type: 'submitQuiz',
           payload: {
             answers,
-            time,
           },
         }),
       )
     }
-  }, [status, answers, time])
+  }, [status, answers])
 }
 
 export default useQuizSocket

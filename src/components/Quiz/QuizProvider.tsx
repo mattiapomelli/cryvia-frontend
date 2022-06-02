@@ -13,6 +13,8 @@ type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
+const SECONDS_PER_QUESTION = 10
+
 export enum QuizPlayingStatus {
   Waiting, // the quiz hasn't started yet
   Started, // the quiz has started
@@ -25,12 +27,15 @@ interface QuizState {
   status: QuizPlayingStatus
   currentQuestion: number
   questionDeadline: number
-  answers: (number | null)[]
+  answers: {
+    id: number | null
+    time: number
+  }[]
   playersCount: number
   leaderboard: number[]
   questions: QuizQuestion[]
   isLive: boolean
-  time: number | null
+  previousTime: number
 }
 
 type QuizAction =
@@ -47,29 +52,34 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       return {
         ...state,
         currentQuestion: 0,
-        questionDeadline: Date.now() + 10000,
+        questionDeadline: Date.now() + SECONDS_PER_QUESTION * 1000,
         status: QuizPlayingStatus.Started,
+        previousTime: Date.now(),
       }
     case 'NEXT_QUESTION': {
-      const answer = action.answer || null
+      const answer = {
+        id: action.answer || null,
+        time: Date.now() - state.previousTime,
+      }
       const newAnswers = [...state.answers, answer]
 
+      // Quiz has finished
       if (state.currentQuestion === state.questions.length - 1) {
-        const time = Date.now() - new Date(state.quiz.startTime).getTime()
         return {
           ...state,
           status: QuizPlayingStatus.Ended,
-          questionDeadline: Date.now(),
+          questionDeadline: 0,
           answers: newAnswers,
-          time,
+          previousTime: 0,
         }
       }
 
       return {
         ...state,
         currentQuestion: state.currentQuestion + 1,
-        questionDeadline: Date.now() + 10000,
+        questionDeadline: Date.now() + SECONDS_PER_QUESTION * 1000,
         answers: newAnswers,
+        previousTime: Date.now(),
       }
     }
     case 'SET_PLAYERS_COUNT':
@@ -118,13 +128,13 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     quiz,
     status: QuizPlayingStatus.Waiting,
     currentQuestion: -1,
-    questionDeadline: Date.now(),
+    questionDeadline: 0,
     answers: [],
     playersCount: 0,
     leaderboard: [],
     questions: [],
     isLive,
-    time: null,
+    previousTime: 0,
   })
 
   return (
