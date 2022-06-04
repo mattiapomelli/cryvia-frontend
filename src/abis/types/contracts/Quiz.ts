@@ -37,10 +37,10 @@ export interface QuizInterface extends utils.Interface {
     'quizPrice(uint256)': FunctionFragment
     'redeem(uint256)': FunctionFragment
     'renounceOwnership()': FunctionFragment
+    'setWinners(uint256,address[])': FunctionFragment
     'subscribe(uint256)': FunctionFragment
     'token()': FunctionFragment
     'transferOwnership(address)': FunctionFragment
-    'updateWinBalance(uint256,address[])': FunctionFragment
     'winBalance(uint256,address)': FunctionFragment
     'withdraw()': FunctionFragment
   }
@@ -56,10 +56,10 @@ export interface QuizInterface extends utils.Interface {
       | 'quizPrice'
       | 'redeem'
       | 'renounceOwnership'
+      | 'setWinners'
       | 'subscribe'
       | 'token'
       | 'transferOwnership'
-      | 'updateWinBalance'
       | 'winBalance'
       | 'withdraw',
   ): FunctionFragment
@@ -95,6 +95,10 @@ export interface QuizInterface extends utils.Interface {
     values?: undefined,
   ): string
   encodeFunctionData(
+    functionFragment: 'setWinners',
+    values: [BigNumberish, string[]],
+  ): string
+  encodeFunctionData(
     functionFragment: 'subscribe',
     values: [BigNumberish],
   ): string
@@ -102,10 +106,6 @@ export interface QuizInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: 'transferOwnership',
     values: [string],
-  ): string
-  encodeFunctionData(
-    functionFragment: 'updateWinBalance',
-    values: [BigNumberish, string[]],
   ): string
   encodeFunctionData(
     functionFragment: 'winBalance',
@@ -131,14 +131,11 @@ export interface QuizInterface extends utils.Interface {
     functionFragment: 'renounceOwnership',
     data: BytesLike,
   ): Result
+  decodeFunctionResult(functionFragment: 'setWinners', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'subscribe', data: BytesLike): Result
   decodeFunctionResult(functionFragment: 'token', data: BytesLike): Result
   decodeFunctionResult(
     functionFragment: 'transferOwnership',
-    data: BytesLike,
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'updateWinBalance',
     data: BytesLike,
   ): Result
   decodeFunctionResult(functionFragment: 'winBalance', data: BytesLike): Result
@@ -227,6 +224,12 @@ export interface Quiz extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>
 
+    setWinners(
+      _quizId: BigNumberish,
+      _winners: string[],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<ContractTransaction>
+
     subscribe(
       _quizId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
@@ -236,12 +239,6 @@ export interface Quiz extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<ContractTransaction>
-
-    updateWinBalance(
-      _quizId: BigNumberish,
-      _winners: string[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>
 
@@ -287,6 +284,12 @@ export interface Quiz extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>
 
+  setWinners(
+    _quizId: BigNumberish,
+    _winners: string[],
+    overrides?: Overrides & { from?: string | Promise<string> },
+  ): Promise<ContractTransaction>
+
   subscribe(
     _quizId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> },
@@ -296,12 +299,6 @@ export interface Quiz extends BaseContract {
 
   transferOwnership(
     newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> },
-  ): Promise<ContractTransaction>
-
-  updateWinBalance(
-    _quizId: BigNumberish,
-    _winners: string[],
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>
 
@@ -342,18 +339,18 @@ export interface Quiz extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>
 
+    setWinners(
+      _quizId: BigNumberish,
+      _winners: string[],
+      overrides?: CallOverrides,
+    ): Promise<void>
+
     subscribe(_quizId: BigNumberish, overrides?: CallOverrides): Promise<void>
 
     token(overrides?: CallOverrides): Promise<string>
 
     transferOwnership(
       newOwner: string,
-      overrides?: CallOverrides,
-    ): Promise<void>
-
-    updateWinBalance(
-      _quizId: BigNumberish,
-      _winners: string[],
       overrides?: CallOverrides,
     ): Promise<void>
 
@@ -409,6 +406,12 @@ export interface Quiz extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>
 
+    setWinners(
+      _quizId: BigNumberish,
+      _winners: string[],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>
+
     subscribe(
       _quizId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
@@ -418,12 +421,6 @@ export interface Quiz extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<BigNumber>
-
-    updateWinBalance(
-      _quizId: BigNumberish,
-      _winners: string[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>
 
@@ -476,6 +473,12 @@ export interface Quiz extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>
 
+    setWinners(
+      _quizId: BigNumberish,
+      _winners: string[],
+      overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>
+
     subscribe(
       _quizId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
@@ -485,12 +488,6 @@ export interface Quiz extends BaseContract {
 
     transferOwnership(
       newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<PopulatedTransaction>
-
-    updateWinBalance(
-      _quizId: BigNumberish,
-      _winners: string[],
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>
 
