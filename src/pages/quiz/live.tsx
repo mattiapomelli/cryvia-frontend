@@ -5,6 +5,8 @@ import QuizProvider from '@components/Quiz/QuizProvider'
 import { useApiClient } from '@contexts/AuthProvider'
 import QuizContainer from '@components/Quiz/QuizContainer'
 
+let done = false
+
 const QuizPage: NextPage = () => {
   const apiClient = useApiClient()
   const { data: quiz } = useQuery('nextQuiz', () =>
@@ -13,7 +15,10 @@ const QuizPage: NextPage = () => {
 
   if (!quiz) return null
 
-  // quiz.startTime = new Date(Date.now() + 2000).toISOString()
+  if (!done) {
+    quiz.startTime = new Date(Date.now() + 2000).toISOString()
+    done = true
+  }
 
   return (
     <QuizProvider quiz={quiz} isLive>

@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query'
+import Link from 'next/link'
 
 import Container from '@components/Layout/Container'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { PageWithLayout } from 'types'
-import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
-import Link from 'next/link'
+import { getDefaultLayout } from '@layouts/DefaultLayout'
+import { useApiClient } from '@contexts/AuthProvider'
+import { PageWithLayout } from 'types'
 
 const HomePage: PageWithLayout = () => {
   const apiClient = useApiClient()
