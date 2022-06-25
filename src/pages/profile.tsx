@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useQuery } from 'react-query'
 
 import Container from '@components/Layout/Container'
@@ -20,7 +21,9 @@ const UserSubmissions = ({ user }: UserSubmissionsProps) => {
   return (
     <div>
       {submissions?.map((submission) => (
-        <div key={submission.id}>{submission.quiz.title}</div>
+        <Link href={`/submissions/${submission.id}`} key={submission.id}>
+          <a>{submission.quiz.title}</a>
+        </Link>
       ))}
     </div>
   )
