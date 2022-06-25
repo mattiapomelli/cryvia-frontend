@@ -8,9 +8,10 @@ export interface QuizSubmission {
   quiz: Quiz
   user: User
   submittedAt: string
+  score: number
   answers: {
     question: Question
-    answer: Answer
+    answer?: Answer
   }[]
 }
 
