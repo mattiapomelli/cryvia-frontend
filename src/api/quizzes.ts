@@ -15,7 +15,7 @@ export interface Quiz {
 
 export interface QuizQuestion {
   question: Question & {
-    answers: Omit<Answer, 'correct'>[]
+    answers: Answer[]
   }
 }
 
