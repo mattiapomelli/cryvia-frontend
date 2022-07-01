@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import Link from 'next/link'
 
 import Container from '@components/Layout/Container'
-import Button from '@components/Button'
+// import Button from '@components/Button'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
 import { useApiClient } from '@contexts/AuthProvider'
 import { PageWithLayout } from 'types'
@@ -14,23 +14,23 @@ const HomePage: PageWithLayout = () => {
     () => apiClient.quizzes.list().then((data) => data.data),
   )
 
-  const { data: nextQuiz, isLoading: isLoadingNextQuiz } = useQuery(
-    'nextQuiz',
-    () => apiClient.quizzes.next().then((data) => data.data),
-  )
+  // const { data: nextQuiz, isLoading: isLoadingNextQuiz } = useQuery(
+  //   'nextQuiz',
+  //   () => apiClient.quizzes.next().then((data) => data.data),
+  // )
 
-  const loading = isLoadingNextQuiz || isLoadingQuizzes
+  // const loading = isLoadingNextQuiz || isLoadingQuizzes
 
-  const filteredQuizzes = !loading
-    ? quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
-    : []
+  // const filteredQuizzes = !loading
+  //   ? quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
+  //   : []
 
   return (
     <Container className="mt-10 flex justify-center">
       <div className="flex flex-col gap-6">
-        {!loading && (
+        {!isLoadingQuizzes && (
           <>
-            <h4 className="font-bold">Next Quiz</h4>
+            {/* <h4 className="font-bold">Next Quiz</h4>
             {nextQuiz && (
               <Link href={`/quiz/${nextQuiz.id}`}>
                 <a className="bg-blue-200 p-4 rounded-lg">
@@ -53,10 +53,10 @@ const HomePage: PageWithLayout = () => {
                   <Button>Suscribe</Button>
                 </a>
               </Link>
-            )}
-            <h4 className="font-bold">Past quizzes</h4>
-            {filteredQuizzes?.map((quiz) => (
-              <Link key={quiz.id} href={`/quiz/${quiz.id}`}>
+            )} */}
+            <h4 className="font-bold">Quizzes</h4>
+            {quizzes?.map((quiz) => (
+              <Link key={quiz.id} href={`/quiz/${quiz.id}/play`}>
                 <a className="bg-gray-100 p-4 rounded-lg">
                   <h4 className="text-lg font-bold">{quiz.title}</h4>
                   <p>{quiz.description}</p>
