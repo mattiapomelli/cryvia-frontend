@@ -35,7 +35,7 @@ const WalletStatus = () => {
   }, [icon, iconRef, status])
 
   if (error && error instanceof UnsupportedChainIdError) {
-    return <div className="text-red-500">Wrong network</div>
+    return <div className="text-red-500">Wrong network (switch to Mumbai)</div>
   }
 
   if (status === UserStatus.Connected && account) {
