@@ -15,7 +15,7 @@ const Logo = ({ href = '/', className, onClick }: LogoProps) => {
         onClick={onClick}
         className={classNames('text-xl font-bold', className)}
       >
-        <h1>Crypto Quizzes</h1>
+        <h1>Cryvia</h1>
       </a>
     </Link>
   )
