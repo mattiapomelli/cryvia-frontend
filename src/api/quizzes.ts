@@ -67,7 +67,8 @@ class QuizService extends ApiService {
   }
 
   async questions(id: Id) {
-    return { data: mockQuizzes.find((quiz) => quiz.id === id)?.questions }
+    const quiz = mockQuizzes.find((quiz) => quiz.id === id)
+    return { data: quiz?.questions || [] }
     // return await this.http.get<QuizQuestion[]>(
     //   `${this.baseUrl}/${id}/questions`,
     // )
