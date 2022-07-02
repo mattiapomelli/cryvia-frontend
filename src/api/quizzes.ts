@@ -1,4 +1,5 @@
 import ApiService from './api-service'
+import mockQuizzes from './mockQuizzes'
 import { QuizSubmission } from './submissions'
 import { Answer, Category, Id, Question } from './types'
 
@@ -42,11 +43,13 @@ export const getQuizStatus = (startTime: string) => {
 
 class QuizService extends ApiService {
   async read(id: Id) {
-    return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
+    return { data: mockQuizzes.find((quiz) => quiz.id === id) }
+    // return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
   }
 
   async list() {
-    return await this.http.get<Quiz[]>(this.baseUrl)
+    return { data: mockQuizzes }
+    // return await this.http.get<Quiz[]>(this.baseUrl)
   }
 
   async next() {
@@ -64,9 +67,10 @@ class QuizService extends ApiService {
   }
 
   async questions(id: Id) {
-    return await this.http.get<QuizQuestion[]>(
-      `${this.baseUrl}/${id}/questions`,
-    )
+    return { data: mockQuizzes.find((quiz) => quiz.id === id)?.questions }
+    // return await this.http.get<QuizQuestion[]>(
+    //   `${this.baseUrl}/${id}/questions`,
+    // )
   }
 }
 
