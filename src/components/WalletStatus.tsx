@@ -6,11 +6,11 @@ import jazzicon from '@metamask/jazzicon'
 import Address from '@components/Address'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { useUser, UserStatus } from '@contexts/AuthProvider'
-import { formatAmount } from '@utils/math'
+import Button from '@components/Button'
 
 const WalletStatus = () => {
-  const { account, connect, error, balance } = useWeb3Context()
-  const { user, status, verifyAddress } = useUser()
+  const { account, connect, error } = useWeb3Context()
+  const { status, verifyAddress } = useUser()
 
   const iconRef = useRef<HTMLSpanElement>(null)
   const icon = useMemo(
@@ -34,34 +34,33 @@ const WalletStatus = () => {
     }
   }, [icon, iconRef, status])
 
+  // Wrong network
   if (error && error instanceof UnsupportedChainIdError) {
     return <div className="text-red-500">Wrong network (switch to Mumbai)</div>
   }
 
+  // Needs verification
   if (status === UserStatus.Connected && account) {
     return (
-      <div className="flex items-center gap-2">
-        <span>{formatAmount(balance)}</span>
+      <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
         <span>
-          <Address address={account} />
-          {status === UserStatus.Connected && (
-            <button className="ml-2" onClick={verifyAddress}>
-              Verify address
-            </button>
-          )}
+          <Address address={account} className="font-semibold" />
+          <button className="ml-2 text-sm font-medium" onClick={verifyAddress}>
+            Verify address
+          </button>
         </span>
         <span ref={iconRef} className="inline-flex" />
       </div>
     )
   }
 
-  if (status === UserStatus.Logged && user) {
+  // Logged in
+  if (status === UserStatus.Logged && account) {
     return (
       <Link href="/profile">
-        <a className="flex items-center gap-2">
-          <span>{formatAmount(balance)}</span>
+        <a className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
           <span>
-            <Address address={user.address} />
+            <Address address={account} className="font-semibold" />
           </span>
           <span ref={iconRef} className="inline-flex" />
         </a>
@@ -69,14 +68,8 @@ const WalletStatus = () => {
     )
   }
 
-  return (
-    <button
-      onClick={connect}
-      className="py-2 px-4 bg-blue-500 text-white rounded-full"
-    >
-      Connect
-    </button>
-  )
+  // Disconnected
+  return <Button onClick={connect}>Connect</Button>
 }
 
 export default WalletStatus

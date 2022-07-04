@@ -13,7 +13,7 @@ const Logo = ({ href = '/', className, onClick }: LogoProps) => {
       <a
         role="none"
         onClick={onClick}
-        className={classNames('text-xl font-bold', className)}
+        className={classNames('text-2xl font-bold', className)}
       >
         <h1>Cryvia</h1>
       </a>
