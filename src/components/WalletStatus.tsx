@@ -10,7 +10,10 @@ import Button from '@components/Button'
 
 const WalletStatus = () => {
   const { account, connect, error } = useWeb3Context()
-  const { status, verifyAddress } = useUser()
+  const {
+    status,
+    // verifyAddress
+  } = useUser()
 
   const iconRef = useRef<HTMLSpanElement>(null)
   const icon = useMemo(
@@ -45,9 +48,9 @@ const WalletStatus = () => {
       <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
         <span>
           <Address address={account} className="font-semibold" />
-          <button className="ml-2 text-sm font-medium" onClick={verifyAddress}>
+          {/* <button className="ml-2 text-sm font-medium" onClick={verifyAddress}>
             Verify address
-          </button>
+          </button> */}
         </span>
         <span ref={iconRef} className="inline-flex" />
       </div>
