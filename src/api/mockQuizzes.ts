@@ -12,7 +12,7 @@ interface QuizWithQuestions extends Quiz {
 const mockQuizzes: QuizWithQuestions[] = [
   {
     id: 5,
-    title: 'DeFi',
+    title: 'DeFi 101',
     description: "An awesome quiz to test if you're a DeFi master",
     price: 100,
     startTime: '2022-07-12T12:40:09.568Z',
@@ -113,7 +113,7 @@ const mockQuizzes: QuizWithQuestions[] = [
   },
   {
     id: 4,
-    title: 'Cryptocurrencies',
+    title: 'Cryptocurrencies 101',
     description: "An awesome quiz to test if you're a crypto master",
     price: 100,
     startTime: '2022-07-10T12:40:09.568Z',
@@ -211,6 +211,22 @@ const mockQuizzes: QuizWithQuestions[] = [
         },
       },
     ],
+  },
+  {
+    id: 4,
+    title: 'Blockchain 101',
+    description: "An awesome quiz to test if you're a blockchain master",
+    price: 100,
+    startTime: '2022-07-10T12:40:09.568Z',
+    createdAt: '2022-07-01T19:10:01.873Z',
+    image: null,
+    categories: [
+      {
+        id: 1,
+        name: 'Blockchain',
+      },
+    ],
+    questions: [],
   },
 ]
 

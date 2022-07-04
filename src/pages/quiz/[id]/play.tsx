@@ -63,7 +63,7 @@ const QuizPage: NextPage = () => {
 
   return (
     <QuizProvider quiz={quiz} isLive={false}>
-      <div className="flex justify-center mt-20">
+      <div className="flex justify-center pt-20 pb-20">
         <QuizPageInner />
       </div>
     </QuizProvider>
