@@ -6,6 +6,7 @@ import Container from '@components/Layout/Container'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
 import { useApiClient } from '@contexts/AuthProvider'
 import { PageWithLayout } from 'types'
+import QuizCard from '@components/QuizCard'
 
 const HomePage: PageWithLayout = () => {
   const apiClient = useApiClient()
@@ -26,11 +27,10 @@ const HomePage: PageWithLayout = () => {
   //   : []
 
   return (
-    <Container className="mt-10 flex justify-center">
-      <div className="flex flex-col gap-6">
-        {!isLoadingQuizzes && (
-          <>
-            {/* <h4 className="font-bold">Next Quiz</h4>
+    <Container className="mt-10">
+      {!isLoadingQuizzes && (
+        <>
+          {/* <h4 className="font-bold">Next Quiz</h4>
             {nextQuiz && (
               <Link href={`/quiz/${nextQuiz.id}`}>
                 <a className="bg-blue-200 p-4 rounded-lg">
@@ -54,24 +54,14 @@ const HomePage: PageWithLayout = () => {
                 </a>
               </Link>
             )} */}
-            <h4 className="font-bold">Quizzes</h4>
+          <h4 className="font-bold text-2xl mb-4">Quizzes</h4>
+          <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-8">
             {quizzes?.map((quiz) => (
-              <Link key={quiz.id} href={`/quiz/${quiz.id}/play`}>
-                <a className="bg-gray-100 p-4 rounded-lg">
-                  <h4 className="text-lg font-bold">{quiz.title}</h4>
-                  <p>{quiz.description}</p>
-                  <div>
-                    <span>Categories: </span>
-                    {quiz.categories.map((category) => (
-                      <span key={category.id}>{category.name} </span>
-                    ))}
-                  </div>
-                </a>
-              </Link>
+              <QuizCard quiz={quiz} key={quiz.id} />
             ))}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </Container>
   )
 }
