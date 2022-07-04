@@ -323,7 +323,7 @@ export const mockNextQuiz: QuizWithQuestions = {
           },
           {
             id: 24,
-            text: 'uniswap',
+            text: 'Uniswap',
             correct: false,
           },
         ],

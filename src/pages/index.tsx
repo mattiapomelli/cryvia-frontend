@@ -30,7 +30,7 @@ const HomePage: PageWithLayout = () => {
       {!loading && (
         <>
           {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
-          <h4 className="font-bold text-2xl mb-4">Quizzes</h4>
+          <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-8">
             {quizzes?.map((quiz) => (
               <QuizCard quiz={quiz} key={quiz.id} />
