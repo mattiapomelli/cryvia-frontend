@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query'
-import Link from 'next/link'
 
 import Container from '@components/Layout/Container'
 // import Button from '@components/Button'

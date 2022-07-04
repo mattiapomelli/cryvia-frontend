@@ -1,4 +1,4 @@
-const { fontFamily } = require('tailwindcss/defaulttheme')
+const { fontFamily } = require('tailwindcss/defaultTheme')
 
 module.exports = {
   content: [
