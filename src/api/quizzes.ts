@@ -1,5 +1,5 @@
 import ApiService from './api-service'
-import mockQuizzes from './mockQuizzes'
+import mockQuizzes, { mockNextQuiz } from './mockQuizzes'
 import { QuizSubmission } from './submissions'
 import { Answer, Category, Id, Question } from './types'
 
@@ -53,7 +53,8 @@ class QuizService extends ApiService {
   }
 
   async next() {
-    return await this.http.get<Quiz>(`${this.baseUrl}/next`)
+    return { data: mockNextQuiz }
+    // return await this.http.get<Quiz>(`${this.baseUrl}/next`)
   }
 
   async suscribe(id: Id) {

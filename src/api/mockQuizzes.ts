@@ -213,7 +213,7 @@ const mockQuizzes: QuizWithQuestions[] = [
     ],
   },
   {
-    id: 4,
+    id: 5,
     title: 'Blockchain 101',
     description: "An awesome quiz to test if you're a blockchain master",
     price: 100,
@@ -229,5 +229,107 @@ const mockQuizzes: QuizWithQuestions[] = [
     questions: [],
   },
 ]
+
+export const mockNextQuiz: QuizWithQuestions = {
+  id: 6,
+  title: 'Fundamentals of blockchain techonology',
+  description: "An awesome quiz to test if you're a DeFi master",
+  price: 100,
+  startTime: '2022-07-05T12:40:09.568Z',
+  createdAt: '2022-07-01T19:16:11.870Z',
+  image: null,
+  categories: [
+    {
+      id: 2,
+      name: 'DeFi',
+    },
+  ],
+  questions: [
+    {
+      question: {
+        id: 10,
+        text: 'What is Uniswap?',
+        answers: [
+          {
+            id: 29,
+            text: 'A centralized exchange',
+            correct: false,
+          },
+          {
+            id: 30,
+            text: 'A lending protocol',
+            correct: false,
+          },
+          {
+            id: 31,
+            text: 'An AMM',
+            correct: true,
+          },
+          {
+            id: 32,
+            text: 'An order-book based exchange',
+            correct: false,
+          },
+        ],
+      },
+    },
+    {
+      question: {
+        id: 9,
+        text: 'What is AAVE?',
+        answers: [
+          {
+            id: 25,
+            text: 'An AMM',
+            correct: false,
+          },
+          {
+            id: 26,
+            text: 'A lending protocol',
+            correct: true,
+          },
+          {
+            id: 27,
+            text: 'A DEX',
+            correct: false,
+          },
+          {
+            id: 28,
+            text: 'A liquid staking protocol',
+            correct: false,
+          },
+        ],
+      },
+    },
+    {
+      question: {
+        id: 8,
+        text: 'What is the biggest protocol by TVL?',
+        answers: [
+          {
+            id: 21,
+            text: 'AAVE',
+            correct: true,
+          },
+          {
+            id: 22,
+            text: 'Maker DAO',
+            correct: false,
+          },
+          {
+            id: 23,
+            text: 'Curve',
+            correct: false,
+          },
+          {
+            id: 24,
+            text: 'uniswap',
+            correct: false,
+          },
+        ],
+      },
+    },
+  ],
+}
 
 export default mockQuizzes
