@@ -1,3 +1,5 @@
+const { fontFamily } = require('tailwindcss/defaulttheme')
+
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx}',
@@ -6,12 +8,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        main: ['Plus Jakarta Sans', ...fontFamily.sans],
+      },
       colors: {
         primary: {
-          DEFAULT: '#0a84f5',
-          hover: '#0270d6',
-          light: '#dbeafe',
+          DEFAULT: '#5C5FFE',
+          hover: '#474AED',
         },
+        secondary: {
+          DEFAULT: '#DBE6FF',
+          hover: '#D2DFFA',
+        },
+        text: {
+          primary: '#25273D',
+          secondary: '#787A9B',
+        },
+        background: '#FFFFFF',
       },
       borderRadius: {
         default: '50px',
