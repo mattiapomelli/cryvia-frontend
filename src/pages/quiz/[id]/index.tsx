@@ -16,6 +16,8 @@ import { useQuizContract } from '@hooks/useContract'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { formatAmount } from '@utils/math'
 import useTransaction from '@hooks/useTransaction'
+import QuizLeaderboard from '@components/Quiz/QuizLeaderboard'
+import QuizSubscriptions from '@components/Quiz/QuizSubscriptions'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState(getQuizStatus(quiz.startTime))
@@ -108,15 +110,6 @@ const QuizPage: PageWithLayout = () => {
     },
   )
 
-  // TODO: fetch submissions only if quiz has already ended (move in QuizStatusSection?)
-  const { data: submissions } = useQuery(
-    `quiz-${quizId}-submissions`,
-    () => apiClient.quizzes.submissions(quizId).then((data) => data.data),
-    {
-      enabled: id !== undefined,
-    },
-  )
-
   return (
     <Container className="mt-10 flex justify-center">
       {quiz && (
@@ -139,9 +132,11 @@ const QuizPage: PageWithLayout = () => {
           </div>
           <QuizStatusSection quiz={quiz} />
           <div>
-            {submissions?.map((submission) => (
-              <div key={submission.id}>{submission.user.address}</div>
-            ))}
+            {getQuizStatus(quiz.startTime) === QuizStatus.Ended ? (
+              <QuizLeaderboard quiz={quiz} />
+            ) : (
+              <QuizSubscriptions quiz={quiz} />
+            )}
           </div>
         </div>
       )}

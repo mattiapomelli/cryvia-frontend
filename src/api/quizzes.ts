@@ -1,6 +1,7 @@
 import ApiService from './api-service'
 import { QuizSubmission } from './submissions'
 import { Answer, Category, Id, Question } from './types'
+import { User } from './users'
 
 export interface Quiz {
   id: Id
@@ -19,6 +20,10 @@ export interface QuizQuestion {
   }
 }
 
+interface Subscription {
+  user: Pick<User, 'id' | 'address' | 'username'>
+}
+
 export enum QuizStatus {
   Subscription,
   WaitingStart,
@@ -29,6 +34,7 @@ export const getQuizStatus = (startTime: string) => {
   const start = new Date(startTime).getTime()
   const now = Date.now()
 
+  // TODO: check quiz is actually ended
   if (start <= now) {
     return QuizStatus.Ended
   }
@@ -55,6 +61,12 @@ class QuizService extends ApiService {
 
   async subscribe(id: Id) {
     return await this.http.post<Quiz[]>(`${this.baseUrl}/${id}/subscribe`)
+  }
+
+  async subscriptions(id: Id) {
+    return await this.http.get<Subscription[]>(
+      `${this.baseUrl}/${id}/subscriptions`,
+    )
   }
 
   async submissions(id: Id) {
