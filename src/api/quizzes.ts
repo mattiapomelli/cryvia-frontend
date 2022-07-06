@@ -1,5 +1,4 @@
 import ApiService from './api-service'
-import mockQuizzes, { mockNextQuiz } from './mockQuizzes'
 import { QuizSubmission } from './submissions'
 import { Answer, Category, Id, Question } from './types'
 
@@ -43,21 +42,18 @@ export const getQuizStatus = (startTime: string) => {
 
 class QuizService extends ApiService {
   async read(id: Id) {
-    return { data: mockQuizzes.find((quiz) => quiz.id === id) }
-    // return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
+    return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
   }
 
   async list() {
-    return { data: mockQuizzes }
-    // return await this.http.get<Quiz[]>(this.baseUrl)
+    return await this.http.get<Quiz[]>(this.baseUrl)
   }
 
   async next() {
-    return { data: mockNextQuiz }
-    // return await this.http.get<Quiz>(`${this.baseUrl}/next`)
+    return await this.http.get<Quiz>(`${this.baseUrl}/next`)
   }
 
-  async suscribe(id: Id) {
+  async subscribe(id: Id) {
     return await this.http.post<Quiz[]>(`${this.baseUrl}/${id}/suscribe`)
   }
 
@@ -68,11 +64,9 @@ class QuizService extends ApiService {
   }
 
   async questions(id: Id) {
-    const quiz = mockQuizzes.find((quiz) => quiz.id === id)
-    return { data: quiz?.questions || [] }
-    // return await this.http.get<QuizQuestion[]>(
-    //   `${this.baseUrl}/${id}/questions`,
-    // )
+    return await this.http.get<QuizQuestion[]>(
+      `${this.baseUrl}/${id}/questions`,
+    )
   }
 }
 

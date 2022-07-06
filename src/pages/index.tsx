@@ -21,9 +21,9 @@ const HomePage: PageWithLayout = () => {
 
   const loading = isLoadingNextQuiz || isLoadingQuizzes
 
-  // const filteredQuizzes = !loading
-  //   ? quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
-  //   : []
+  const filteredQuizzes = !loading
+    ? quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
+    : []
 
   return (
     <Container className="mt-10">
@@ -32,7 +32,7 @@ const HomePage: PageWithLayout = () => {
           {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
           <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
           <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-8">
-            {quizzes?.map((quiz) => (
+            {filteredQuizzes?.map((quiz) => (
               <QuizCard quiz={quiz} key={quiz.id} />
             ))}
           </div>

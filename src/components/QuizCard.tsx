@@ -8,7 +8,7 @@ interface QuizCardProps {
 
 const QuizCard = ({ quiz }: QuizCardProps) => {
   return (
-    <Link key={quiz.id} href={`/quiz/${quiz.id}/play`}>
+    <Link key={quiz.id} href={`/quiz/${quiz.id}`}>
       <a className="p-6 rounded-lg bg-[#F8F1FD]">
         <h4 className="text-xl font-bold mb-2">{quiz.title}</h4>
         <p className="text-text-secondary mb-4">{quiz.description}</p>
