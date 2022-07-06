@@ -56,20 +56,10 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   return (
     <div>
       {status === QuizStatus.Subscription && (
-        <>
-          <QuizSubscription
-            quiz={quiz}
-            onCountdownComplete={onSubscriptionCountdownComplete}
-          />
-          {winBalance.gt(0) && (
-            <div>
-              You won! You can redeem: {formatAmount(winBalance)}
-              <Button onClick={redeem} loading={pending}>
-                Redeem
-              </Button>
-            </div>
-          )}
-        </>
+        <QuizSubscription
+          quiz={quiz}
+          onCountdownComplete={onSubscriptionCountdownComplete}
+        />
       )}
       {status === QuizStatus.WaitingStart && (
         <div>
@@ -84,6 +74,14 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
       )}
       {status === QuizStatus.Ended && (
         <div>
+          {winBalance.gt(0) && (
+            <div>
+              You won! You can redeem: {formatAmount(winBalance)}
+              <Button onClick={redeem} loading={pending}>
+                Redeem
+              </Button>
+            </div>
+          )}
           <Link href={`/quiz/${quiz.id}/play`}>
             <a>
               <Button>Take for free</Button>
@@ -122,19 +120,19 @@ const QuizPage: PageWithLayout = () => {
   return (
     <Container className="mt-10 flex justify-center">
       {quiz && (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <h1 className="text-2xl font-bold">{quiz.title}</h1>
           <p>{quiz.description}</p>
           <div>
-            <span>Price: </span>
+            <span className="font-bold">Price: </span>
             <span>{quiz.price}</span>
           </div>
           <div>
-            <span>Starts at: </span>
+            <span className="font-bold">Starts at: </span>
             <span>{quiz.startTime}</span>
           </div>
           <div>
-            <span>Categories: </span>
+            <span className="font-bold">Categories: </span>
             {quiz.categories.map((category) => (
               <span key={category.id}>{category.name} </span>
             ))}
