@@ -9,6 +9,8 @@ import useTransaction from '@hooks/useTransaction'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import Modal, { BaseModalProps } from '@components/Modal'
 import { parseAmount } from '@utils/math'
+import { useApiClient } from '@contexts/AuthProvider'
+import useApiRequest from '@hooks/useApiRequest'
 
 enum SubscriptionStatus {
   NotApproved,
@@ -35,6 +37,9 @@ const SubscribeModal = ({
   const tokenContract = useTokenContract(true)
   const { handleTransaction, pending, error } = useTransaction()
 
+  const apiClient = useApiClient()
+  const { handleRequest, loading } = useApiRequest()
+
   const approveSpending = async () => {
     if (!account) {
       // TODO: show message/modal telling to connect wallet
@@ -59,9 +64,13 @@ const SubscribeModal = ({
     if (!quizContract) return
 
     const res = await handleTransaction(() => quizContract.subscribe(quiz.id))
+
     if (res) {
-      setStatus(SubscriptionStatus.Subscribed)
-      updateBalance()
+      handleRequest(async () => {
+        await apiClient.quizzes.subscribe(quiz.id)
+        setStatus(SubscriptionStatus.Subscribed)
+        updateBalance()
+      })
     }
   }
 
@@ -79,7 +88,7 @@ const SubscribeModal = ({
         </div>
       )}
       {status === SubscriptionStatus.Approved && (
-        <Button onClick={suscribe} loading={pending}>
+        <Button onClick={suscribe} loading={pending || loading}>
           Subscribe
         </Button>
       )}
@@ -156,6 +165,7 @@ const QuizSubscription = ({
                 status={status}
                 setStatus={setStatus}
               />
+              {/* TODO: show connect modal on click if no user is connected */}
               <Button onClick={() => setShowSubscribeModal(true)}>
                 Subscribe
               </Button>

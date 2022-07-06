@@ -20,9 +20,9 @@ const useTransaction = () => {
       setError(null)
 
       return res
-    } catch (error) {
+    } catch (err) {
       setPending(false)
-      setError(error as Error)
+      setError(err as Error)
       return null
     }
   }
