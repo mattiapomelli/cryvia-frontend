@@ -14,6 +14,7 @@ const QuizLeaderboard = ({ quiz }: QuizLeaderboardProps) => {
 
   return (
     <div>
+      <h4 className="font-bold">Leadeboard</h4>
       {submissions?.map((submission) => (
         <div key={submission.id}>{submission.user.address}</div>
       ))}

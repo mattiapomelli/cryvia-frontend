@@ -151,8 +151,10 @@ const QuizSubscription = ({
 
   return (
     <div>
-      Subscriptions close in:{' '}
-      <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
+      <div>
+        Subscriptions close in:
+        <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
+      </div>
       {!loading && (
         <>
           {(status === SubscriptionStatus.NotApproved ||

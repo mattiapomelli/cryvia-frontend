@@ -15,6 +15,9 @@ const QuizSubscriptions = ({ quiz }: QuizSubscriptionsProps) => {
 
   return (
     <div>
+      <h4 className="font-bold">
+        Subscriptions - ({subscriptions?.length} people subscribed)
+      </h4>
       {subscriptions?.map(({ user }) => (
         <div key={user.id}>{user.address}</div>
       ))}
