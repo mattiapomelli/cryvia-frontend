@@ -13,7 +13,7 @@ type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
-const SECONDS_PER_QUESTION = 10
+const SECONDS_PER_QUESTION = 20
 
 export enum QuizPlayingStatus {
   Waiting, // the quiz hasn't started yet
@@ -32,7 +32,6 @@ interface QuizState {
     time: number
   }[]
   playersCount: number
-  leaderboard: number[]
   questions: QuizQuestion[]
   isLive: boolean
   previousTime: number
@@ -42,7 +41,6 @@ type QuizAction =
   | { type: 'INIT' }
   | { type: 'NEXT_QUESTION'; answer?: number }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
-  | { type: 'SET_LEADERBOARD'; leadeboard: number[] }
   | { type: 'SET_QUESTIONS'; questions: QuizQuestion[] }
   | { type: 'SET_RESULTS_AVAILABLE' }
 
@@ -87,11 +85,6 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         ...state,
         playersCount: action.count,
       }
-    case 'SET_LEADERBOARD':
-      return {
-        ...state,
-        leaderboard: action.leadeboard,
-      }
     case 'SET_QUESTIONS':
       return {
         ...state,
@@ -131,7 +124,6 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     questionDeadline: 0,
     answers: [],
     playersCount: 0,
-    leaderboard: [],
     questions: [],
     isLive,
     previousTime: 0,
