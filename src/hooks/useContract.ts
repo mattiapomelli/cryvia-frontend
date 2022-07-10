@@ -1,22 +1,35 @@
 import { useMemo } from 'react'
-import { ContractInterface, ethers } from 'ethers'
+import { ContractInterface, ethers, providers } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 
-import { useWeb3Context } from '@contexts/Web3Provider'
 import { Quiz, ERC20 } from '@abis/types'
 import QuizContractAbi from '@abis/contracts/Quiz.json'
 import ERC20Abi from '@abis/contracts/ERC20.json'
-import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
+import {
+  AddressMap,
+  QUIZ_CONTRACT_ADDRESS,
+  TOKEN_ADDRESS,
+} from '@constants/addresses'
+import { useWeb3React } from '@web3-react/core'
 
 const useContract = <T extends Contract = Contract>(
-  address: string,
+  addressOrAddressMap: string | AddressMap,
   abi: ContractInterface,
   withSigner = true,
 ): T | null => {
-  const { provider, account } = useWeb3Context()
+  const {
+    library: provider,
+    account,
+    chainId,
+  } = useWeb3React<providers.Web3Provider>()
 
   const contract = useMemo(() => {
-    if (!provider) return null
+    if (!provider || !chainId) return null
+
+    const address =
+      typeof addressOrAddressMap === 'string'
+        ? addressOrAddressMap
+        : addressOrAddressMap[chainId]
 
     const providerOrSigner =
       withSigner && account ? provider.getSigner() : provider
@@ -26,7 +39,7 @@ const useContract = <T extends Contract = Contract>(
     } catch (error) {
       return null
     }
-  }, [address, abi, provider, withSigner, account])
+  }, [addressOrAddressMap, abi, provider, withSigner, account, chainId])
 
   return contract
 }
