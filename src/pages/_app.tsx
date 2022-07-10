@@ -10,7 +10,14 @@ import { PageWithLayout } from 'types'
 import AuthProvider from '@contexts/AuthProvider'
 
 const getLibrary = (provider: any) => {
-  return new Web3Provider(provider)
+  return new Web3Provider(
+    provider,
+    typeof provider.chainId === 'number'
+      ? provider.chainId
+      : typeof provider.chainId === 'string'
+      ? parseInt(provider.chainId)
+      : 'any',
+  )
 }
 
 const queryClient = new QueryClient()
