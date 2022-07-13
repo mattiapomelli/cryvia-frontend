@@ -3,11 +3,12 @@ import Link from 'next/link'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const QuizEndedStage = () => {
-  const [{ quiz, status }] = useQuiz()
+  const [{ quiz, status, playersCount }] = useQuiz()
 
   return (
     <div className="flex flex-col items-center mt-4">
       <h2 className="text-2xl font-bold">Quiz Ended</h2>
+      {/* TODO: automatically redirect to quiz page instead of show button? */}
       {status === QuizPlayingStatus.ResultsAvailable ? (
         <Link href={`/quiz/${quiz.id}`}>
           <a>
@@ -15,7 +16,10 @@ const QuizEndedStage = () => {
           </a>
         </Link>
       ) : (
-        <div>Waiting for other users to finish...</div>
+        <div>
+          {playersCount} people finished the quiz. Waiting for other users to
+          finish...
+        </div>
       )}
     </div>
   )
