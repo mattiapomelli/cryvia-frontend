@@ -2,6 +2,16 @@ import { useUser } from '@contexts/AuthProvider'
 import { useEffect, useRef } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
+enum InputMessageType {
+  QuizFinished = 'quizFinished',
+  RoomSize = 'roomSize',
+}
+
+enum OutputMessageType {
+  EnterQuestion = 'enterQuestion',
+  SubmitQuiz = 'submitQuiz',
+}
+
 const useQuizSocket = () => {
   const { user } = useUser()
   const [{ currentQuestion, status, answers }, dispatch] = useQuiz()
@@ -18,11 +28,11 @@ const useQuizSocket = () => {
       const messageData = JSON.parse(message.data.toString())
       console.log('From server: ', messageData)
 
-      if (messageData.type === 'roomSize') {
+      if (messageData.type === InputMessageType.RoomSize) {
         dispatch({ type: 'SET_PLAYERS_COUNT', count: messageData.payload })
       }
 
-      if (messageData.type === 'quizFinished') {
+      if (messageData.type === InputMessageType.QuizFinished) {
         dispatch({ type: 'SET_RESULTS_AVAILABLE' })
       }
     }
@@ -33,7 +43,7 @@ const useQuizSocket = () => {
       // Update server on current question room
       ws.current.send(
         JSON.stringify({
-          type: 'questionRoom',
+          type: OutputMessageType.EnterQuestion,
           payload: currentQuestion,
         }),
       )
@@ -48,7 +58,7 @@ const useQuizSocket = () => {
       // Tell server the user has finished the quiz
       ws.current.send(
         JSON.stringify({
-          type: 'submitQuiz',
+          type: OutputMessageType.SubmitQuiz,
           payload: {
             answers,
           },
