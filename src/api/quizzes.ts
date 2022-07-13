@@ -11,6 +11,7 @@ export interface Quiz {
   startTime: string
   createdAt: string
   image: string | null
+  ended: boolean
   categories: Category[]
 }
 
@@ -27,16 +28,20 @@ interface Subscription {
 export enum QuizStatus {
   Subscription,
   WaitingStart,
+  Playing,
   Ended,
 }
 
-export const getQuizStatus = (startTime: string) => {
-  const start = new Date(startTime).getTime()
+export const getQuizStatus = (quiz: Quiz) => {
+  if (quiz.ended) {
+    return QuizStatus.Ended
+  }
+
+  const start = new Date(quiz.startTime).getTime()
   const now = Date.now()
 
-  // TODO: check quiz is actually ended
   if (start <= now) {
-    return QuizStatus.Ended
+    return QuizStatus.Playing
   }
 
   if (start - 1000 * 60 * 10 > now) {

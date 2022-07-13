@@ -20,7 +20,7 @@ import QuizLeaderboard from '@components/Quiz/QuizLeaderboard'
 import QuizSubscriptions from '@components/Quiz/QuizSubscriptions'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  const [status, setStatus] = useState(getQuizStatus(quiz.startTime))
+  const [status, setStatus] = useState(getQuizStatus(quiz))
   const { account, updateBalance } = useWeb3Context()
   const quizContract = useQuizContract(true)
 
@@ -74,6 +74,8 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
           </Link>
         </div>
       )}
+      {status === QuizStatus.Playing && <div>Playing right now</div>}
+      {/* TODO: move redeem logic to another component */}
       {status === QuizStatus.Ended && (
         <div>
           {winBalance.gt(0) && (
@@ -132,7 +134,7 @@ const QuizPage: PageWithLayout = () => {
           </div>
           <QuizStatusSection quiz={quiz} />
           <div>
-            {getQuizStatus(quiz.startTime) === QuizStatus.Ended ? (
+            {getQuizStatus(quiz) === QuizStatus.Ended ? (
               <QuizLeaderboard quiz={quiz} />
             ) : (
               <QuizSubscriptions quiz={quiz} />
