@@ -9,8 +9,14 @@ let done = false
 
 const QuizPage: NextPage = () => {
   const apiClient = useApiClient()
-  const { data: quiz } = useQuery('nextQuiz', () =>
-    apiClient.quizzes.next().then((data) => data.data),
+  const { data: quiz } = useQuery(
+    'nextQuiz',
+    () => apiClient.quizzes.next().then((data) => data.data),
+    {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
   )
 
   if (!quiz) return null
