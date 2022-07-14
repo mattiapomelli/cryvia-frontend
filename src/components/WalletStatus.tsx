@@ -1,39 +1,16 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { UnsupportedChainIdError } from '@web3-react/core'
-import jazzicon from '@metamask/jazzicon'
 
 import Address from '@components/Address'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { useUser, UserStatus } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import { ethers } from 'ethers'
+import AddressAvatar from './AddressAvatar'
 
 const WalletStatus = () => {
   const { account, connect, error, balance } = useWeb3Context()
   const { status, verifyAddress } = useUser()
-
-  const iconRef = useRef<HTMLSpanElement>(null)
-  const icon = useMemo(
-    () => (account ? jazzicon(16, parseInt(account.slice(2, 10), 16)) : null),
-    [account],
-  )
-
-  useLayoutEffect(() => {
-    const current = iconRef.current
-    if (
-      icon &&
-      (status === UserStatus.Connected || status === UserStatus.Logged)
-    ) {
-      current?.appendChild(icon)
-    }
-
-    return () => {
-      if (icon) {
-        current?.removeChild(icon)
-      }
-    }
-  }, [icon, iconRef, status])
 
   // Wrong network
   if (error && error instanceof UnsupportedChainIdError) {
@@ -51,7 +28,7 @@ const WalletStatus = () => {
             Verify address
           </button>
         </span>
-        <span ref={iconRef} className="inline-flex" />
+        <AddressAvatar address={account} />
       </div>
     )
   }
@@ -65,7 +42,7 @@ const WalletStatus = () => {
           <span>
             <Address address={account} className="font-semibold" />
           </span>
-          <span ref={iconRef} className="inline-flex" />
+          <AddressAvatar address={account} />
         </a>
       </Link>
     )
