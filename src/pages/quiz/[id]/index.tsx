@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { BigNumber } from 'ethers'
 import { useQuery } from 'react-query'
 import Countdown from 'react-countdown'
 
@@ -12,47 +11,15 @@ import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
 import QuizSubscription from '@components/Quiz/QuizStatus/QuizSubscription'
-import { useQuizContract } from '@hooks/useContract'
-import { useWeb3Context } from '@contexts/Web3Provider'
-import { formatAmount } from '@utils/math'
-import useTransaction from '@hooks/useTransaction'
 import Leaderboard from '@components/Quiz/QuizInfo/Leaderboard'
 import SubscriptionList from '@components/Quiz/QuizInfo/SubcriptionList'
+import QuizEnded from '@components/Quiz/QuizStatus/QuizEnded'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  const [status, setStatus] = useState(getQuizStatus(quiz))
-  const { account, updateBalance } = useWeb3Context()
-  const quizContract = useQuizContract(true)
-
-  const [winBalance, setWinBalance] = useState(BigNumber.from(0))
-  const { handleTransaction, pending } = useTransaction()
+  const [status, setStatus] = useState(QuizStatus.Subscription)
 
   const onSubscriptionCountdownComplete = () => {
     setStatus(QuizStatus.WaitingStart)
-  }
-
-  useEffect(() => {
-    if (!quizContract || !account) return
-
-    const getWinBalance = async () => {
-      const winBalance = await quizContract.winBalance(1, account) // TODO: replace with actual quizId
-
-      setWinBalance(winBalance)
-    }
-
-    getWinBalance()
-  }, [quizContract, account])
-
-  const redeem = async () => {
-    if (!quizContract) return
-
-    const res = await handleTransaction(
-      () => quizContract.redeem(1), // TODO: replace with actual quizId
-    )
-
-    if (res) {
-      updateBalance()
-    }
   }
 
   return (
@@ -75,25 +42,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
         </div>
       )}
       {status === QuizStatus.Playing && <div>Playing right now</div>}
-      {/* TODO: move redeem logic to another component */}
-      {status === QuizStatus.Ended && (
-        <div>
-          {winBalance.gt(0) && (
-            <div>
-              You won! You can redeem: {formatAmount(winBalance)}
-              <Button onClick={redeem} loading={pending}>
-                Redeem
-              </Button>
-            </div>
-          )}
-          <Link href={`/quiz/${quiz.id}/play`}>
-            <a>
-              <Button>Take for free</Button>
-            </a>
-          </Link>
-          <div>Leaderboard</div>
-        </div>
-      )}
+      {status === QuizStatus.Ended && <QuizEnded quiz={quiz} />}
     </div>
   )
 }
