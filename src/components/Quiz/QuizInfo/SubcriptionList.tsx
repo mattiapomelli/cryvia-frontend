@@ -2,11 +2,11 @@ import { Quiz } from '@api/quizzes'
 import { useApiClient } from '@contexts/AuthProvider'
 import { useQuery } from 'react-query'
 
-interface QuizSubscriptionsProps {
+interface SubscriptionListProps {
   quiz: Quiz
 }
 
-const QuizSubscriptions = ({ quiz }: QuizSubscriptionsProps) => {
+const SubscriptionList = ({ quiz }: SubscriptionListProps) => {
   const apiClient = useApiClient()
   const { data: subscriptions } = useQuery(
     `quiz-${quiz.id}-subscriptions`,
@@ -25,4 +25,4 @@ const QuizSubscriptions = ({ quiz }: QuizSubscriptionsProps) => {
   )
 }
 
-export default QuizSubscriptions
+export default SubscriptionList

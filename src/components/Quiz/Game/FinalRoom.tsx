@@ -2,7 +2,7 @@ import Button from '@components/Button'
 import Link from 'next/link'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
-const QuizEndedStage = () => {
+const FinalRoom = () => {
   const [{ quiz, status, playersCount }] = useQuiz()
 
   return (
@@ -25,4 +25,4 @@ const QuizEndedStage = () => {
   )
 }
 
-export default QuizEndedStage
+export default FinalRoom

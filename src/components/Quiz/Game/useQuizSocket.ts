@@ -1,4 +1,5 @@
 import { useUser } from '@contexts/AuthProvider'
+import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
@@ -17,11 +18,14 @@ const useQuizSocket = () => {
   const [{ currentQuestion, status, answers }, dispatch] = useQuiz()
   const ws = useRef<WebSocket>()
 
+  const router = useRouter()
+
   useEffect(() => {
-    if (!user) return
+    // if (!user) return
+    if (!router.query.id) return
 
     ws.current = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${user.id}`,
+      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${router.query.id}`,
     )
 
     ws.current.onmessage = (message: MessageEvent) => {
@@ -36,7 +40,11 @@ const useQuizSocket = () => {
         dispatch({ type: 'SET_RESULTS_AVAILABLE' })
       }
     }
-  }, [dispatch, user])
+  }, [
+    dispatch,
+    // user,
+    router.query.id,
+  ])
 
   useEffect(() => {
     if (ws.current?.readyState === WebSocket.OPEN) {

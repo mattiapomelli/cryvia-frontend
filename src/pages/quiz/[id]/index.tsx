@@ -11,13 +11,13 @@ import { PageWithLayout } from 'types'
 import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
-import QuizSubscription from '@components/Quiz/QuizSubscription'
+import QuizSubscription from '@components/Quiz/QuizStatus/QuizSubscription'
 import { useQuizContract } from '@hooks/useContract'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import { formatAmount } from '@utils/math'
 import useTransaction from '@hooks/useTransaction'
-import QuizLeaderboard from '@components/Quiz/QuizLeaderboard'
-import QuizSubscriptions from '@components/Quiz/QuizSubscriptions'
+import Leaderboard from '@components/Quiz/QuizInfo/Leaderboard'
+import SubscriptionList from '@components/Quiz/QuizInfo/SubcriptionList'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState(getQuizStatus(quiz))
@@ -135,9 +135,9 @@ const QuizPage: PageWithLayout = () => {
           <QuizStatusSection quiz={quiz} />
           <div>
             {getQuizStatus(quiz) === QuizStatus.Ended ? (
-              <QuizLeaderboard quiz={quiz} />
+              <Leaderboard quiz={quiz} />
             ) : (
-              <QuizSubscriptions quiz={quiz} />
+              <SubscriptionList quiz={quiz} />
             )}
           </div>
         </div>

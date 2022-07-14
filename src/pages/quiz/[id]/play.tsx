@@ -6,11 +6,11 @@ import { useQuery } from 'react-query'
 import QuizProvider, {
   QuizPlayingStatus,
   useQuiz,
-} from '@components/Quiz/QuizProvider'
+} from '@components/Quiz/Game/QuizProvider'
 import { useApiClient } from '@contexts/AuthProvider'
 import Button from '@components/Button'
-import Quiz from '@components/Quiz/Quiz'
-import QuizResult from '@components/Quiz/QuizResult'
+import Quiz from '@components/Quiz/Game/Quiz'
+import QuizResult from '@components/Quiz/Game/QuizResult'
 
 const QuizPageInner = () => {
   const [{ quiz, status }, dispatch] = useQuiz()

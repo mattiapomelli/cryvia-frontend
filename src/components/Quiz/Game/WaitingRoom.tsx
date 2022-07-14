@@ -5,7 +5,7 @@ import { useQuiz } from './QuizProvider'
 import useMounted from '@hooks/useMounted'
 import { useApiClient } from '@contexts/AuthProvider'
 
-const QuizStage = () => {
+const WaitingRoom = () => {
   const [{ quiz, playersCount }, dispatch] = useQuiz()
   const fetchedQuestions = useRef(false)
   const mounted = useMounted()
@@ -65,4 +65,4 @@ const QuizStage = () => {
   )
 }
 
-export default QuizStage
+export default WaitingRoom
