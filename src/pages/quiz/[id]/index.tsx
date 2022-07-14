@@ -14,9 +14,13 @@ import QuizSubscription from '@components/Quiz/QuizStatus/QuizSubscription'
 import Leaderboard from '@components/Quiz/QuizInfo/Leaderboard'
 import SubscriptionList from '@components/Quiz/QuizInfo/SubcriptionList'
 import QuizEnded from '@components/Quiz/QuizStatus/QuizEnded'
+import useSubscriptionStatus, {
+  SubscriptionStatus,
+} from '@hooks/useSubscriptionStatus'
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  const [status, setStatus] = useState(QuizStatus.Subscription)
+  const [status, setStatus] = useState(getQuizStatus(quiz))
+  const { status: subscriptionStatus } = useSubscriptionStatus(quiz)
 
   const onSubscriptionCountdownComplete = () => {
     setStatus(QuizStatus.WaitingStart)
@@ -33,12 +37,13 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
       {status === QuizStatus.WaitingStart && (
         <div>
           Quiz starts in <Countdown date={quiz.startTime} />{' '}
-          {/* TODO: show only if user has suscribed */}
-          <Link href="/quiz/live">
-            <a>
-              <Button>Go to stage</Button>
-            </a>
-          </Link>
+          {subscriptionStatus === SubscriptionStatus.Subscribed && (
+            <Link href="/quiz/live">
+              <a>
+                <Button>Go to stage</Button>
+              </a>
+            </Link>
+          )}
         </div>
       )}
       {status === QuizStatus.Playing && <div>Playing right now</div>}
