@@ -76,7 +76,7 @@ class QuizService extends ApiService {
 
   async submissions(id: Id) {
     return await this.http.get<
-      Pick<QuizSubmission, 'id' | 'user' | 'submittedAt'>[]
+      Pick<QuizSubmission, 'id' | 'user' | 'submittedAt' | 'score'>[]
     >(`${this.baseUrl}/${id}/submissions`)
   }
 

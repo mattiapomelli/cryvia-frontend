@@ -42,20 +42,23 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 mb-10">
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center">
+        Quiz ended!
+        <Link href={`/quiz/${quiz.id}/play`}>
+          <a>
+            <Button>Take for free</Button>
+          </a>
+        </Link>
+      </div>
       {winBalance.gt(0) && (
-        <div>
-          You won! You can redeem: {formatAmount(winBalance)}
+        <div className="bg-[#fdf9f1] flex flex-col gap-2 p-4 rounded-xl items-center">
+          You won 🏆! You can redeem {formatAmount(winBalance)} USDC
           <Button onClick={redeem} loading={pending}>
             Redeem
           </Button>
         </div>
       )}
-      <Link href={`/quiz/${quiz.id}/play`}>
-        <a>
-          <Button>Take for free</Button>
-        </a>
-      </Link>
     </div>
   )
 }

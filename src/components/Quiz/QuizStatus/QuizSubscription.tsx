@@ -108,11 +108,13 @@ const QuizSubscription = ({
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
 
   return (
-    <div>
-      <div>
-        Subscriptions close in:
-        <Countdown date={subscriptionEnd} onComplete={onCountdownComplete} />
-      </div>
+    <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+      Subscriptions close in:
+      <Countdown
+        date={subscriptionEnd}
+        onComplete={onCountdownComplete}
+        className="font-bold text-xl"
+      />
       {!loading && (
         <>
           {(status === SubscriptionStatus.NotApproved ||
@@ -132,7 +134,9 @@ const QuizSubscription = ({
             </>
           )}
           {status === SubscriptionStatus.Subscribed && (
-            <p>You are subscribed to this quiz!</p>
+            <p className="font-bold text-primary">
+              You are subscribed to this quiz! ✔️
+            </p>
           )}
         </>
       )}

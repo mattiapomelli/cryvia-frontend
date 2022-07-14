@@ -20,6 +20,7 @@ module.exports = {
           DEFAULT: '#DBE6FF',
           hover: '#D2DFFA',
         },
+        tertiary: '#F8F1FD',
         text: {
           primary: '#25273D',
           secondary: '#787A9B',

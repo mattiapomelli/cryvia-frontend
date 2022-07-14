@@ -26,6 +26,10 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
     setStatus(QuizStatus.WaitingStart)
   }
 
+  const onCountdownComplete = () => {
+    setStatus(QuizStatus.Playing)
+  }
+
   return (
     <div>
       {status === QuizStatus.Subscription && (
@@ -35,8 +39,13 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
         />
       )}
       {status === QuizStatus.WaitingStart && (
-        <div>
-          Quiz starts in <Countdown date={quiz.startTime} />{' '}
+        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+          Quiz starts in:
+          <Countdown
+            date={quiz.startTime}
+            onComplete={onCountdownComplete}
+            className="font-bold text-xl"
+          />{' '}
           {subscriptionStatus === SubscriptionStatus.Subscribed && (
             <Link href="/quiz/live">
               <a>
@@ -46,7 +55,11 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
           )}
         </div>
       )}
-      {status === QuizStatus.Playing && <div>Playing right now</div>}
+      {status === QuizStatus.Playing && (
+        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+          <p className="font-bold text-primary">In live right now...</p>
+        </div>
+      )}
       {status === QuizStatus.Ended && <QuizEnded quiz={quiz} />}
     </div>
   )
@@ -67,35 +80,47 @@ const QuizPage: PageWithLayout = () => {
   )
 
   return (
-    <Container className="mt-10 flex justify-center">
-      {quiz && (
-        <div className="flex flex-col gap-4">
-          <h1 className="text-2xl font-bold">{quiz.title}</h1>
-          <p>{quiz.description}</p>
+    <Container className="mt-10">
+      <div className="max-w-xl mx-auto">
+        {quiz && (
           <div>
-            <span className="font-bold">Price: </span>
-            <span>{quiz.price}</span>
+            <div className="flex flex-col gap-4 mb-12">
+              <h1 className="text-4xl font-bold">{quiz.title}</h1>
+              <p className="text-text-secondary mb-2">{quiz.description}</p>
+              <div>
+                <span className="font-bold">Price: </span>
+                <span className="text-text-secondary">{quiz.price} USDC</span>
+              </div>
+              <div>
+                <span className="font-bold">Starts at: </span>
+                <span className="text-text-secondary">
+                  {' '}
+                  {new Date(quiz.startTime).toLocaleString()}
+                </span>
+              </div>
+              <div>
+                <span className="font-bold">Categories: </span>
+                {quiz.categories.map((category) => (
+                  <span
+                    className="bg-[#0B0E11] text-white rounded-full py-1.5 px-3 text-sm"
+                    key={category.id}
+                  >
+                    {category.name}{' '}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <QuizStatusSection quiz={quiz} />
+            <div>
+              {getQuizStatus(quiz) === QuizStatus.Ended ? (
+                <Leaderboard quiz={quiz} />
+              ) : (
+                <SubscriptionList quiz={quiz} />
+              )}
+            </div>
           </div>
-          <div>
-            <span className="font-bold">Starts at: </span>
-            <span>{quiz.startTime}</span>
-          </div>
-          <div>
-            <span className="font-bold">Categories: </span>
-            {quiz.categories.map((category) => (
-              <span key={category.id}>{category.name} </span>
-            ))}
-          </div>
-          <QuizStatusSection quiz={quiz} />
-          <div>
-            {getQuizStatus(quiz) === QuizStatus.Ended ? (
-              <Leaderboard quiz={quiz} />
-            ) : (
-              <SubscriptionList quiz={quiz} />
-            )}
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </Container>
   )
 }
