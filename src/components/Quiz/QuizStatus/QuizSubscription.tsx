@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { ethers } from 'ethers'
 import Countdown from 'react-countdown'
 
@@ -8,9 +8,9 @@ import { useQuizContract, useTokenContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import Modal, { BaseModalProps } from '@components/Modal'
-import { parseAmount } from '@utils/math'
 import { useApiClient } from '@contexts/AuthProvider'
 import useApiRequest from '@hooks/useApiRequest'
+import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
 
 enum SubscriptionStatus {
   NotApproved,
@@ -31,7 +31,7 @@ const SubscribeModal = ({
   status,
   setStatus,
 }: SubscribeModalProps) => {
-  const { account, updateBalance } = useWeb3Context()
+  const { updateBalance } = useWeb3Context()
 
   const quizContract = useQuizContract(true)
   const tokenContract = useTokenContract(true)
@@ -41,11 +41,6 @@ const SubscribeModal = ({
   const { handleRequest, loading } = useApiRequest()
 
   const approveSpending = async () => {
-    if (!account) {
-      // TODO: show message/modal telling to connect wallet
-      return
-    }
-
     if (!tokenContract || !quizContract) return
 
     const res = await handleTransaction(() =>
@@ -106,48 +101,11 @@ const QuizSubscription = ({
   quiz,
   onCountdownComplete,
 }: QuizSubscriptionProps) => {
-  const { account } = useWeb3Context()
-  const [loading, setLoading] = useState(true)
-  const [status, setStatus] = useState(SubscriptionStatus.NotApproved)
-
+  const { loading, status, setStatus } = useSubscriptionStatus(quiz)
   const [showSubscribeModal, setShowSubscribeModal] = useState(false)
 
   // Subscription closes 10 minutes before the beginning of the quiz
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
-
-  const quizContract = useQuizContract(true)
-  const tokenContract = useTokenContract(true)
-
-  useEffect(() => {
-    if (!quizContract || !tokenContract || !account) {
-      setLoading(false)
-      return
-    }
-
-    const getSubscriptionStatus = async () => {
-      setLoading(true)
-      const isSubscribed = await quizContract.isSubscribed(quiz.id, account)
-
-      if (isSubscribed) {
-        setStatus(SubscriptionStatus.Subscribed)
-      } else {
-        const allowance = await tokenContract.allowance(
-          account,
-          quizContract.address,
-        )
-
-        if (allowance.gte(parseAmount(quiz.price))) {
-          setStatus(SubscriptionStatus.Approved)
-        } else {
-          setStatus(SubscriptionStatus.NotApproved)
-        }
-      }
-
-      setLoading(false)
-    }
-
-    getSubscriptionStatus()
-  }, [quizContract, tokenContract, account, quiz.id, quiz.price])
 
   return (
     <div>
