@@ -73,19 +73,29 @@ const SubscribeModal = ({
     <Modal show={show} onClose={onClose}>
       {status === SubscriptionStatus.NotApproved && (
         <div>
-          <p>
+          <h4 className="font-bold text-xl mb-2">Approve</h4>
+          <p className="mb-4">
             You first have to approve the spending of your tokens to be able to
-            subscribe
+            subscribe.
           </p>
-          <Button onClick={approveSpending} loading={pending}>
-            Approve
-          </Button>
+          <div className="flex justify-end">
+            <Button onClick={approveSpending} loading={pending}>
+              Approve
+            </Button>
+          </div>
         </div>
       )}
       {status === SubscriptionStatus.Approved && (
-        <Button onClick={suscribe} loading={pending || loading}>
-          Subscribe
-        </Button>
+        <div>
+          <h4 className="font-bold text-xl mb-2">Subscribe</h4>
+          <p>Subscribe to the quiz by paying the quiz fee.</p>
+          <p className="mb-4">Price: {quiz.price} USDC</p>
+          <div className="flex justify-end">
+            <Button onClick={suscribe} loading={pending || loading}>
+              Subscribe
+            </Button>
+          </div>
+        </div>
       )}
       {error && <p className="text-red-500">Something went wrong</p>}
     </Modal>

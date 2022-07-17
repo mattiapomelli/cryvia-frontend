@@ -9,10 +9,15 @@ interface NextQuizCardProps {
 }
 
 const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
-  const renderer = ({ hours, minutes, seconds }: CountdownRenderProps) => {
+  const renderer = ({
+    days,
+    hours,
+    minutes,
+    seconds,
+  }: CountdownRenderProps) => {
     return (
       <span className="text-4xl font-bold mb-6 text-[#441491]">
-        {hours}:{minutes}:{seconds}
+        {days}:{hours}:{minutes}:{seconds}
       </span>
     )
   }

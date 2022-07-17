@@ -8,12 +8,13 @@ import {
 
 import { Quiz, QuizQuestion } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
+import { GivenAnswer } from '@api/types'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
-const SECONDS_PER_QUESTION = 20
+const SECONDS_PER_QUESTION = 20000
 
 export enum QuizPlayingStatus {
   Waiting, // the quiz hasn't started yet
@@ -27,10 +28,7 @@ interface QuizState {
   status: QuizPlayingStatus
   currentQuestion: number
   questionDeadline: number
-  answers: {
-    id: number | null
-    time: number
-  }[]
+  answers: GivenAnswer[]
   playersCount: number
   questions: QuizQuestion[]
   isLive: boolean

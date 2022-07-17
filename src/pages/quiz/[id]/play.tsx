@@ -8,9 +8,10 @@ import QuizProvider, {
   useQuiz,
 } from '@components/Quiz/Game/QuizProvider'
 import { useApiClient } from '@contexts/AuthProvider'
-import Button from '@components/Button'
 import Quiz from '@components/Quiz/Game/Quiz'
 import QuizResult from '@components/Quiz/Game/QuizResult'
+import Container from '@components/Layout/Container'
+import QuizLoading from '@components/Quiz/Game/QuizLoading'
 
 const QuizPageInner = () => {
   const [{ quiz, status }, dispatch] = useQuiz()
@@ -25,17 +26,8 @@ const QuizPageInner = () => {
     }
   }, [questions, dispatch])
 
-  const startQuiz = () => {
-    dispatch({ type: 'INIT' })
-  }
-
   if (status === QuizPlayingStatus.Waiting) {
-    return (
-      <div className="flex flex-col items-center gap-10">
-        <h1 className="text-4xl font-bold">{quiz.title}</h1>
-        <Button onClick={startQuiz}>Start quiz</Button>
-      </div>
-    )
+    return <QuizLoading />
   }
 
   if (status === QuizPlayingStatus.Started) {
@@ -63,9 +55,11 @@ const QuizPage: NextPage = () => {
 
   return (
     <QuizProvider quiz={quiz} isLive={false}>
-      <div className="flex justify-center pt-20 pb-20">
-        <QuizPageInner />
-      </div>
+      <Container className="mt-10">
+        <div className="max-w-xl mx-auto">
+          <QuizPageInner />
+        </div>
+      </Container>
     </QuizProvider>
   )
 }

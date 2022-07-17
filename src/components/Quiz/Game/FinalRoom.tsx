@@ -1,27 +1,30 @@
-import Button from '@components/Button'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
 
 const FinalRoom = () => {
   const [{ quiz, status, playersCount }] = useQuiz()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (status === QuizPlayingStatus.ResultsAvailable) {
+      router.push(`/quiz/${quiz.id}`)
+    }
+  }, [status, quiz.id, router])
 
   return (
-    <div className="flex flex-col items-center mt-4">
-      <h2 className="text-2xl font-bold">Quiz Ended</h2>
-      {/* TODO: automatically redirect to quiz page instead of show button? */}
-      {status === QuizPlayingStatus.ResultsAvailable ? (
-        <Link href={`/quiz/${quiz.id}`}>
-          <a>
-            <Button>See results</Button>
-          </a>
-        </Link>
-      ) : (
-        <div>
-          {playersCount} people finished the quiz. Waiting for other users to
-          finish...
-        </div>
-      )}
-    </div>
+    <>
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mt-20">
+        <p className="text-text-secondary">You have completed</p>
+        <h1 className="text-3xl font-bold text-center">{quiz.title}</h1>
+        <p className="text-3xl">🎉</p>
+        <p className="mt-4">
+          <span className="font-bold">{playersCount} </span>
+          people have completed the quiz.
+        </p>
+        <p>Waiting for other users to finish...</p>
+      </div>
+    </>
   )
 }
 

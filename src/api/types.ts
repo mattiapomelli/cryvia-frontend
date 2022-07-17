@@ -39,3 +39,8 @@ export interface Category {
   id: Id
   name: string
 }
+
+export interface GivenAnswer {
+  id: number | null
+  time: number
+}

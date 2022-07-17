@@ -39,29 +39,33 @@ const WaitingRoom = () => {
 
   const renderer = ({ hours, minutes, seconds }: CountdownRenderProps) => {
     return (
-      <span className="text-3xl font-bold">
+      <span className="font-bold text-4xl text-primary">
         {hours}:{minutes}:{seconds}
       </span>
     )
   }
 
   return (
-    <div className="flex flex-col items-center mt-4">
-      <h1 className="text-2xl font-bold mb-6">{quiz.title}</h1>
-      <p className="mb-2">Starts in:</p>
-      {/* We need to show countdown only when component mounted, to match server and client content  */}
-      {mounted && (
-        <Countdown
-          date={quiz.startTime}
-          renderer={renderer}
-          onComplete={startQuiz}
-          onTick={onTick}
-          intervalDelay={intervalDelay}
-          key={intervalDelay}
-        />
-      )}
-      <div className="mt-2">People waiting: {playersCount}</div>
-    </div>
+    <>
+      <h1 className="text-3xl font-bold mb-6 text-center mt-20">
+        {quiz.title}
+      </h1>
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center">
+        <p className="text-text-secondary">Starts in:</p>
+        {/* We need to show countdown only when component mounted, to match server and client content  */}
+        {mounted && (
+          <Countdown
+            date={quiz.startTime}
+            renderer={renderer}
+            onComplete={startQuiz}
+            onTick={onTick}
+            intervalDelay={intervalDelay}
+            key={intervalDelay}
+          />
+        )}
+        <div className="font-semibold mt-4">People waiting: {playersCount}</div>
+      </div>
+    </>
   )
 }
 

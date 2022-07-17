@@ -1,4 +1,3 @@
-import type { NextPage } from 'next'
 import { useQuery } from 'react-query'
 
 import QuizProvider, {
@@ -13,6 +12,8 @@ import { useRouter } from 'next/router'
 import WaitingRoom from '@components/Quiz/Game/WaitingRoom'
 import Quiz from '@components/Quiz/Game/Quiz'
 import FinalRoom from '@components/Quiz/Game/FinalRoom'
+import { PageWithLayout } from 'types'
+import Container from '@components/Layout/Container'
 
 let done = false
 
@@ -30,7 +31,7 @@ const LiveQuizPageInner = () => {
   return <FinalRoom />
 }
 
-const LiveQuizPage: NextPage = () => {
+const LiveQuizPage: PageWithLayout = () => {
   const { account } = useWeb3Context()
   const apiClient = useApiClient()
   const router = useRouter()
@@ -73,9 +74,11 @@ const LiveQuizPage: NextPage = () => {
 
   return (
     <QuizProvider quiz={quiz} isLive>
-      <div className="flex justify-center pt-20 pb-20">
-        <LiveQuizPageInner />
-      </div>
+      <Container className="mt-10">
+        <div className="max-w-xl mx-auto">
+          <LiveQuizPageInner />
+        </div>
+      </Container>
     </QuizProvider>
   )
 }
