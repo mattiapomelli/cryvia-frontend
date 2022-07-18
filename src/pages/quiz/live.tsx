@@ -15,7 +15,7 @@ import FinalRoom from '@components/Quiz/Game/FinalRoom'
 import { PageWithLayout } from 'types'
 import Container from '@components/Layout/Container'
 
-let done = false
+// let done = false
 
 const LiveQuizPageInner = () => {
   const [{ status }] = useQuiz()
@@ -67,10 +67,10 @@ const LiveQuizPage: PageWithLayout = () => {
 
   if (!quiz) return null
 
-  if (!done) {
-    quiz.startTime = new Date(Date.now() + 2000).toISOString()
-    done = true
-  }
+  // if (!done) {
+  //   quiz.startTime = new Date(Date.now() + 2000).toISOString()
+  //   done = true
+  // }
 
   return (
     <QuizProvider quiz={quiz} isLive>
