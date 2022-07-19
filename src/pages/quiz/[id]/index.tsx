@@ -101,61 +101,67 @@ const QuizPage: PageWithLayout = () => {
   }, [quiz, quizContract])
 
   return (
-    <Container className="mt-10">
+    <Container className="mt-8">
       <div className="max-w-xl mx-auto">
         {quiz && (
           <div>
-            <div className="flex flex-col gap-3 mb-12">
-              <h1 className="text-4xl font-bold mb-1">{quiz.title}</h1>
-              <p className="text-text-secondary mb-3">{quiz.description}</p>
-              <div>
-                <span className="font-bold">Price: </span>
-                <span className="text-text-secondary">{quiz.price} MTK</span>
-              </div>
-              <div>
-                <span className="font-bold">Starts at: </span>
-                <span className="text-text-secondary">
-                  {new Date(quiz.startTime).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false,
-                  })}
-                </span>
-              </div>
-              <div>
-                <span className="font-bold">Categories: </span>
-                {quiz.categories.map((category) => (
-                  <span
-                    className="bg-[#0B0E11] text-white rounded-full py-1.5 px-3 text-sm"
-                    key={category.id}
-                  >
-                    {category.name}{' '}
+            <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>
+            <p className="text-text-secondary mb-7">{quiz.description}</p>
+            <div className="flex">
+              <div className="flex flex-col gap-3 mb-12 flex-1">
+                <div>
+                  <span className="font-bold">Price: </span>
+                  <span className="text-text-secondary">{quiz.price} MTK</span>
+                </div>
+                <div>
+                  <span className="font-bold">Starts at: </span>
+                  <span className="text-text-secondary">
+                    {new Date(quiz.startTime).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    })}
                   </span>
-                ))}
-              </div>
-              <div>
-                <span className="font-bold">Number of winners: </span>
-                <span className="text-text-secondary">{NUMBER_OF_WINNERS}</span>
-              </div>
-              {account && (
-                <>
-                  <div>
-                    <span className="font-bold">Total prize: </span>
-                    <span className="text-text-secondary">
-                      {formatAmount(quizFund)} MTK
+                </div>
+                <div>
+                  <span className="font-bold">Categories: </span>
+                  {quiz.categories.map((category) => (
+                    <span
+                      className="bg-[#0B0E11] text-white rounded-full py-1.5 px-3 text-sm"
+                      key={category.id}
+                    >
+                      {category.name}{' '}
                     </span>
-                  </div>
-                  <div>
-                    <span className="font-bold">Prize per winner: </span>
-                    <span className="text-text-secondary">
-                      {formatAmount(quizFund.div(NUMBER_OF_WINNERS))} MTK
-                    </span>
-                  </div>
-                </>
-              )}
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 mb-12 flex-1">
+                <div>
+                  <span className="font-bold">Number of winners: </span>
+                  <span className="text-text-secondary">
+                    {NUMBER_OF_WINNERS}
+                  </span>
+                </div>
+                {account && (
+                  <>
+                    <div>
+                      <span className="font-bold">Total prize: </span>
+                      <span className="text-text-secondary">
+                        {formatAmount(quizFund)} MTK
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-bold">Prize per winner: </span>
+                      <span className="text-text-secondary">
+                        {formatAmount(quizFund.div(NUMBER_OF_WINNERS))} MTK
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
             <QuizStatusSection quiz={quiz} />
             <div>
