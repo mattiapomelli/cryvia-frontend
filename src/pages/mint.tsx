@@ -37,7 +37,7 @@ const MintPage: PageWithLayout = () => {
         </p>
         {success ? (
           <div className="font-bold text-green-500">
-            Succesfully minted 20 MTK! ✔️
+            Successfully minted 20 MTK! ✔️
           </div>
         ) : (
           <Button loading={pending} onClick={mint}>
