@@ -3,18 +3,20 @@ import {
   Dispatch,
   ReactNode,
   useContext,
+  useEffect,
   useReducer,
 } from 'react'
 
 import { Quiz, QuizQuestion } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
 import { GivenAnswer } from '@api/types'
+import { useRouter } from 'next/router'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined)
 
-const SECONDS_PER_QUESTION = 20000
+const SECONDS_PER_QUESTION = 20
 
 export enum QuizPlayingStatus {
   Waiting, // the quiz hasn't started yet
@@ -126,6 +128,18 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     isLive,
     previousTime: 0,
   })
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const endQuizAndRedirect = async () => {
+      router.push(`/quiz/${quiz.id}`)
+    }
+
+    if (quizState.status === QuizPlayingStatus.ResultsAvailable) {
+      endQuizAndRedirect()
+    }
+  }, [quizState.status, quiz.id, router])
 
   return (
     <QuizContext.Provider value={[quizState, dispatch]}>

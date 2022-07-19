@@ -1,16 +1,7 @@
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { QuizPlayingStatus, useQuiz } from './QuizProvider'
+import { useQuiz } from './QuizProvider'
 
 const FinalRoom = () => {
-  const [{ quiz, status, playersCount }] = useQuiz()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === QuizPlayingStatus.ResultsAvailable) {
-      router.push(`/quiz/${quiz.id}`)
-    }
-  }, [status, quiz.id, router])
+  const [{ quiz, playersCount }] = useQuiz()
 
   return (
     <>
