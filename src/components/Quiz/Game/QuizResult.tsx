@@ -91,7 +91,7 @@ const QuizResult = () => {
       </div>
       <Link href={`/quiz/${quiz.id}`}>
         <a className="flex justify-end">
-          <Button>Back to home</Button>
+          <Button>Back to quiz page</Button>
         </a>
       </Link>
     </div>

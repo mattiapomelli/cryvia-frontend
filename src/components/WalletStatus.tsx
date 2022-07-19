@@ -1,4 +1,4 @@
-import Link from 'next/link'
+// import Link from 'next/link'
 import { UnsupportedChainIdError } from '@web3-react/core'
 
 import Address from '@components/Address'
@@ -21,7 +21,7 @@ const WalletStatus = () => {
   if (status === UserStatus.Connected && account) {
     return (
       <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
-        <span>{ethers.utils.formatEther(balance)}</span>
+        <span>{ethers.utils.formatEther(balance)} MTK</span>
         <span>
           <Address address={account} className="font-semibold" />
           <button className="ml-2 text-sm font-medium" onClick={verifyAddress}>
@@ -36,15 +36,15 @@ const WalletStatus = () => {
   // Logged in
   if (status === UserStatus.Logged && account) {
     return (
-      <Link href="/profile">
-        <a className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
-          <span>{ethers.utils.formatEther(balance)}</span>
-          <span>
-            <Address address={account} className="font-semibold" />
-          </span>
-          <AddressAvatar address={account} />
-        </a>
-      </Link>
+      // <Link href="/profile">
+      <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
+        <span>{ethers.utils.formatEther(balance)} MTK</span>
+        <span>
+          <Address address={account} className="font-semibold" />
+        </span>
+        <AddressAvatar address={account} />
+      </div>
+      // </Link>
     )
   }
 

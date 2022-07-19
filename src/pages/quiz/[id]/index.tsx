@@ -49,7 +49,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
           {subscriptionStatus === SubscriptionStatus.Subscribed && (
             <Link href="/quiz/live">
               <a>
-                <Button>Go to stage</Button>
+                <Button>Go to waiting room</Button>
               </a>
             </Link>
           )}
@@ -89,7 +89,7 @@ const QuizPage: PageWithLayout = () => {
               <p className="text-text-secondary mb-2">{quiz.description}</p>
               <div>
                 <span className="font-bold">Price: </span>
-                <span className="text-text-secondary">{quiz.price} USDC</span>
+                <span className="text-text-secondary">{quiz.price} MTK</span>
               </div>
               <div>
                 <span className="font-bold">Starts at: </span>
