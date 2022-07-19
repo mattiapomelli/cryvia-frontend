@@ -122,7 +122,7 @@ const SubscribeModal = ({
   }
 
   return (
-    <Modal show={show} onClose={onClose}>
+    <Modal show={show} onClose={onClose} closable={!pending && !loading}>
       {status === SubscriptionStatus.NotApproved && (
         <div>
           <h4 className="font-bold text-xl mb-2">Approve</h4>
