@@ -5,13 +5,19 @@ import { User } from './users'
 
 export interface QuizSubmission {
   id: Id
-  quiz: Quiz
+  quiz: Quiz & {
+    questions: {
+      question: Question & {
+        answers: Answer[]
+      }
+    }[]
+  }
   user: User
   submittedAt: string
   score: number
   answers: {
     question: Question
-    answer?: Answer
+    answer: Answer
   }[]
 }
 

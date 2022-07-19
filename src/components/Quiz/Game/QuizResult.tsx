@@ -66,7 +66,8 @@ const QuizResult = () => {
     <div className="flex flex-col mt-20 mb-20">
       <h2 className="text-3xl mb-8 font-bold">{quiz.title}</h2>
       <p className="mb-6">
-        Correct answers: {count} / {questions.length}
+        <span className="font-bold">Correct answers: </span>
+        {count} / {questions.length}
       </p>
       <div className="flex flex-col gap-8 mb-8">
         {questions.map(({ question }, index) => (
