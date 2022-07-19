@@ -15,7 +15,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
       <Navbar />
       <main className="flex-grow pb-20">
         <Container>
-          <div className="mt-4 bg-blue-100 text-primary p-4 rounded-xl text-center">
+          <div className="mt-2 bg-blue-100 text-primary p-3 rounded-xl text-center">
             Go{' '}
             <Link href="/mint">
               <a className="underline font-bold">here</a>
@@ -23,7 +23,6 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
             to mint some free tokens to test the platform
           </div>
         </Container>
-
         {children}
       </main>
       <Footer />
