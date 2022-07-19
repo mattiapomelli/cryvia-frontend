@@ -51,6 +51,12 @@ const QuizPage: NextPage = () => {
     },
   )
 
+  useEffect(() => {
+    if (quiz && !quiz.ended) {
+      router.push('/')
+    }
+  }, [quiz, router])
+
   if (!quiz) return null
 
   return (
