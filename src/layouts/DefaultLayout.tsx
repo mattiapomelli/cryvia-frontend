@@ -20,7 +20,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
             <Link href="/mint">
               <a className="underline font-bold">here</a>
             </Link>{' '}
-            to mint some free tokens to test the platform
+            to mint some free tokens to test the app
           </div>
         </Container>
         {children}
