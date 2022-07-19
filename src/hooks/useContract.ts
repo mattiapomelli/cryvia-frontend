@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import { ContractInterface, ethers, providers } from 'ethers'
 import { Contract } from '@ethersproject/contracts'
 
-import { Quiz, ERC20 } from '@abis/types'
+import { Quiz, MyToken } from '@abis/types'
 import QuizContractAbi from '@abis/contracts/Quiz.json'
-import ERC20Abi from '@abis/contracts/ERC20.json'
+import MyTokenAbi from '@abis/contracts/MyToken.json'
 import {
   AddressMap,
   QUIZ_CONTRACT_ADDRESS,
@@ -55,5 +55,5 @@ export const useQuizContract = (withSigner = true) => {
 }
 
 export const useTokenContract = (withSigner = true) => {
-  return useContract<ERC20>(TOKEN_ADDRESS, ERC20Abi.abi, withSigner)
+  return useContract<MyToken>(TOKEN_ADDRESS, MyTokenAbi.abi, withSigner)
 }
