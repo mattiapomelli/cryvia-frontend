@@ -20,7 +20,7 @@ const WalletStatus = () => {
   // Needs verification
   if (status === UserStatus.Connected && account) {
     return (
-      <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
+      <div className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full cursor-pointer">
         <span>{ethers.utils.formatEther(balance)} MTK</span>
         <span>
           <Address address={account} className="font-semibold" />
