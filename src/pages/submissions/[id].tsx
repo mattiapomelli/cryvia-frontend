@@ -21,7 +21,7 @@ function countCorrectAnswers(
     const answer = answers[i]
 
     // If no answer was given, continue
-    if (!answer.id) continue
+    if (!answer) continue
 
     const correctAnswer = questions[i].question.answers.find((a) => a.correct)
 
@@ -122,6 +122,9 @@ const SubmissionPage: PageWithLayout = () => {
                             givenAnswer={givenAnswer?.id || null}
                           />
                         ),
+                      )}
+                      {givenAnswer === null && (
+                        <div className="text-center mt-2">Did not answer</div>
                       )}
                     </div>
                   </div>

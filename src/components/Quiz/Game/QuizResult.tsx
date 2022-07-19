@@ -86,6 +86,9 @@ const QuizResult = () => {
                   givenAnswer={answers[index].id}
                 />
               ))}
+              {answers[index].id === null && (
+                <div className="text-center mt-2">Did not answer</div>
+              )}
             </div>
           </div>
         ))}
