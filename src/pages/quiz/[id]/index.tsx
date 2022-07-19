@@ -22,7 +22,7 @@ import { BigNumber } from 'ethers'
 import { formatAmount } from '@utils/math'
 import { useWeb3Context } from '@contexts/Web3Provider'
 
-const NUMBER_OF_WINNERS = 2
+const NUMBER_OF_WINNERS = 3
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState(getQuizStatus(quiz))
