@@ -1,4 +1,4 @@
-import Countdown from 'react-countdown'
+import Countdown, { CountdownRenderProps } from 'react-countdown'
 
 import Container from '@components/Layout/Container'
 import { useQuiz } from './QuizProvider'
@@ -18,6 +18,10 @@ const Quiz = () => {
     dispatch({ type: 'NEXT_QUESTION' })
   }
 
+  const renderer = ({ seconds }: CountdownRenderProps) => {
+    return <span className="text-xl">{seconds}</span>
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-between w-full">
@@ -35,6 +39,7 @@ const Quiz = () => {
           <Countdown
             date={questionDeadline}
             onComplete={onDeadlineReached}
+            renderer={renderer}
             key={questionDeadline} // key is needed to make the countdown re-render when the deadline changes
           />
         </div>
