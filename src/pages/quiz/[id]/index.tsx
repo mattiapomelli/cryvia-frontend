@@ -94,8 +94,14 @@ const QuizPage: PageWithLayout = () => {
               <div>
                 <span className="font-bold">Starts at: </span>
                 <span className="text-text-secondary">
-                  {' '}
-                  {new Date(quiz.startTime).toLocaleString()}
+                  {new Date(quiz.startTime).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                  })}
                 </span>
               </div>
               <div>
