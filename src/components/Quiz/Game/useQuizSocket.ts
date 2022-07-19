@@ -36,6 +36,10 @@ const useQuizSocket = () => {
         dispatch({ type: 'SET_RESULTS_AVAILABLE' })
       }
     }
+
+    return () => {
+      ws.current?.close()
+    }
   }, [dispatch, user])
 
   useEffect(() => {
