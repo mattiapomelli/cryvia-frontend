@@ -42,7 +42,6 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     error,
   } = useWeb3React<providers.Web3Provider>()
 
-  // const tokenContract = useTokenContract()
   const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
   const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0))
