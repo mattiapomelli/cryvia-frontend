@@ -21,7 +21,7 @@ export interface QuizQuestion {
   }
 }
 
-interface Subscription {
+export interface Subscription {
   user: Pick<User, 'id' | 'address' | 'username'>
 }
 

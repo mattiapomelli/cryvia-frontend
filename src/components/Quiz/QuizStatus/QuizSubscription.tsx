@@ -3,14 +3,15 @@ import { ethers } from 'ethers'
 import Countdown from 'react-countdown'
 
 import Button from '@components/Button'
-import { Quiz } from '@api/quizzes'
+import { Quiz, Subscription } from '@api/quizzes'
 import { useQuizContract, useTokenContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import Modal, { BaseModalProps } from '@components/Modal'
-import { useApiClient } from '@contexts/AuthProvider'
+import { useApiClient, useUser } from '@contexts/AuthProvider'
 import useApiRequest from '@hooks/useApiRequest'
 import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
+import { useQueryClient } from 'react-query'
 
 enum SubscriptionStatus {
   NotApproved,
@@ -39,6 +40,8 @@ const SubscribeModal = ({
 
   const apiClient = useApiClient()
   const { handleRequest, loading } = useApiRequest()
+  const queryClient = useQueryClient()
+  const { user } = useUser()
 
   const approveSpending = async () => {
     if (!tokenContract || !quizContract) return
@@ -63,8 +66,25 @@ const SubscribeModal = ({
     if (res) {
       handleRequest(async () => {
         await apiClient.quizzes.subscribe(quiz.id)
-        setStatus(SubscriptionStatus.Subscribed)
+        await queryClient.setQueryData<Subscription[] | undefined>(
+          `quiz-${quiz.id}-subscriptions`,
+          (subscriptions) => {
+            if (!subscriptions || !user) return subscriptions
+            const { id, address, username } = user
+            return [
+              ...subscriptions,
+              {
+                user: {
+                  id,
+                  address,
+                  username,
+                },
+              },
+            ]
+          },
+        )
         updateBalance()
+        setStatus(SubscriptionStatus.Subscribed)
       })
     }
   }
