@@ -11,6 +11,7 @@ import { Quiz, QuizQuestion } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
 import { GivenAnswer } from '@api/types'
 import { useRouter } from 'next/router'
+import { useQueryClient } from 'react-query'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
@@ -129,17 +130,28 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     previousTime: 0,
   })
 
+  const queryClient = useQueryClient()
   const router = useRouter()
 
   useEffect(() => {
     const endQuizAndRedirect = async () => {
+      await queryClient.setQueryData<Quiz | undefined>(
+        `quiz-${quiz.id}`,
+        (quiz) => {
+          if (!quiz) return undefined
+          return {
+            ...quiz,
+            ended: true,
+          }
+        },
+      )
       router.push(`/quiz/${quiz.id}`)
     }
 
     if (quizState.status === QuizPlayingStatus.ResultsAvailable) {
       endQuizAndRedirect()
     }
-  }, [quizState.status, quiz.id, router])
+  }, [quizState.status, quiz.id, router, queryClient])
 
   return (
     <QuizContext.Provider value={[quizState, dispatch]}>
