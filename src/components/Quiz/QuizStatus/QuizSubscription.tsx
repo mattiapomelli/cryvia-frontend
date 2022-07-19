@@ -8,10 +8,11 @@ import { useQuizContract, useTokenContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
 import { useWeb3Context } from '@contexts/Web3Provider'
 import Modal, { BaseModalProps } from '@components/Modal'
-import { useApiClient, useUser } from '@contexts/AuthProvider'
+import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
 import useApiRequest from '@hooks/useApiRequest'
 import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
 import { useQueryClient } from 'react-query'
+import Link from 'next/link'
 
 enum SubscriptionStatus {
   NotApproved,
@@ -32,7 +33,7 @@ const SubscribeModal = ({
   status,
   setStatus,
 }: SubscribeModalProps) => {
-  const { updateBalance } = useWeb3Context()
+  const { updateBalance, balance } = useWeb3Context()
 
   const quizContract = useQuizContract(true)
   const tokenContract = useTokenContract(true)
@@ -41,7 +42,7 @@ const SubscribeModal = ({
   const apiClient = useApiClient()
   const { handleRequest, loading } = useApiRequest()
   const queryClient = useQueryClient()
-  const { user } = useUser()
+  const { user, status: userStatus } = useUser()
 
   const approveSpending = async () => {
     if (!tokenContract || !quizContract) return
@@ -87,6 +88,37 @@ const SubscribeModal = ({
         setStatus(SubscriptionStatus.Subscribed)
       })
     }
+  }
+
+  if (userStatus !== UserStatus.Logged) {
+    return (
+      <Modal show={show} onClose={onClose}>
+        <div>
+          <p className="mb-4">
+            Please connect your wallet and verify your address in order to
+            subscribe to the quiz
+          </p>
+        </div>
+      </Modal>
+    )
+  }
+
+  const canPayFee = balance.gte(ethers.utils.parseEther(quiz.price.toString()))
+
+  if (!canPayFee) {
+    return (
+      <Modal show={show} onClose={onClose}>
+        <div>
+          <p className="mb-4">
+            You don&apos;t have enough MTK tokens to subscribe to the quiz. Get
+            some{' '}
+            <Link href="/mint">
+              <a className="underline font-bold">here</a>
+            </Link>{' '}
+          </p>
+        </div>
+      </Modal>
+    )
   }
 
   return (
