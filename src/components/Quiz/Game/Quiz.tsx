@@ -3,6 +3,33 @@ import Countdown, { CountdownRenderProps } from 'react-countdown'
 import Container from '@components/Layout/Container'
 import { useQuiz } from './QuizProvider'
 import PeopleIcon from '@icons/people.svg'
+import { useState } from 'react'
+import { Answer, Id } from '@api/types'
+
+interface AnswerButtonProps {
+  answer: Answer
+  onClick: (answerId: Id) => void
+}
+
+const AnswerButton = ({ answer, onClick }: AnswerButtonProps) => {
+  // Used to disabled the question after selecting it to prevent double click mistakes
+  const [disabled, setDisabled] = useState(false)
+
+  const handleClick = () => {
+    onClick(answer.id)
+    setDisabled(true)
+  }
+
+  return (
+    <button
+      className="py-3 px-5 bg-[#e9d9f3] rounded-xl hover:bg-[#d5c1e3] text-left"
+      onClick={handleClick}
+      disabled={disabled}
+    >
+      {answer.text}
+    </button>
+  )
+}
 
 const Quiz = () => {
   const [
@@ -15,7 +42,7 @@ const Quiz = () => {
   }
 
   const onDeadlineReached = () => {
-    dispatch({ type: 'NEXT_QUESTION' })
+    dispatch({ type: 'NEXT_QUESTION', answer: null })
   }
 
   const renderer = ({ seconds }: CountdownRenderProps) => {
@@ -50,13 +77,11 @@ const Quiz = () => {
       </h3>
       <div className="flex flex-col gap-4">
         {questions[currentQuestion]?.answers.map((answer) => (
-          <button
-            key={answer.text}
-            className="py-3 px-5 bg-[#e9d9f3] rounded-xl hover:bg-[#d5c1e3] text-left"
-            onClick={() => onSelectAnswer(answer.id)}
-          >
-            {answer.text}
-          </button>
+          <AnswerButton
+            key={answer.id}
+            answer={answer}
+            onClick={onSelectAnswer}
+          />
         ))}
       </div>
       {/* Progress Banner */}

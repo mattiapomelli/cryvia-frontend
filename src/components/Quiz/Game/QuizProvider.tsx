@@ -61,6 +61,16 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         previousTime: Date.now(),
       }
     case 'NEXT_QUESTION': {
+      const { questions, currentQuestion } = state
+
+      // Prevent possible mistakes where a non-allowed ansers is being given for a question
+      const foundAnswer = questions[currentQuestion].answers.find(
+        (a) => a.id === action.answer,
+      )
+      if (!foundAnswer) {
+        return state
+      }
+
       const answer = {
         id: action.answer || null,
         time: Date.now() - state.previousTime,
