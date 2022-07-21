@@ -35,6 +35,10 @@ export interface Answer {
   correct: boolean
 }
 
+export interface QuestionWithAnswers extends Question {
+  answers: Answer[]
+}
+
 export interface Category {
   id: Id
   name: string

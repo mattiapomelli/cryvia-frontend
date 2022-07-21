@@ -1,66 +1,16 @@
-import { QuizQuestion } from '@api/quizzes'
-import { Answer, GivenAnswer } from '@api/types'
+import { countCorrectAnswers } from '@api/submissions'
 import Button from '@components/Button'
-import classNames from 'classnames'
+import SubmissionAnswerCard from '@components/SubmissionAnswerCard'
 import Link from 'next/link'
 import { useQuiz } from './QuizProvider'
-
-function countCorrectAnswers(
-  questions: QuizQuestion[],
-  answers: GivenAnswer[],
-) {
-  let count = 0
-
-  for (let i = 0; i < questions.length; i++) {
-    const answer = answers[i]
-
-    // If no answer was given, continue
-    if (!answer.id) continue
-
-    const correctAnswer = questions[i].question.answers.find((a) => a.correct)
-
-    // Check if answer is correct
-    if (answer.id === correctAnswer?.id) {
-      count += 1
-    }
-  }
-
-  return count
-}
-
-interface AnswerCardProps {
-  answer: Answer
-  givenAnswer: number | null
-}
-
-const AnswerCard = ({ answer, givenAnswer }: AnswerCardProps) => {
-  const isCorrect = answer.correct
-  const isWrong = givenAnswer === answer.id && !isCorrect
-  const isNothing = !isCorrect && !isWrong
-
-  return (
-    <div
-      className={classNames(
-        'py-2 px-5 rounded-xl',
-        { 'bg-[#f9f1ff] opacity-60': isNothing },
-        {
-          'text-green-500 border border-green-400 font-bold bg-green-50':
-            isCorrect,
-        },
-        {
-          'text-red-500 font-bold border border-red-400 bg-red-50': isWrong,
-        },
-      )}
-    >
-      {answer.text}
-    </div>
-  )
-}
 
 const QuizResult = () => {
   const [{ quiz, answers, questions }] = useQuiz()
 
-  const count = countCorrectAnswers(questions, answers)
+  const count = countCorrectAnswers(
+    questions.map((q) => q.question),
+    answers.map((a) => a.id),
+  )
 
   return (
     <div className="flex flex-col mt-20 mb-20">
@@ -71,26 +21,12 @@ const QuizResult = () => {
       </p>
       <div className="flex flex-col gap-8 mb-8">
         {questions.map(({ question }, index) => (
-          <div key={question.id} className="bg-[#e7d8f2] rounded-xl p-5">
-            <div className="flex gap-2 mb-2">
-              <span className="rounded-full bg-white w-7 h-7 font-bold inline-flex justify-center items-center">
-                {index + 1}
-              </span>
-              <h4 className="text-lg font-bold mb-2">{question.text}</h4>
-            </div>
-            <div className="flex flex-col gap-2.5">
-              {question.answers.map((answer) => (
-                <AnswerCard
-                  key={answer.id}
-                  answer={answer}
-                  givenAnswer={answers[index].id}
-                />
-              ))}
-              {answers[index].id === null && (
-                <div className="text-center mt-2">Did not answer</div>
-              )}
-            </div>
-          </div>
+          <SubmissionAnswerCard
+            key={question.id}
+            question={question}
+            questionNumber={index + 1}
+            givenAnswer={answers[index].id}
+          />
         ))}
       </div>
       <Link href={`/quiz/${quiz.id}`}>

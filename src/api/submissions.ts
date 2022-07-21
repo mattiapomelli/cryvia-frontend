@@ -1,23 +1,18 @@
 import ApiService from './api-service'
 import { Quiz } from './quizzes'
-import { Answer, Id, Question } from './types'
+import { GivenAnswer, Id, QuestionWithAnswers } from './types'
 import { User } from './users'
 
 export interface QuizSubmission {
   id: Id
-  quiz: Quiz & {
-    questions: {
-      question: Question & {
-        answers: Answer[]
-      }
-    }[]
-  }
-  user: User
+  quiz: Pick<Quiz, 'id' | 'title'>
+  user: Pick<User, 'id' | 'address' | 'username'>
   submittedAt: string
   score: number
   answers: {
-    question: Question
-    answer: Answer
+    question: QuestionWithAnswers
+    answerId: Id | null
+    time: number
   }[]
 }
 
@@ -26,6 +21,29 @@ interface CreateSubmissionBody {
   quizId: number
   answers: Id[]
   time: number
+}
+
+export const countCorrectAnswers = (
+  questions: QuestionWithAnswers[],
+  answers: GivenAnswer['id'][],
+) => {
+  let count = 0
+
+  for (let i = 0; i < questions.length; i++) {
+    const answerId = answers[i]
+
+    // If no answer was given, continue
+    if (!answerId) continue
+
+    const correctAnswer = questions[i].answers.find((a) => a.correct)
+
+    // Check if answer is correct
+    if (answerId === correctAnswer?.id) {
+      count += 1
+    }
+  }
+
+  return count
 }
 
 class SubmissionService extends ApiService {
