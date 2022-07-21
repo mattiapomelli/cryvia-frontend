@@ -8,7 +8,7 @@ const QuizResult = () => {
   const [{ quiz, answers, questions }] = useQuiz()
 
   const count = countCorrectAnswers(
-    questions.map((q) => q.question),
+    questions,
     answers.map((a) => a.id),
   )
 
@@ -20,7 +20,7 @@ const QuizResult = () => {
         {count} / {questions.length}
       </p>
       <div className="flex flex-col gap-8 mb-8">
-        {questions.map(({ question }, index) => (
+        {questions.map((question, index) => (
           <SubmissionAnswerCard
             key={question.id}
             question={question}

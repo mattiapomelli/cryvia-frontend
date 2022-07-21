@@ -1,6 +1,6 @@
 import ApiService from './api-service'
 import { QuizSubmission } from './submissions'
-import { Answer, Category, Id, Question } from './types'
+import { Category, Id, QuestionWithAnswers } from './types'
 import { User } from './users'
 
 export interface Quiz {
@@ -13,12 +13,6 @@ export interface Quiz {
   image: string | null
   ended: boolean
   categories: Category[]
-}
-
-export interface QuizQuestion {
-  question: Question & {
-    answers: Answer[]
-  }
 }
 
 export interface Subscription {
@@ -81,7 +75,7 @@ class QuizService extends ApiService {
   }
 
   async questions(id: Id) {
-    return await this.http.get<QuizQuestion[]>(
+    return await this.http.get<QuestionWithAnswers[]>(
       `${this.baseUrl}/${id}/questions`,
     )
   }

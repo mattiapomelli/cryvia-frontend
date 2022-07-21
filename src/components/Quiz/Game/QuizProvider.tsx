@@ -7,9 +7,9 @@ import {
   useReducer,
 } from 'react'
 
-import { Quiz, QuizQuestion } from '@api/quizzes'
+import { Quiz } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
-import { GivenAnswer } from '@api/types'
+import { GivenAnswer, QuestionWithAnswers } from '@api/types'
 import { useRouter } from 'next/router'
 import { useQueryClient } from 'react-query'
 
@@ -33,7 +33,7 @@ interface QuizState {
   questionDeadline: number
   answers: GivenAnswer[]
   playersCount: number
-  questions: QuizQuestion[]
+  questions: QuestionWithAnswers[]
   isLive: boolean
   previousTime: number
 }
@@ -42,7 +42,7 @@ type QuizAction =
   | { type: 'INIT' }
   | { type: 'NEXT_QUESTION'; answer?: number }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
-  | { type: 'SET_QUESTIONS'; questions: QuizQuestion[] }
+  | { type: 'SET_QUESTIONS'; questions: QuestionWithAnswers[] }
   | { type: 'SET_RESULTS_AVAILABLE' }
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {

@@ -46,10 +46,10 @@ const Quiz = () => {
       </div>
       <div className="w-full border-t border-gray-200 my-4" />
       <h3 className="text-xl font-bold mt-6 mb-8">
-        {questions[currentQuestion]?.question.text}
+        {questions[currentQuestion]?.text}
       </h3>
       <div className="flex flex-col gap-4">
-        {questions[currentQuestion]?.question.answers.map((answer) => (
+        {questions[currentQuestion]?.answers.map((answer) => (
           <button
             key={answer.text}
             className="py-3 px-5 bg-[#e9d9f3] rounded-xl hover:bg-[#d5c1e3] text-left"
