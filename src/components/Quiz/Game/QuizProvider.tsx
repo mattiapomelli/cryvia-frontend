@@ -9,7 +9,7 @@ import {
 
 import { Quiz } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
-import { GivenAnswer, QuestionWithAnswers } from '@api/types'
+import { Id, QuestionWithAnswers } from '@api/types'
 import { useRouter } from 'next/router'
 import { useQueryClient } from 'react-query'
 
@@ -26,6 +26,11 @@ export enum QuizPlayingStatus {
   ResultsAvailable, // all players have finished the quiz, so results are available
 }
 
+interface GivenAnswer {
+  id: Id | null
+  time: number
+}
+
 interface QuizState {
   quiz: Quiz
   status: QuizPlayingStatus
@@ -40,7 +45,7 @@ interface QuizState {
 
 type QuizAction =
   | { type: 'INIT' }
-  | { type: 'NEXT_QUESTION'; answer?: number }
+  | { type: 'NEXT_QUESTION'; answer: number | null }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
   | { type: 'SET_QUESTIONS'; questions: QuestionWithAnswers[] }
   | { type: 'SET_RESULTS_AVAILABLE' }

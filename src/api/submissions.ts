@@ -1,7 +1,13 @@
 import ApiService from './api-service'
 import { Quiz } from './quizzes'
-import { GivenAnswer, Id, QuestionWithAnswers } from './types'
+import { Id, QuestionWithAnswers } from './types'
 import { User } from './users'
+
+interface SubmissionAnswer {
+  question: QuestionWithAnswers
+  answerId: Id | null
+  time: number
+}
 
 export interface QuizSubmission {
   id: Id
@@ -9,11 +15,7 @@ export interface QuizSubmission {
   user: Pick<User, 'id' | 'address' | 'username'>
   submittedAt: string
   score: number
-  answers: {
-    question: QuestionWithAnswers
-    answerId: Id | null
-    time: number
-  }[]
+  answers: SubmissionAnswer[]
 }
 
 interface CreateSubmissionBody {
@@ -25,7 +27,7 @@ interface CreateSubmissionBody {
 
 export const countCorrectAnswers = (
   questions: QuestionWithAnswers[],
-  answers: GivenAnswer['id'][],
+  answers: (Id | null)[],
 ) => {
   let count = 0
 
