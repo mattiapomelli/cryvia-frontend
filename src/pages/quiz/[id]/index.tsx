@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
@@ -17,6 +17,12 @@ import QuizEnded from '@components/Quiz/QuizStatus/QuizEnded'
 import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@hooks/useSubscriptionStatus'
+import { useQuizContract } from '@hooks/useContract'
+import { BigNumber } from 'ethers'
+import { formatAmount } from '@utils/math'
+import { useWeb3Context } from '@contexts/Web3Provider'
+
+const NUMBER_OF_WINNERS = 3
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
   const [status, setStatus] = useState(getQuizStatus(quiz))
@@ -49,7 +55,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
           {subscriptionStatus === SubscriptionStatus.Subscribed && (
             <Link href="/quiz/live">
               <a>
-                <Button>Go to stage</Button>
+                <Button>Go to waiting room</Button>
               </a>
             </Link>
           )}
@@ -69,6 +75,7 @@ const QuizPage: PageWithLayout = () => {
   const router = useRouter()
   const id = router.query.id?.toString()
   const quizId = Number(id)
+  const { account } = useWeb3Context()
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
@@ -79,35 +86,81 @@ const QuizPage: PageWithLayout = () => {
     },
   )
 
+  const [quizFund, setQuizFund] = useState(BigNumber.from(0))
+  const quizContract = useQuizContract(false)
+
+  useEffect(() => {
+    if (!quizContract || !quiz) return
+
+    const getQuizFund = async () => {
+      const fund = await quizContract.quizFund(quiz.id)
+      setQuizFund(fund)
+    }
+
+    getQuizFund()
+  }, [quiz, quizContract])
+
   return (
-    <Container className="mt-10">
+    <Container className="mt-8">
       <div className="max-w-xl mx-auto">
         {quiz && (
           <div>
-            <div className="flex flex-col gap-4 mb-12">
-              <h1 className="text-4xl font-bold">{quiz.title}</h1>
-              <p className="text-text-secondary mb-2">{quiz.description}</p>
-              <div>
-                <span className="font-bold">Price: </span>
-                <span className="text-text-secondary">{quiz.price} USDC</span>
-              </div>
-              <div>
-                <span className="font-bold">Starts at: </span>
-                <span className="text-text-secondary">
-                  {' '}
-                  {new Date(quiz.startTime).toLocaleString()}
-                </span>
-              </div>
-              <div>
-                <span className="font-bold">Categories: </span>
-                {quiz.categories.map((category) => (
-                  <span
-                    className="bg-[#0B0E11] text-white rounded-full py-1.5 px-3 text-sm"
-                    key={category.id}
-                  >
-                    {category.name}{' '}
+            <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>
+            <p className="text-text-secondary mb-7">{quiz.description}</p>
+            <div className="flex">
+              <div className="flex flex-col gap-3 mb-12 flex-1">
+                <div>
+                  <span className="font-bold">Price: </span>
+                  <span className="text-text-secondary">{quiz.price} MTK</span>
+                </div>
+                <div>
+                  <span className="font-bold">Starts at: </span>
+                  <span className="text-text-secondary">
+                    {new Date(quiz.startTime).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    })}
                   </span>
-                ))}
+                </div>
+                <div>
+                  <span className="font-bold">Categories: </span>
+                  {quiz.categories.map((category) => (
+                    <span
+                      className="bg-[#0B0E11] text-white rounded-full py-1.5 px-3 text-sm"
+                      key={category.id}
+                    >
+                      {category.name}{' '}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 mb-12 flex-1">
+                <div>
+                  <span className="font-bold">Number of winners: </span>
+                  <span className="text-text-secondary">
+                    {NUMBER_OF_WINNERS}
+                  </span>
+                </div>
+                {account && (
+                  <>
+                    <div>
+                      <span className="font-bold">Total prize: </span>
+                      <span className="text-text-secondary">
+                        {formatAmount(quizFund)} MTK
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-bold">Prize per winner: </span>
+                      <span className="text-text-secondary">
+                        {formatAmount(quizFund.div(NUMBER_OF_WINNERS))} MTK
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <QuizStatusSection quiz={quiz} />

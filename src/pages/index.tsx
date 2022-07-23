@@ -26,7 +26,7 @@ const HomePage: PageWithLayout = () => {
     : []
 
   return (
-    <Container className="mt-10">
+    <Container className="mt-8">
       {!loading && (
         <>
           {nextQuiz && <NextQuizCard quiz={nextQuiz} />}

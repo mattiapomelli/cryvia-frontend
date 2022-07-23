@@ -11,6 +11,7 @@ export interface ModalProps extends BaseModalProps {
   children: ReactNode
   title?: string
   size?: 'medium' | 'large'
+  closable?: boolean
 }
 
 const Modal = ({
@@ -19,13 +20,14 @@ const Modal = ({
   title,
   size = 'medium',
   children,
+  closable = true,
 }: ModalProps) => {
   return (
     <Transition appear show={show} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-20 overflow-y-auto"
-        onClose={onClose}
+        onClose={closable ? onClose : () => undefined}
       >
         <div className="min-h-screen px-4 flex justify-center items-center">
           <Transition.Child

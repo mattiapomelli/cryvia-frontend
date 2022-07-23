@@ -3,11 +3,15 @@ import {
   Dispatch,
   ReactNode,
   useContext,
+  useEffect,
   useReducer,
 } from 'react'
 
-import { Quiz, QuizQuestion } from '@api/quizzes'
+import { Quiz } from '@api/quizzes'
 import useQuizSocket from './useQuizSocket'
+import { Id, QuestionWithAnswers } from '@api/types'
+import { useRouter } from 'next/router'
+import { useQueryClient } from 'react-query'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
@@ -22,26 +26,28 @@ export enum QuizPlayingStatus {
   ResultsAvailable, // all players have finished the quiz, so results are available
 }
 
+interface GivenAnswer {
+  id: Id | null
+  time: number
+}
+
 interface QuizState {
   quiz: Quiz
   status: QuizPlayingStatus
   currentQuestion: number
   questionDeadline: number
-  answers: {
-    id: number | null
-    time: number
-  }[]
+  answers: GivenAnswer[]
   playersCount: number
-  questions: QuizQuestion[]
+  questions: QuestionWithAnswers[]
   isLive: boolean
   previousTime: number
 }
 
 type QuizAction =
   | { type: 'INIT' }
-  | { type: 'NEXT_QUESTION'; answer?: number }
+  | { type: 'NEXT_QUESTION'; answer: number | null }
   | { type: 'SET_PLAYERS_COUNT'; count: number }
-  | { type: 'SET_QUESTIONS'; questions: QuizQuestion[] }
+  | { type: 'SET_QUESTIONS'; questions: QuestionWithAnswers[] }
   | { type: 'SET_RESULTS_AVAILABLE' }
 
 const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
@@ -55,6 +61,16 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
         previousTime: Date.now(),
       }
     case 'NEXT_QUESTION': {
+      const { questions, currentQuestion } = state
+
+      // Prevent possible mistakes where a non-allowed ansers is being given for a question
+      const foundAnswer = questions[currentQuestion].answers.find(
+        (a) => a.id === action.answer,
+      )
+      if (!foundAnswer) {
+        return state
+      }
+
       const answer = {
         id: action.answer || null,
         time: Date.now() - state.previousTime,
@@ -128,6 +144,29 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     isLive,
     previousTime: 0,
   })
+
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  useEffect(() => {
+    const endQuizAndRedirect = async () => {
+      await queryClient.setQueryData<Quiz | undefined>(
+        `quiz-${quiz.id}`,
+        (quiz) => {
+          if (!quiz) return undefined
+          return {
+            ...quiz,
+            ended: true,
+          }
+        },
+      )
+      router.push(`/quiz/${quiz.id}`)
+    }
+
+    if (quizState.status === QuizPlayingStatus.ResultsAvailable) {
+      endQuizAndRedirect()
+    }
+  }, [quizState.status, quiz.id, router, queryClient])
 
   return (
     <QuizContext.Provider value={[quizState, dispatch]}>

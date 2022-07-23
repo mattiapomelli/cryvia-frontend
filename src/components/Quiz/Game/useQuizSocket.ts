@@ -1,7 +1,7 @@
 import { useUser } from '@contexts/AuthProvider'
-import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
+import { getToken } from '@utils/tokens'
 
 enum InputMessageType {
   QuizFinished = 'quizFinished',
@@ -18,14 +18,17 @@ const useQuizSocket = () => {
   const [{ currentQuestion, status, answers }, dispatch] = useQuiz()
   const ws = useRef<WebSocket>()
 
-  const router = useRouter()
-
   useEffect(() => {
-    // if (!user) return
-    if (!router.query.id) return
+    if (!user) return
+
+    if (!process.env.NEXT_PUBLIC_WS_URL) {
+      console.error('NEXT_PUBLIC_WS_URL must be specified')
+      return
+    }
 
     ws.current = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}?userId=${router.query.id}`,
+      process.env.NEXT_PUBLIC_WS_URL,
+      getToken(user.address),
     )
 
     ws.current.onmessage = (message: MessageEvent) => {
@@ -40,11 +43,11 @@ const useQuizSocket = () => {
         dispatch({ type: 'SET_RESULTS_AVAILABLE' })
       }
     }
-  }, [
-    dispatch,
-    // user,
-    router.query.id,
-  ])
+
+    return () => {
+      ws.current?.close()
+    }
+  }, [dispatch, user])
 
   useEffect(() => {
     if (ws.current?.readyState === WebSocket.OPEN) {
