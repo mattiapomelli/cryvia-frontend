@@ -37,6 +37,9 @@ class UserService extends ApiService {
       `${this.baseUrl}/${id}/submissions`,
     )
   }
+  async userByAddress(address: string) {
+    return await this.http.get<User>(`${this.baseUrl}/users/address/${address}`)
+  }
 }
 
 export default UserService
