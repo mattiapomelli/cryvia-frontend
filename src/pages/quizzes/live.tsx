@@ -26,7 +26,7 @@ const LiveQuizPageInner = () => {
   useEffect(() => {
     // If user hasn't subscribed to quiz, redirect to quiz page
     if (!loading && subscriptionStatus !== SubscriptionStatus.Subscribed) {
-      router.push(`/quiz/${quiz.id}`)
+      router.push(`/quizzes/${quiz.id}`)
     }
   }, [loading, subscriptionStatus, router, quiz.id])
 

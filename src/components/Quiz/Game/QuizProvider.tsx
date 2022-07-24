@@ -160,7 +160,7 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
           }
         },
       )
-      router.push(`/quiz/${quiz.id}`)
+      router.push(`/quizzes/${quiz.id}`)
     }
 
     if (quizState.status === QuizPlayingStatus.ResultsAvailable) {

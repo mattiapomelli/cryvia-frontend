@@ -37,7 +37,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
         <h2 className="text-5xl font-bold mb-6 max-w-[600px]">{quiz.title}</h2>
         <p className="text-text-secondary text-lg mb-2">Starts in:</p>
         <Countdown date={quiz.startTime} renderer={renderer} />
-        <Link href={`/quiz/${quiz.id}`} passHref>
+        <Link href={`/quizzes/${quiz.id}`} passHref>
           <Button className="min-w-[120px]" as="a">
             Join
           </Button>

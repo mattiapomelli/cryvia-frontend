@@ -1,4 +1,4 @@
-// import Link from 'next/link'
+import Link from 'next/link'
 import { useAccount, useConnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
@@ -55,17 +55,19 @@ const WalletStatus = () => {
   // Logged in
   if (status === UserStatus.Logged && address) {
     return (
-      // <Link href="/profile">
-      <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
-        <span>
-          {balance?.formatted} {balance?.symbol}
-        </span>
-        <span>
-          <Address address={address} className="font-semibold" />
-        </span>
-        <AddressAvatar address={address} />
-      </div>
-      // </Link>
+      <Link href={`/${address}`}>
+        <a>
+          <div className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full">
+            <span>
+              {balance?.formatted} {balance?.symbol}
+            </span>
+            <span>
+              <Address address={address} className="font-semibold" />
+            </span>
+            <AddressAvatar address={address} />
+          </div>
+        </a>
+      </Link>
     )
   }
 

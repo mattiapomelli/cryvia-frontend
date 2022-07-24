@@ -30,7 +30,7 @@ const QuizResult = () => {
           />
         ))}
       </div>
-      <Link href={`/quiz/${quiz.id}`}>
+      <Link href={`/quizzes/${quiz.id}`}>
         <a className="flex justify-end">
           <Button>Back to quiz page</Button>
         </a>
