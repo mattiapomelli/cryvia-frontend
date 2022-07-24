@@ -1,13 +1,13 @@
+import { BigNumber } from 'ethers'
+import Link from 'next/link'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
+
 import { Quiz } from '@api/quizzes'
 import Button from '@components/Button'
 import { TOKEN_ADDRESS } from '@constants/addresses'
-import { useQuizContract } from '@hooks/useContract'
-import useTransaction from '@hooks/useTransaction'
+import { useQuizContractRead } from '@hooks/useContractRead'
+import { useQuizContractWrite } from '@hooks/useContractWriteAndWait'
 import { formatAmount } from '@utils/math'
-import { BigNumber } from 'ethers'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 interface QuizEndedProps {
   quiz: Quiz
@@ -16,37 +16,28 @@ interface QuizEndedProps {
 const QuizEnded = ({ quiz }: QuizEndedProps) => {
   const { address } = useAccount()
   const { chain } = useNetwork()
-  const { refetch } = useBalance({
+  const { refetch: refetchBalance, data } = useBalance({
     addressOrName: address,
     token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
     enabled: chain !== undefined,
   })
 
-  const quizContract = useQuizContract()
+  const { data: winBalance, refetch: refetchWinBalance } =
+    useQuizContractRead<BigNumber>({
+      functionName: 'winBalance',
+      args: [quiz.id, address],
+    })
 
-  const [winBalance, setWinBalance] = useState(BigNumber.from(0))
-  const { handleTransaction, pending } = useTransaction()
+  const { write, status } = useQuizContractWrite({
+    functionName: 'redeem',
+    onSuccess() {
+      refetchBalance()
+      refetchWinBalance()
+    },
+  })
 
-  useEffect(() => {
-    if (!quizContract || !address) return
-
-    const getWinBalance = async () => {
-      const winBalance = await quizContract.winBalance(quiz.id, address)
-      setWinBalance(winBalance)
-    }
-
-    getWinBalance()
-  }, [quizContract, address, quiz.id])
-
-  const redeem = async () => {
-    if (!quizContract) return
-
-    const res = await handleTransaction(() => quizContract.redeem(quiz.id))
-
-    if (res) {
-      refetch()
-      setWinBalance(BigNumber.from(0))
-    }
+  const redeem = () => {
+    write({ args: quiz.id })
   }
 
   return (
@@ -59,10 +50,10 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
           </a>
         </Link>
       </div>
-      {winBalance.gt(0) && (
+      {winBalance?.gt(0) && (
         <div className="bg-[#fdf9f1] flex flex-col gap-2 p-4 rounded-xl items-center">
-          You won 🏆! You can redeem {formatAmount(winBalance)} USDC
-          <Button onClick={redeem} loading={pending}>
+          You won 🏆! You can redeem {formatAmount(winBalance)} {data?.symbol}
+          <Button onClick={redeem} loading={status === 'loading'}>
             Redeem
           </Button>
         </div>

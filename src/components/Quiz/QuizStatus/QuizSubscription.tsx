@@ -85,7 +85,7 @@ const SubscribeModal = ({
   const queryClient = useQueryClient()
   const { user, status: userStatus } = useUser()
 
-  const approveSpending = async () => {
+  const approveSpending = () => {
     writeApprove({
       args: [
         QUIZ_CONTRACT_ADDRESS[CHAIN.id],
@@ -94,7 +94,7 @@ const SubscribeModal = ({
     })
   }
 
-  const subscribe = async () => {
+  const subscribe = () => {
     writeSubscribe({
       args: [quiz.id],
     })
