@@ -6,7 +6,9 @@ import Button from '@components/Button'
 import { Quiz, Subscription } from '@api/quizzes'
 import Modal, { BaseModalProps } from '@components/Modal'
 import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
-import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
+import useSubscriptionStatus, {
+  SubscriptionStatus,
+} from '@hooks/useSubscriptionStatus'
 import { useMutation, useQueryClient } from 'react-query'
 import Link from 'next/link'
 import { useAccount, useBalance, useNetwork } from 'wagmi'
@@ -16,12 +18,6 @@ import {
   useTokenContractWrite,
 } from '@hooks/useContractWriteAndWait'
 import { CHAIN } from '@constants/chains'
-
-enum SubscriptionStatus {
-  NotApproved,
-  Approved,
-  Subscribed,
-}
 
 interface SubscribeModalProps extends BaseModalProps {
   quiz: Quiz

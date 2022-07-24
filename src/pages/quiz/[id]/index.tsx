@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import Countdown from 'react-countdown'
-import { BigNumber } from 'ethers'
-import { useAccount } from 'wagmi'
 
 import Container from '@components/Layout/Container'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
@@ -19,8 +17,8 @@ import QuizEnded from '@components/Quiz/QuizStatus/QuizEnded'
 import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@hooks/useSubscriptionStatus'
-import { useQuizContract } from '@hooks/useContract'
 import { formatAmount } from '@utils/math'
+import { useQuizContractRead } from '@hooks/useContractRead'
 
 const NUMBER_OF_WINNERS = 3
 
@@ -75,7 +73,6 @@ const QuizPage: PageWithLayout = () => {
   const router = useRouter()
   const id = router.query.id?.toString()
   const quizId = Number(id)
-  const { address } = useAccount()
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
@@ -86,19 +83,11 @@ const QuizPage: PageWithLayout = () => {
     },
   )
 
-  const [quizFund, setQuizFund] = useState(BigNumber.from(0))
-  const quizContract = useQuizContract(false)
-
-  useEffect(() => {
-    if (!quizContract || !quiz) return
-
-    const getQuizFund = async () => {
-      const fund = await quizContract.quizFund(quiz.id)
-      setQuizFund(fund)
-    }
-
-    getQuizFund()
-  }, [quiz, quizContract])
+  const { data: quizFund } = useQuizContractRead({
+    functionName: 'quizFund',
+    args: quizId,
+    enabled: id !== undefined,
+  })
 
   return (
     <Container className="mt-8">
@@ -145,7 +134,7 @@ const QuizPage: PageWithLayout = () => {
                     {NUMBER_OF_WINNERS}
                   </span>
                 </div>
-                {address && (
+                {quizFund && (
                   <>
                     <div>
                       <span className="font-bold">Total prize: </span>
