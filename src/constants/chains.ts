@@ -1,9 +1,4 @@
-// TODO: import this from wagmi?
-export enum SupportedChainId {
-  LOCAL = 31337,
-  MUMBAI = 80001,
-  POLYGON = 137,
-}
+import { chain } from 'wagmi'
 
 const getChain = () => {
   if (!process.env.NEXT_PUBLIC_CHAIN) {
@@ -12,11 +7,11 @@ const getChain = () => {
 
   switch (process.env.NEXT_PUBLIC_CHAIN) {
     case 'localhost':
-      return SupportedChainId.LOCAL
+      return chain.hardhat
     case 'testnet':
-      return SupportedChainId.MUMBAI
+      return chain.polygonMumbai
     case 'mainnet':
-      return SupportedChainId.POLYGON
+      return chain.polygon
     default:
       throw new Error('Invalid NEXT_PUBLIC_CHAIN value')
   }

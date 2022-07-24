@@ -18,13 +18,13 @@ import { CHAIN } from '@constants/chains'
 const WalletStatus = () => {
   const { address } = useAccount()
   const { connect } = useConnect({
-    connector: new InjectedConnector(),
+    connector: new InjectedConnector({ chains: [CHAIN] }),
   })
 
   const { chain } = useNetwork()
   const { data: balance } = useBalance({
     addressOrName: address,
-    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
+    token: TOKEN_ADDRESS[CHAIN.id],
     enabled: chain !== undefined,
   })
   const { switchNetwork } = useSwitchNetwork()
@@ -37,9 +37,9 @@ const WalletStatus = () => {
       <Button
         variant="danger"
         size="small"
-        onClick={() => switchNetwork?.(CHAIN)}
+        onClick={() => switchNetwork?.(CHAIN.id)}
       >
-        Switch to Mumbai
+        Switch to {CHAIN.name}
       </Button>
     )
   }

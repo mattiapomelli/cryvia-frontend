@@ -11,7 +11,7 @@ export const useQuizContract = (withSigner = true) => {
   const provider = useProvider()
 
   const contract = useContract<Quiz>({
-    addressOrName: QUIZ_CONTRACT_ADDRESS[CHAIN],
+    addressOrName: QUIZ_CONTRACT_ADDRESS[CHAIN.id],
     contractInterface: QuizContractAbi.abi,
     signerOrProvider: withSigner ? signer : provider,
   })
@@ -25,7 +25,7 @@ export const useTokenContract = (withSigner = true) => {
 
   // TODO: replace with ERC20 for production
   const contract = useContract<MyToken>({
-    addressOrName: TOKEN_ADDRESS[CHAIN],
+    addressOrName: TOKEN_ADDRESS[CHAIN.id],
     contractInterface: MyTokenAbi.abi,
     signerOrProvider: withSigner ? signer : provider,
   })

@@ -42,7 +42,7 @@ const useTokenContractWrite = ({
     error: writeError,
     data: writeData,
   } = useContractWrite({
-    addressOrName: TOKEN_ADDRESS[CHAIN],
+    addressOrName: TOKEN_ADDRESS[CHAIN.id],
     contractInterface: MyTokenAbi.abi,
     functionName,
   })

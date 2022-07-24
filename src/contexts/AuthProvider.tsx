@@ -40,16 +40,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState(UserStatus.Loading)
 
-  const {
-    address,
-    isConnected,
-    isConnecting,
-    isReconnecting,
-    status: accountStatus,
-  } = useAccount()
+  const { address, isConnected, isConnecting, isReconnecting } = useAccount()
   const { signMessageAsync } = useSignMessage()
-
-  console.log(accountStatus, isConnected, address)
 
   const handleUnauthorizedError = async () => {
     setUser(null)
