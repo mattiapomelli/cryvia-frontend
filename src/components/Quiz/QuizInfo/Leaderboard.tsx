@@ -24,27 +24,28 @@ const Leaderboard = ({ quiz }: LeaderboardProps) => {
       </h4>
       <div className="flex flex-col gap-2">
         {submissions?.map((submission, index) => (
-          <div
-            key={submission.id}
-            className="bg-gray-100 p-4 rounded-xl flex items-center gap-2"
-          >
-            <span className="font-bold text-center w-4 mr-2">{index + 1}</span>
-            <AddressAvatar address={submission.user.address} size={26} />
-            <Address
-              address={submission.user.address}
-              className="font-medium"
-            />
-            <div className="font-bold ml-auto flex">
-              {submission.user.address === user?.address && (
-                <Link href={`/submissions/${submission.id}`}>
-                  <a className="flex justify-end underline text-primary ml-auto mr-2">
-                    See your submission
-                  </a>
-                </Link>
-              )}
-              <span>{submission.score}</span>
-            </div>
-          </div>
+          <Link href={`/${submission.user.address}`} key={submission.id}>
+            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl flex items-center gap-2">
+              <span className="font-bold text-center w-4 mr-2">
+                {index + 1}
+              </span>
+              <AddressAvatar address={submission.user.address} size={26} />
+              <Address
+                address={submission.user.address}
+                className="font-medium"
+              />
+              <div className="font-bold ml-auto flex">
+                {submission.user.address === user?.address && (
+                  <Link href={`/submissions/${submission.id}`}>
+                    <a className="flex justify-end underline text-primary hover:text-primary-hover ml-auto mr-2">
+                      See your submission
+                    </a>
+                  </Link>
+                )}
+                <span>{submission.score}</span>
+              </div>
+            </a>
+          </Link>
         ))}
       </div>
     </div>

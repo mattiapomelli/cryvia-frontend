@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query'
+import Link from 'next/link'
 
 import { Quiz } from '@/api/quizzes'
 import Address from '@/components/Address'
@@ -23,13 +24,12 @@ const SubscriptionList = ({ quiz }: SubscriptionListProps) => {
       </h4>
       <div className="flex flex-col gap-2">
         {subscriptions?.map(({ user }) => (
-          <div
-            key={user.id}
-            className="bg-gray-100 p-4 rounded-xl flex items-center gap-2"
-          >
-            <AddressAvatar address={user.address} size={26} />
-            <Address address={user.address} className="font-medium" />
-          </div>
+          <Link key={user.id} href={`/${user.address}`}>
+            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl flex items-center gap-2">
+              <AddressAvatar address={user.address} size={26} />
+              <Address address={user.address} className="font-medium" />
+            </a>
+          </Link>
         ))}
       </div>
     </div>

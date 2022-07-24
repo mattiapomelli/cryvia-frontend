@@ -37,7 +37,7 @@ const Submission = ({ submission }: { submission: SubmissionWithAnswers }) => {
           />
         ))}
       </div>
-      <Link href={`/quiz/${submission.quiz.id}`}>
+      <Link href={`/quizzes/${submission.quiz.id}`}>
         <a className="flex justify-end">
           <Button>Back to quiz page</Button>
         </a>
