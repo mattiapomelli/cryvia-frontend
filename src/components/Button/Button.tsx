@@ -56,7 +56,7 @@ const Button = React.forwardRef(
         className={classNames(
           variantClassNames[variant],
           sizeClassNames[size],
-          'rounded-default',
+          'rounded-full',
           'focus:outline-none',
           'focus:ring-4',
           'ring-blue-light',

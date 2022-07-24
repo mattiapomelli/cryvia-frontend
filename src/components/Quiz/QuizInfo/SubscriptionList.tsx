@@ -25,7 +25,7 @@ const SubscriptionList = ({ quiz }: SubscriptionListProps) => {
       <div className="flex flex-col gap-2">
         {subscriptions?.map(({ user }) => (
           <Link key={user.id} href={`/${user.address}`}>
-            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl flex items-center gap-2">
+            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-default flex items-center gap-2">
               <AddressAvatar address={user.address} size={26} />
               <Address address={user.address} className="font-medium" />
             </a>

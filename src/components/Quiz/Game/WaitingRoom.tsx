@@ -50,7 +50,7 @@ const WaitingRoom = () => {
       <h1 className="text-3xl font-bold mb-6 text-center mt-20">
         {quiz.title}
       </h1>
-      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center">
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center">
         <p className="text-text-secondary">Starts in:</p>
         {/* We need to show countdown only when component mounted, to match server and client content  */}
         {mounted && (

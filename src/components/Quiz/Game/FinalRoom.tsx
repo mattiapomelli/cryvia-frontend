@@ -5,7 +5,7 @@ const FinalRoom = () => {
 
   return (
     <>
-      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mt-20">
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mt-20">
         <p className="text-text-secondary">You have completed</p>
         <h1 className="text-3xl font-bold text-center">{quiz.title}</h1>
         <p className="text-3xl">🎉</p>

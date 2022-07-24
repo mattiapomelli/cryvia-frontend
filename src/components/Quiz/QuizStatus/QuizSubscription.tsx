@@ -186,7 +186,7 @@ const QuizSubscription = ({
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
 
   return (
-    <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+    <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mb-10">
       Subscriptions close in:
       <Countdown
         date={subscriptionEnd}

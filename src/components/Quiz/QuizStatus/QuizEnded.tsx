@@ -37,7 +37,7 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
 
   return (
     <div className="flex flex-col gap-4 mb-10">
-      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center">
+      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center">
         Quiz ended!
         <Link href={`/quizzes/${quiz.id}/play`}>
           <a>
@@ -46,7 +46,7 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
         </Link>
       </div>
       {winBalance?.gt(0) && (
-        <div className="bg-[#fdf9f1] flex flex-col gap-2 p-4 rounded-xl items-center">
+        <div className="bg-[#fdf9f1] flex flex-col gap-2 p-4 rounded-default items-center">
           You won 🏆! You can redeem {formatAmount(winBalance)}{' '}
           {balance?.symbol}
           <Button onClick={redeem} loading={status === 'loading'}>

@@ -31,7 +31,7 @@ const HomePage: PageWithLayout = () => {
         <>
           {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
           <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
-          <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-8">
+          <div className="grid grid-cols-autofill gap-8">
             {filteredQuizzes?.map((quiz) => (
               <QuizCard quiz={quiz} key={quiz.id} />
             ))}

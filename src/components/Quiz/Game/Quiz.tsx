@@ -22,7 +22,7 @@ const AnswerButton = ({ answer, onClick }: AnswerButtonProps) => {
 
   return (
     <button
-      className="py-3 px-5 bg-[#e9d9f3] rounded-xl hover:bg-[#d5c1e3] text-left"
+      className="py-3 px-5 bg-[#e9d9f3] rounded-default hover:bg-[#d5c1e3] text-left"
       onClick={handleClick}
       disabled={disabled}
     >

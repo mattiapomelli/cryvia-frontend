@@ -25,7 +25,7 @@ const Leaderboard = ({ quiz }: LeaderboardProps) => {
       <div className="flex flex-col gap-2">
         {submissions?.map((submission, index) => (
           <Link href={`/${submission.user.address}`} key={submission.id}>
-            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-xl flex items-center gap-2">
+            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-default flex items-center gap-2">
               <span className="font-bold text-center w-4 mr-2">
                 {index + 1}
               </span>

@@ -20,7 +20,10 @@ module.exports = {
           DEFAULT: '#DBE6FF',
           hover: '#D2DFFA',
         },
-        tertiary: '#F8F1FD',
+        tertiary: {
+          DEFAULT: '#F8F1FD',
+          hover: '#f5e9ff',
+        },
         text: {
           primary: '#25273D',
           secondary: '#787A9B',
@@ -28,7 +31,10 @@ module.exports = {
         background: '#FFFFFF',
       },
       borderRadius: {
-        default: '50px',
+        default: '0.7rem',
+      },
+      gridTemplateColumns: {
+        autofill: 'repeat(auto-fill, minmax(300px, 1fr))',
       },
     },
   },

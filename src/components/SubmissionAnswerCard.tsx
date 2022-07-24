@@ -15,7 +15,7 @@ const AnswerCard = ({ answer, givenAnswer }: AnswerCardProps) => {
   return (
     <div
       className={classNames(
-        'py-2 px-5 rounded-xl',
+        'py-2 px-5 rounded-default',
         { 'bg-[#f9f1ff] opacity-60': isNothing },
         {
           'text-green-500 border border-green-400 font-bold bg-green-50':
@@ -43,7 +43,7 @@ const SubmissionAnswerCard = ({
   givenAnswer,
 }: SubmissionAnswerCardProps) => {
   return (
-    <div className="bg-[#e7d8f2] rounded-xl p-5">
+    <div className="bg-[#e7d8f2] rounded-default p-5">
       <div className="flex gap-2 mb-2">
         <span className="rounded-full bg-white w-7 h-7 font-bold inline-flex justify-center items-center">
           {questionNumber}

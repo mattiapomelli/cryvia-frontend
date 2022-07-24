@@ -44,7 +44,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
         />
       )}
       {status === QuizStatus.WaitingStart && (
-        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mb-10">
           Quiz starts in:
           <Countdown
             date={quiz.startTime}
@@ -61,7 +61,7 @@ const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
         </div>
       )}
       {status === QuizStatus.Playing && (
-        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-xl items-center mb-10">
+        <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mb-10">
           <p className="font-bold text-primary">In live right now...</p>
         </div>
       )}

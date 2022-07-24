@@ -9,7 +9,7 @@ interface QuizCardProps {
 const QuizCard = ({ quiz }: QuizCardProps) => {
   return (
     <Link key={quiz.id} href={`/quizzes/${quiz.id}`}>
-      <a className="p-6 rounded-lg bg-tertiary">
+      <a className="p-6 rounded-default bg-tertiary hover:bg-tertiary-hover">
         <h4 className="text-xl font-bold mb-2">{quiz.title}</h4>
         <p className="text-text-secondary mb-4">{quiz.description}</p>
         <div>
