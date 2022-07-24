@@ -49,10 +49,9 @@
       "groups": [
         // Side effect imports.
         ["^\\u0000"],
-        // `react` related packages, `next` related packages, other packeages.
+        // `react` related packages, `next` related packages, other packages.
         ["react", "^next", "^@?\\w"],
-        // Packages.
-        // Absolute imports and other imports such as Vue-style `@/foo`.
+        // Absolute imports and other imports such as `@/foo`.
         // Relative imports
         // Anything not matched in another group.
         ["^", "^\\."]
