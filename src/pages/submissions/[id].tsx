@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
-import { countCorrectAnswers, QuizSubmission } from '@/api/submissions'
+import { countCorrectAnswers, SubmissionWithAnswers } from '@/api/submissions'
 import Button from '@/components/Button'
 import Container from '@/components/Layout/Container'
 import SubmissionAnswerCard from '@/components/SubmissionAnswerCard'
@@ -10,7 +10,7 @@ import { useApiClient } from '@/contexts/AuthProvider'
 import { getDefaultLayout } from '@/layouts/DefaultLayout'
 import { PageWithLayout } from '@/types'
 
-const Submission = ({ submission }: { submission: QuizSubmission }) => {
+const Submission = ({ submission }: { submission: SubmissionWithAnswers }) => {
   const count = countCorrectAnswers(
     submission.answers.map((a) => a.question),
     submission.answers.map((a) => a.answerId),

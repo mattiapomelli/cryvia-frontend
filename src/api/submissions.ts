@@ -9,12 +9,15 @@ interface SubmissionAnswer {
   time: number
 }
 
-export interface QuizSubmission {
+export interface Submission {
   id: Id
   quiz: Pick<Quiz, 'id' | 'title'>
   user: Pick<User, 'id' | 'address' | 'username'>
   submittedAt: string
   score: number
+}
+
+export interface SubmissionWithAnswers extends Submission {
   answers: SubmissionAnswer[]
 }
 
@@ -50,7 +53,7 @@ export const countCorrectAnswers = (
 
 class SubmissionService extends ApiService {
   async read(id: Id) {
-    return await this.http.get<QuizSubmission>(`${this.baseUrl}/${id}`)
+    return await this.http.get<SubmissionWithAnswers>(`${this.baseUrl}/${id}`)
   }
 
   async create(data: CreateSubmissionBody) {

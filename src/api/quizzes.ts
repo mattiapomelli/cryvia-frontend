@@ -1,5 +1,5 @@
 import ApiService from './api-service'
-import { QuizSubmission } from './submissions'
+import { Submission } from './submissions'
 import { Category, Id, QuestionWithAnswers } from './types'
 import { User } from './users'
 
@@ -69,9 +69,9 @@ class QuizService extends ApiService {
   }
 
   async submissions(id: Id) {
-    return await this.http.get<
-      Pick<QuizSubmission, 'id' | 'user' | 'submittedAt' | 'score'>[]
-    >(`${this.baseUrl}/${id}/submissions`)
+    return await this.http.get<Omit<Submission, 'quiz'>[]>(
+      `${this.baseUrl}/${id}/submissions`,
+    )
   }
 
   async questions(id: Id) {
