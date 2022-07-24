@@ -12,7 +12,7 @@ interface LeaderboardProps {
 const Leaderboard = ({ quiz }: LeaderboardProps) => {
   const { user } = useUser()
   const apiClient = useApiClient()
-  const { data: submissions } = useQuery(`quiz-${quiz.id}-submissions`, () =>
+  const { data: submissions } = useQuery(['quiz-submissions', quiz.id], () =>
     apiClient.quizzes.submissions(quiz.id).then((data) => data.data),
   )
 

@@ -76,7 +76,7 @@ const QuizPage: PageWithLayout = () => {
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
-    `quiz-${quizId}`,
+    ['quiz', quizId],
     () => apiClient.quizzes.read(quizId).then((data) => data.data),
     {
       enabled: id !== undefined,

@@ -10,12 +10,12 @@ import NextQuizCard from '@components/NextQuizCard'
 const HomePage: PageWithLayout = () => {
   const apiClient = useApiClient()
   const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery(
-    'quizzes',
+    ['quizzes'],
     () => apiClient.quizzes.list().then((data) => data.data),
   )
 
   const { data: nextQuiz, isLoading: isLoadingNextQuiz } = useQuery(
-    'nextQuiz',
+    ['nextQuiz'],
     () => apiClient.quizzes.next().then((data) => data.data),
   )
 

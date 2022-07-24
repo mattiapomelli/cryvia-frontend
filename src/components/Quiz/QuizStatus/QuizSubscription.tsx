@@ -51,7 +51,7 @@ const SubscribeModal = ({
     {
       onSuccess() {
         queryClient.setQueryData<Subscription[] | undefined>(
-          `quiz-${quiz.id}-subscriptions`,
+          ['quiz-subscriptions', quiz.id],
           (subscriptions) => {
             if (!subscriptions || !user) return subscriptions
             const { id, address, username } = user

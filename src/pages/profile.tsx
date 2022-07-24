@@ -14,7 +14,7 @@ interface UserSubmissionsProps {
 const UserSubmissions = ({ user }: UserSubmissionsProps) => {
   const apiClient = useApiClient()
 
-  const { data: submissions } = useQuery(`user-${user.id}-submissions`, () =>
+  const { data: submissions } = useQuery(['user-submissions', user.id], () =>
     apiClient.users.submissions(user.id).then((data) => data.data),
   )
 

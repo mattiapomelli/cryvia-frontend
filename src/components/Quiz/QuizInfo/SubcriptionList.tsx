@@ -11,7 +11,7 @@ interface SubscriptionListProps {
 const SubscriptionList = ({ quiz }: SubscriptionListProps) => {
   const apiClient = useApiClient()
   const { data: subscriptions } = useQuery(
-    `quiz-${quiz.id}-subscriptions`,
+    ['quiz-subscriptions', quiz.id],
     () => apiClient.quizzes.subscriptions(quiz.id).then((data) => data.data),
   )
 

@@ -16,7 +16,7 @@ import QuizLoading from '@components/Quiz/Game/QuizLoading'
 const QuizPageInner = () => {
   const [{ quiz, status }, dispatch] = useQuiz()
   const apiClient = useApiClient()
-  const { data: questions } = useQuery(`quiz${quiz.id}-questions`, () =>
+  const { data: questions } = useQuery(['quiz-questions', quiz.id], () =>
     apiClient.quizzes.questions(quiz.id).then((data) => data.data),
   )
 
@@ -44,7 +44,7 @@ const QuizPage: NextPage = () => {
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
-    `quiz-${quizId}`,
+    [`quiz-${quizId}`],
     () => apiClient.quizzes.read(quizId).then((data) => data.data),
     {
       enabled: id !== undefined,

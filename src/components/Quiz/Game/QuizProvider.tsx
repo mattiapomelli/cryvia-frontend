@@ -151,7 +151,7 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
   useEffect(() => {
     const endQuizAndRedirect = async () => {
       await queryClient.setQueryData<Quiz | undefined>(
-        `quiz-${quiz.id}`,
+        ['quiz', quiz.id],
         (quiz) => {
           if (!quiz) return undefined
           return {

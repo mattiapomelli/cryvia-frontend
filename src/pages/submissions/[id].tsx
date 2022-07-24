@@ -53,7 +53,7 @@ const SubmissionPage: PageWithLayout = () => {
 
   const apiClient = useApiClient()
   const { data: submission, isLoading } = useQuery(
-    `submission-${submissionId}`,
+    ['submission', submissionId],
     () => apiClient.submissions.read(submissionId).then((data) => data.data),
     {
       enabled: id !== undefined,

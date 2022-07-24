@@ -46,7 +46,7 @@ const LiveQuizPage: PageWithLayout = () => {
   const router = useRouter()
 
   const { data: quiz, isLoading } = useQuery(
-    'nextQuiz',
+    ['nextQuiz'],
     () => apiClient.quizzes.next().then((data) => data.data),
     {
       refetchOnMount: false,
