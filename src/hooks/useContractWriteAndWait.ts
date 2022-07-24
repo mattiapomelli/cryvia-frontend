@@ -1,11 +1,12 @@
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
-import { providers } from 'ethers'
+import { Contract, ContractTransaction, providers } from 'ethers'
 
 import MyTokenAbi from '@abis/contracts/MyToken.json'
 import QuizContractAbi from '@abis/contracts/Quiz.json'
 import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
 import { CHAIN } from '@constants/chains'
 import { ContractInterface } from 'ethers'
+import { MyToken, Quiz } from '@abis/types'
 
 type Status = 'error' | 'success' | 'idle' | 'loading'
 
@@ -30,22 +31,33 @@ const getStatus = (writeStatus: Status, confirmationStatus: Status): Status => {
   return 'idle'
 }
 
-interface BaseUseContractWriteArgs {
-  functionName: string
+type ContractFunctions<T extends Contract> = T['functions']
+
+type ContractWriteFunctions<T extends Contract> = {
+  [K in keyof ContractFunctions<T>]: ReturnType<
+    ContractFunctions<T>[K]
+  > extends Promise<ContractTransaction>
+    ? K
+    : never
+}[keyof ContractFunctions<T>]
+
+interface BaseUseContractWriteArgs<T extends Contract> {
+  functionName: ContractWriteFunctions<T>
   onSuccess?: (data: providers.TransactionReceipt) => void
+  args?: any | any[]
 }
 
-interface UseContractWriteArgs extends BaseUseContractWriteArgs {
+interface UseContractWriteArgs<T extends Contract>
+  extends BaseUseContractWriteArgs<T> {
   addressOrName: string
   contractInterface: ContractInterface
 }
 
-const useContractWriteAndWait = ({
-  addressOrName,
-  contractInterface,
+const useContractWriteAndWait = <T extends Contract>({
   functionName,
   onSuccess,
-}: UseContractWriteArgs) => {
+  ...args
+}: UseContractWriteArgs<T>) => {
   const {
     write,
     writeAsync,
@@ -54,9 +66,8 @@ const useContractWriteAndWait = ({
     data: writeData,
     isLoading: isLoadingWrite,
   } = useContractWrite({
-    addressOrName,
-    contractInterface,
-    functionName,
+    ...args,
+    functionName: functionName as string,
   })
 
   const {
@@ -81,26 +92,20 @@ const useContractWriteAndWait = ({
 
 export default useContractWriteAndWait
 
-export const useTokenContractWrite = ({
-  functionName,
-  onSuccess,
-}: BaseUseContractWriteArgs) => {
+export const useTokenContractWrite = (
+  args: BaseUseContractWriteArgs<MyToken>,
+) => {
   return useContractWriteAndWait({
     addressOrName: TOKEN_ADDRESS[CHAIN.id],
     contractInterface: MyTokenAbi.abi,
-    functionName,
-    onSuccess,
+    ...args,
   })
 }
 
-export const useQuizContractWrite = ({
-  functionName,
-  onSuccess,
-}: BaseUseContractWriteArgs) => {
+export const useQuizContractWrite = (args: BaseUseContractWriteArgs<Quiz>) => {
   return useContractWriteAndWait({
     addressOrName: QUIZ_CONTRACT_ADDRESS[CHAIN.id],
     contractInterface: QuizContractAbi.abi,
-    functionName,
-    onSuccess,
+    ...args,
   })
 }
