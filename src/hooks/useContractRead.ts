@@ -46,7 +46,7 @@ export const useQuizContractRead = <T = Result>(
 }
 
 export const useTokenContractRead = <T = Result>(
-  args: UseContractReadArgs<MyToken>,
+  args: UseContractReadArgs<MyToken>, // TODO: replace with ERC20 for production
 ): UseContractReadReturnType<T> => {
   const { data, ...rest } = useContractRead({
     addressOrName: TOKEN_ADDRESS[CHAIN.id],

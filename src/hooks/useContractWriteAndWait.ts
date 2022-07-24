@@ -92,20 +92,20 @@ const useContractWriteAndWait = <T extends Contract>({
 
 export default useContractWriteAndWait
 
-export const useTokenContractWrite = (
-  args: BaseUseContractWriteArgs<MyToken>,
-) => {
-  return useContractWriteAndWait({
-    addressOrName: TOKEN_ADDRESS[CHAIN.id],
-    contractInterface: MyTokenAbi.abi,
-    ...args,
-  })
-}
-
 export const useQuizContractWrite = (args: BaseUseContractWriteArgs<Quiz>) => {
   return useContractWriteAndWait({
     addressOrName: QUIZ_CONTRACT_ADDRESS[CHAIN.id],
     contractInterface: QuizContractAbi.abi,
+    ...args,
+  })
+}
+
+export const useTokenContractWrite = (
+  args: BaseUseContractWriteArgs<MyToken>, // TODO: replace with ERC20 for production
+) => {
+  return useContractWriteAndWait({
+    addressOrName: TOKEN_ADDRESS[CHAIN.id],
+    contractInterface: MyTokenAbi.abi,
     ...args,
   })
 }
