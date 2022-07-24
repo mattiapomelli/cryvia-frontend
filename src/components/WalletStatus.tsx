@@ -1,19 +1,13 @@
 // import Link from 'next/link'
-import {
-  useAccount,
-  useBalance,
-  useConnect,
-  useNetwork,
-  useSwitchNetwork,
-} from 'wagmi'
+import { useAccount, useConnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
 import Address from '@components/Address'
 import { useUser, UserStatus } from '@contexts/AuthProvider'
 import Button from '@components/Button'
 import AddressAvatar from './AddressAvatar'
-import { TOKEN_ADDRESS } from '@constants/addresses'
 import { CHAIN } from '@constants/chains'
+import useTokenBalance from '@hooks/useTokenBalance'
 
 const WalletStatus = () => {
   const { address } = useAccount()
@@ -22,11 +16,7 @@ const WalletStatus = () => {
   })
 
   const { chain } = useNetwork()
-  const { data: balance } = useBalance({
-    addressOrName: address,
-    token: TOKEN_ADDRESS[CHAIN.id],
-    enabled: chain !== undefined,
-  })
+  const { balance } = useTokenBalance()
   const { switchNetwork } = useSwitchNetwork()
 
   const { status, verifyAddress } = useUser()

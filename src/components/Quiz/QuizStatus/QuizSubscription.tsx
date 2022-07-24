@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { ethers } from 'ethers'
+import { useMutation, useQueryClient } from 'react-query'
+import Link from 'next/link'
 import Countdown from 'react-countdown'
 
 import Button from '@components/Button'
@@ -9,15 +11,13 @@ import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
 import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@hooks/useSubscriptionStatus'
-import { useMutation, useQueryClient } from 'react-query'
-import Link from 'next/link'
-import { useAccount, useBalance, useNetwork } from 'wagmi'
-import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
+import { QUIZ_CONTRACT_ADDRESS } from '@constants/addresses'
 import {
   useQuizContractWrite,
   useTokenContractWrite,
 } from '@hooks/useContractWriteAndWait'
 import { CHAIN } from '@constants/chains'
+import useTokenBalance from '@hooks/useTokenBalance'
 
 interface SubscribeModalProps extends BaseModalProps {
   quiz: Quiz
@@ -32,13 +32,7 @@ const SubscribeModal = ({
   status,
   setStatus,
 }: SubscribeModalProps) => {
-  const { address } = useAccount()
-  const { chain } = useNetwork()
-  const { data: balance, refetch } = useBalance({
-    addressOrName: address,
-    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
-    enabled: chain !== undefined,
-  })
+  const { balance, refetch } = useTokenBalance()
 
   const {
     write: writeApprove,

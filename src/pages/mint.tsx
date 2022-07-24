@@ -1,21 +1,14 @@
 import { ethers } from 'ethers'
-import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 import Button from '@components/Button'
 import Container from '@components/Layout/Container'
-import { TOKEN_ADDRESS } from '@constants/addresses'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
 import { PageWithLayout } from 'types'
 import { useTokenContractWrite } from '@hooks/useContractWriteAndWait'
+import useTokenBalance from '@hooks/useTokenBalance'
 
 const MintPage: PageWithLayout = () => {
-  const { address } = useAccount()
-  const { chain } = useNetwork()
-  const { refetch } = useBalance({
-    addressOrName: address,
-    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
-    enabled: chain !== undefined,
-  })
+  const { refetch } = useTokenBalance()
 
   const { data, write, status, error } = useTokenContractWrite({
     functionName: 'mint',
