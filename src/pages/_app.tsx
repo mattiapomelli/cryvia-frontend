@@ -1,24 +1,34 @@
 import '../styles/globals.css'
+
+import React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import type { AppProps } from 'next/app'
+import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from 'wagmi/providers/public'
 
-import { Web3ReactProvider } from '@web3-react/core'
-import { Web3Provider } from '@ethersproject/providers'
-import { QueryClientProvider, QueryClient } from 'react-query'
+import { CHAIN } from '@/constants/chains'
+import AuthProvider from '@/contexts/AuthProvider'
+import { PageWithLayout } from '@/types'
 
-import Web3ContextProvider from '@contexts/Web3Provider'
-import { PageWithLayout } from 'types'
-import AuthProvider from '@contexts/AuthProvider'
+const { chains, provider } = configureChains(
+  [CHAIN],
+  [
+    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_KEY }),
+    publicProvider(),
+  ],
+)
 
-const getLibrary = (provider: any) => {
-  return new Web3Provider(
-    provider,
-    typeof provider.chainId === 'number'
-      ? provider.chainId
-      : typeof provider.chainId === 'string'
-      ? parseInt(provider.chainId)
-      : 'any',
-  )
-}
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors: [
+    new InjectedConnector({
+      chains,
+    }),
+  ],
+  provider,
+})
 
 const queryClient = new QueryClient()
 
@@ -26,13 +36,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = (Component as PageWithLayout).getLayout || ((page) => page)
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ContextProvider>
-          <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
-        </Web3ContextProvider>
-      </Web3ReactProvider>
-    </QueryClientProvider>
+    <WagmiConfig client={wagmiClient}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+      </QueryClientProvider>
+    </WagmiConfig>
   )
 }
 

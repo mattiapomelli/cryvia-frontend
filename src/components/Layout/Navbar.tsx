@@ -1,7 +1,7 @@
-import Container from '@components/Layout/Container'
-import Logo from '@components/Logo'
-import WalletStatus from '@components/WalletStatus'
-import { UserStatus, useUser } from '@contexts/AuthProvider'
+import Container from '@/components/Layout/Container'
+import Logo from '@/components/Logo'
+import WalletStatus from '@/components/WalletStatus'
+import { UserStatus, useUser } from '@/contexts/AuthProvider'
 
 const Navbar = () => {
   const { status } = useUser()

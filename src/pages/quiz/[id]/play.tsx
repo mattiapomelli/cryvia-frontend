@@ -1,22 +1,22 @@
-import type { NextPage } from 'next'
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
 
+import Container from '@/components/Layout/Container'
+import Quiz from '@/components/Quiz/Game/Quiz'
+import QuizLoading from '@/components/Quiz/Game/QuizLoading'
 import QuizProvider, {
   QuizPlayingStatus,
   useQuiz,
-} from '@components/Quiz/Game/QuizProvider'
-import { useApiClient } from '@contexts/AuthProvider'
-import Quiz from '@components/Quiz/Game/Quiz'
-import QuizResult from '@components/Quiz/Game/QuizResult'
-import Container from '@components/Layout/Container'
-import QuizLoading from '@components/Quiz/Game/QuizLoading'
+} from '@/components/Quiz/Game/QuizProvider'
+import QuizResult from '@/components/Quiz/Game/QuizResult'
+import { useApiClient } from '@/contexts/AuthProvider'
 
 const QuizPageInner = () => {
   const [{ quiz, status }, dispatch] = useQuiz()
   const apiClient = useApiClient()
-  const { data: questions } = useQuery(`quiz${quiz.id}-questions`, () =>
+  const { data: questions } = useQuery(['quiz-questions', quiz.id], () =>
     apiClient.quizzes.questions(quiz.id).then((data) => data.data),
   )
 
@@ -44,7 +44,7 @@ const QuizPage: NextPage = () => {
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
-    `quiz-${quizId}`,
+    [`quiz-${quizId}`],
     () => apiClient.quizzes.read(quizId).then((data) => data.data),
     {
       enabled: id !== undefined,

@@ -1,5 +1,5 @@
-import React, { Fragment, ReactNode } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import React, { Fragment, ReactNode } from 'react'
 import classNames from 'classnames'
 
 export interface BaseModalProps {

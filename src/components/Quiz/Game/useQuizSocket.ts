@@ -1,7 +1,8 @@
-import { useUser } from '@contexts/AuthProvider'
 import { useEffect, useRef } from 'react'
+
+import { useUser } from '@/contexts/AuthProvider'
+import { getToken } from '@/utils/tokens'
 import { QuizPlayingStatus, useQuiz } from './QuizProvider'
-import { getToken } from '@utils/tokens'
 
 enum InputMessageType {
   QuizFinished = 'quizFinished',

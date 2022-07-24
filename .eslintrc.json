@@ -9,7 +9,8 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:jsx-a11y/recommended"
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -28,7 +29,9 @@
     "react",
     "@typescript-eslint",
     "react-hooks",
-    "jsx-a11y"
+    "jsx-a11y",
+    "simple-import-sort",
+    "import"
   ],
   "ignorePatterns": [
     "next.config.js",
@@ -41,6 +44,20 @@
     "react-hooks/exhaustive-deps": "warn",
     "jsx-a11y/anchor-is-valid": "off",
     "react/prop-types": "off", // We will use TypeScript's types for component props instead
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "simple-import-sort/imports": ["error", {
+      "groups": [
+        // Side effect imports.
+        ["^\\u0000"],
+        // `react` related packages, `next` related packages, other packeages.
+        ["react", "^next", "^@?\\w"],
+        // Packages.
+        // Absolute imports and other imports such as Vue-style `@/foo`.
+        // Relative imports
+        // Anything not matched in another group.
+        ["^", "^\\."]
+      ]
+    }],
+    "simple-import-sort/exports": "error"
   }
 }

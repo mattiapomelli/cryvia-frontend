@@ -1,5 +1,5 @@
-import type { NextPage } from 'next'
 import { ReactNode } from 'react'
+import type { NextPage } from 'next'
 
 export enum PageAuth {
   Admin,

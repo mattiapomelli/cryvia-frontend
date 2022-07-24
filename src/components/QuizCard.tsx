@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { Quiz } from '@api/quizzes'
+import { Quiz } from '@/api/quizzes'
 
 interface QuizCardProps {
   quiz: Quiz

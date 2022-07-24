@@ -1,11 +1,20 @@
-export enum SupportedChainId {
-  LOCAL = 31337,
-  MUMBAI = 80001,
+import { chain } from 'wagmi'
+
+const getChain = () => {
+  if (!process.env.NEXT_PUBLIC_CHAIN) {
+    throw new Error('NEXT_PUBLIC_CHAIN envinronment variable must be defined')
+  }
+
+  switch (process.env.NEXT_PUBLIC_CHAIN) {
+    case 'localhost':
+      return chain.hardhat
+    case 'testnet':
+      return chain.polygonMumbai
+    case 'mainnet':
+      return chain.polygon
+    default:
+      throw new Error('Invalid NEXT_PUBLIC_CHAIN value')
+  }
 }
 
-/**
- * Array of all the supported chain IDs
- */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(
-  SupportedChainId,
-).filter((id) => typeof id === 'number') as SupportedChainId[]
+export const CHAIN = getChain()

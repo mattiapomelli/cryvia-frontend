@@ -6,12 +6,12 @@ import {
   useEffect,
   useReducer,
 } from 'react'
-
-import { Quiz } from '@api/quizzes'
-import useQuizSocket from './useQuizSocket'
-import { Id, QuestionWithAnswers } from '@api/types'
-import { useRouter } from 'next/router'
 import { useQueryClient } from 'react-query'
+import { useRouter } from 'next/router'
+
+import { Quiz } from '@/api/quizzes'
+import { Id, QuestionWithAnswers } from '@/api/types'
+import useQuizSocket from './useQuizSocket'
 
 type QuizContextValue = [QuizState, Dispatch<QuizAction>]
 
@@ -151,7 +151,7 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
   useEffect(() => {
     const endQuizAndRedirect = async () => {
       await queryClient.setQueryData<Quiz | undefined>(
-        `quiz-${quiz.id}`,
+        ['quiz', quiz.id],
         (quiz) => {
           if (!quiz) return undefined
           return {

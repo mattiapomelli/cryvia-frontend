@@ -1,16 +1,16 @@
 import { ContractTransaction } from 'ethers'
 import { useState } from 'react'
-import { useWeb3Context } from '../contexts/Web3Provider'
+import { useAccount } from 'wagmi'
 
 type Transaction = () => Promise<ContractTransaction>
 
 const useTransaction = () => {
-  const { active } = useWeb3Context()
+  const { isConnected } = useAccount()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   const handleTransaction = async (transaction: Transaction) => {
-    if (!active) return
+    if (!isConnected) return
     setPending(true)
 
     try {

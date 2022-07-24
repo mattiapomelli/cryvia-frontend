@@ -1,24 +1,23 @@
 import { Dispatch, SetStateAction, useState } from 'react'
-import { ethers } from 'ethers'
 import Countdown from 'react-countdown'
-
-import Button from '@components/Button'
-import { Quiz, Subscription } from '@api/quizzes'
-import { useQuizContract, useTokenContract } from '@hooks/useContract'
-import useTransaction from '@hooks/useTransaction'
-import { useWeb3Context } from '@contexts/Web3Provider'
-import Modal, { BaseModalProps } from '@components/Modal'
-import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
-import useApiRequest from '@hooks/useApiRequest'
-import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
-import { useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import Link from 'next/link'
+import { ethers } from 'ethers'
 
-enum SubscriptionStatus {
-  NotApproved,
-  Approved,
-  Subscribed,
-}
+import { Quiz, Subscription } from '@/api/quizzes'
+import Button from '@/components/Button'
+import Modal, { BaseModalProps } from '@/components/Modal'
+import { QUIZ_CONTRACT_ADDRESS } from '@/constants/addresses'
+import { CHAIN } from '@/constants/chains'
+import { useApiClient, UserStatus, useUser } from '@/contexts/AuthProvider'
+import {
+  useQuizContractWrite,
+  useTokenContractWrite,
+} from '@/hooks/useContractWriteAndWait'
+import useSubscriptionStatus, {
+  SubscriptionStatus,
+} from '@/hooks/useSubscriptionStatus'
+import useTokenBalance from '@/hooks/useTokenBalance'
 
 interface SubscribeModalProps extends BaseModalProps {
   quiz: Quiz
@@ -33,61 +32,66 @@ const SubscribeModal = ({
   status,
   setStatus,
 }: SubscribeModalProps) => {
-  const { updateBalance, balance } = useWeb3Context()
+  const { balance, refetch } = useTokenBalance()
 
-  const quizContract = useQuizContract(true)
-  const tokenContract = useTokenContract(true)
-  const { handleTransaction, pending, error } = useTransaction()
+  const {
+    write: writeApprove,
+    error: approveError,
+    isLoading: loadingApprove,
+  } = useTokenContractWrite({
+    functionName: 'approve',
+    onSuccess() {
+      setStatus(SubscriptionStatus.Approved)
+    },
+  })
 
   const apiClient = useApiClient()
-  const { handleRequest, loading } = useApiRequest()
-  const queryClient = useQueryClient()
-  const { user, status: userStatus } = useUser()
-
-  const approveSpending = async () => {
-    if (!tokenContract || !quizContract) return
-
-    const res = await handleTransaction(() =>
-      tokenContract.approve(
-        quizContract.address,
-        ethers.utils.parseUnits(quiz.price.toString(), 18), // TODO: replace with actual quiz price
-      ),
-    )
-
-    if (res) {
-      setStatus(SubscriptionStatus.Approved)
-    }
-  }
-
-  const suscribe = async () => {
-    if (!quizContract) return
-
-    const res = await handleTransaction(() => quizContract.subscribe(quiz.id))
-
-    if (res) {
-      handleRequest(async () => {
-        await apiClient.quizzes.subscribe(quiz.id)
-        await queryClient.setQueryData<Subscription[] | undefined>(
-          `quiz-${quiz.id}-subscriptions`,
+  const { mutate, isLoading } = useMutation(
+    () => apiClient.quizzes.subscribe(quiz.id),
+    {
+      onSuccess() {
+        queryClient.setQueryData<Subscription[] | undefined>(
+          ['quiz-subscriptions', quiz.id],
           (subscriptions) => {
             if (!subscriptions || !user) return subscriptions
             const { id, address, username } = user
-            return [
-              ...subscriptions,
-              {
-                user: {
-                  id,
-                  address,
-                  username,
-                },
-              },
-            ]
+            const newSubscription = { user: { id, address, username } }
+            return [...subscriptions, newSubscription]
           },
         )
-        updateBalance()
+        refetch()
         setStatus(SubscriptionStatus.Subscribed)
-      })
-    }
+      },
+    },
+  )
+
+  const {
+    write: writeSubscribe,
+    error: subscribeError,
+    isLoading: loadingSubscribe,
+  } = useQuizContractWrite({
+    functionName: 'subscribe',
+    onSuccess() {
+      mutate()
+    },
+  })
+
+  const queryClient = useQueryClient()
+  const { user, status: userStatus } = useUser()
+
+  const approveSpending = () => {
+    writeApprove({
+      args: [
+        QUIZ_CONTRACT_ADDRESS[CHAIN.id],
+        ethers.utils.parseUnits(quiz.price.toString(), 18), // TODO: replace with actual decimal digits
+      ],
+    })
+  }
+
+  const subscribe = () => {
+    writeSubscribe({
+      args: [quiz.id],
+    })
   }
 
   if (userStatus !== UserStatus.Logged) {
@@ -103,9 +107,11 @@ const SubscribeModal = ({
     )
   }
 
-  const canPayFee = balance.gte(ethers.utils.parseEther(quiz.price.toString()))
+  const canPayQuizFee = balance?.value.gte(
+    ethers.utils.parseEther(quiz.price.toString()),
+  )
 
-  if (!canPayFee) {
+  if (!canPayQuizFee) {
     return (
       <Modal show={show} onClose={onClose}>
         <div>
@@ -122,7 +128,11 @@ const SubscribeModal = ({
   }
 
   return (
-    <Modal show={show} onClose={onClose} closable={!pending && !loading}>
+    <Modal
+      show={show}
+      onClose={onClose}
+      closable={!loadingApprove && !loadingSubscribe && !isLoading}
+    >
       {status === SubscriptionStatus.NotApproved && (
         <div>
           <h4 className="font-bold text-xl mb-2">Approve</h4>
@@ -131,7 +141,7 @@ const SubscribeModal = ({
             subscribe.
           </p>
           <div className="flex justify-end">
-            <Button onClick={approveSpending} loading={pending}>
+            <Button onClick={approveSpending} loading={loadingApprove}>
               Approve
             </Button>
           </div>
@@ -143,13 +153,19 @@ const SubscribeModal = ({
           <p>Subscribe to the quiz by paying the quiz fee.</p>
           <p className="mb-4">Price: {quiz.price} USDC</p>
           <div className="flex justify-end">
-            <Button onClick={suscribe} loading={pending || loading}>
+            <Button onClick={subscribe} loading={loadingSubscribe || isLoading}>
               Subscribe
             </Button>
           </div>
         </div>
       )}
-      {error && <p className="text-red-500">Something went wrong</p>}
+      {(approveError || subscribeError) && (
+        <p className="text-red-500">
+          {approveError?.message ||
+            subscribeError?.message ||
+            'Something went wrong'}
+        </p>
+      )}
     </Modal>
   )
 }

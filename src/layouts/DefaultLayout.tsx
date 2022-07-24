@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react'
-
-import Navbar from '@components/Layout/Navbar'
-import Footer from '@components/Layout/Footer'
-import Container from '@components/Layout/Container'
 import Link from 'next/link'
+
+import Container from '@/components/Layout/Container'
+import Footer from '@/components/Layout/Footer'
+import Navbar from '@/components/Layout/Navbar'
 
 interface DefaultLayoutProps {
   children: ReactNode

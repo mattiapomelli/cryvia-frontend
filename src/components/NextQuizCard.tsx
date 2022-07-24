@@ -1,7 +1,8 @@
-import { Quiz } from '@api/quizzes'
+import Countdown, { CountdownRenderProps } from 'react-countdown'
 import Image from 'next/image'
 import Link from 'next/link'
-import Countdown, { CountdownRenderProps } from 'react-countdown'
+
+import { Quiz } from '@/api/quizzes'
 import Button from './Button'
 
 interface NextQuizCardProps {

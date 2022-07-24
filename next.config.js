@@ -1,9 +1,13 @@
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
 }
 
-module.exports = {
+module.exports = withBundleAnalyzer({
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -14,4 +18,4 @@ module.exports = {
     return config
   },
   ...nextConfig,
-}
+})

@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 
+import { useApiClient } from '@/contexts/AuthProvider'
+import useMounted from '@/hooks/useMounted'
 import { useQuiz } from './QuizProvider'
-import useMounted from '@hooks/useMounted'
-import { useApiClient } from '@contexts/AuthProvider'
 
 const WaitingRoom = () => {
   const [{ quiz, playersCount }, dispatch] = useQuiz()

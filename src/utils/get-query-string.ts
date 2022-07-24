@@ -1,4 +1,4 @@
-import { QueryParams } from '@api/types'
+import { QueryParams } from '@/api/types'
 
 const getQueryString = (params: QueryParams = {}) => {
   if (Object.keys(params).length === 0) return ''

@@ -1,11 +1,11 @@
-import Link from 'next/link'
 import { useQuery } from 'react-query'
+import Link from 'next/link'
 
-import Container from '@components/Layout/Container'
-import { useApiClient, useUser } from '@contexts/AuthProvider'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { PageWithLayout } from 'types'
-import { User } from '@api/users'
+import { User } from '@/api/users'
+import Container from '@/components/Layout/Container'
+import { useApiClient, useUser } from '@/contexts/AuthProvider'
+import { getDefaultLayout } from '@/layouts/DefaultLayout'
+import { PageWithLayout } from '@/types'
 
 interface UserSubmissionsProps {
   user: User
@@ -14,7 +14,7 @@ interface UserSubmissionsProps {
 const UserSubmissions = ({ user }: UserSubmissionsProps) => {
   const apiClient = useApiClient()
 
-  const { data: submissions } = useQuery(`user-${user.id}-submissions`, () =>
+  const { data: submissions } = useQuery(['user-submissions', user.id], () =>
     apiClient.users.submissions(user.id).then((data) => data.data),
   )
 

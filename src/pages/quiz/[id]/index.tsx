@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { useQuery } from 'react-query'
+import { useState } from 'react'
 import Countdown from 'react-countdown'
+import { useQuery } from 'react-query'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-import Container from '@components/Layout/Container'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { PageWithLayout } from 'types'
-import { useApiClient } from '@contexts/AuthProvider'
-import Button from '@components/Button'
-import { getQuizStatus, Quiz, QuizStatus } from '@api/quizzes'
-import QuizSubscription from '@components/Quiz/QuizStatus/QuizSubscription'
-import Leaderboard from '@components/Quiz/QuizInfo/Leaderboard'
-import SubscriptionList from '@components/Quiz/QuizInfo/SubcriptionList'
-import QuizEnded from '@components/Quiz/QuizStatus/QuizEnded'
+import { getQuizStatus, Quiz, QuizStatus } from '@/api/quizzes'
+import Button from '@/components/Button'
+import Container from '@/components/Layout/Container'
+import Leaderboard from '@/components/Quiz/QuizInfo/Leaderboard'
+import SubscriptionList from '@/components/Quiz/QuizInfo/SubcriptionList'
+import QuizEnded from '@/components/Quiz/QuizStatus/QuizEnded'
+import QuizSubscription from '@/components/Quiz/QuizStatus/QuizSubscription'
+import { useApiClient } from '@/contexts/AuthProvider'
+import { useQuizContractRead } from '@/hooks/useContractRead'
 import useSubscriptionStatus, {
   SubscriptionStatus,
-} from '@hooks/useSubscriptionStatus'
-import { useQuizContract } from '@hooks/useContract'
-import { BigNumber } from 'ethers'
-import { formatAmount } from '@utils/math'
-import { useWeb3Context } from '@contexts/Web3Provider'
+} from '@/hooks/useSubscriptionStatus'
+import { getDefaultLayout } from '@/layouts/DefaultLayout'
+import { PageWithLayout } from '@/types'
+import { formatAmount } from '@/utils/math'
 
 const NUMBER_OF_WINNERS = 3
 
@@ -75,30 +73,21 @@ const QuizPage: PageWithLayout = () => {
   const router = useRouter()
   const id = router.query.id?.toString()
   const quizId = Number(id)
-  const { account } = useWeb3Context()
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
-    `quiz-${quizId}`,
+    ['quiz', quizId],
     () => apiClient.quizzes.read(quizId).then((data) => data.data),
     {
       enabled: id !== undefined,
     },
   )
 
-  const [quizFund, setQuizFund] = useState(BigNumber.from(0))
-  const quizContract = useQuizContract(false)
-
-  useEffect(() => {
-    if (!quizContract || !quiz) return
-
-    const getQuizFund = async () => {
-      const fund = await quizContract.quizFund(quiz.id)
-      setQuizFund(fund)
-    }
-
-    getQuizFund()
-  }, [quiz, quizContract])
+  const { data: quizFund } = useQuizContractRead({
+    functionName: 'quizFund',
+    args: quizId,
+    enabled: id !== undefined,
+  })
 
   return (
     <Container className="mt-8">
@@ -145,7 +134,7 @@ const QuizPage: PageWithLayout = () => {
                     {NUMBER_OF_WINNERS}
                   </span>
                 </div>
-                {account && (
+                {quizFund && (
                   <>
                     <div>
                       <span className="font-bold">Total prize: </span>
