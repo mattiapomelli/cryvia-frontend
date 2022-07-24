@@ -25,8 +25,7 @@ import { formatAmount } from '@utils/math'
 const NUMBER_OF_WINNERS = 3
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  // const [status, setStatus] = useState(getQuizStatus(quiz))
-  const [status, setStatus] = useState(QuizStatus.Subscription)
+  const [status, setStatus] = useState(getQuizStatus(quiz))
   const { status: subscriptionStatus } = useSubscriptionStatus(quiz)
 
   const onSubscriptionCountdownComplete = () => {

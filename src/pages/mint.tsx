@@ -6,7 +6,7 @@ import Container from '@components/Layout/Container'
 import { TOKEN_ADDRESS } from '@constants/addresses'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
 import { PageWithLayout } from 'types'
-import useTokenContractWrite from '@hooks/useTokenContractWrite'
+import { useTokenContractWrite } from '@hooks/useContractWriteAndWait'
 
 const MintPage: PageWithLayout = () => {
   const { address } = useAccount()
