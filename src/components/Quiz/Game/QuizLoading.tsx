@@ -1,5 +1,6 @@
-import { useApiClient } from '@contexts/AuthProvider'
 import { useEffect } from 'react'
+
+import { useApiClient } from '@/contexts/AuthProvider'
 import { useQuiz } from './QuizProvider'
 
 const QuizLoading = () => {

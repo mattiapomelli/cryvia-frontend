@@ -2,12 +2,12 @@
 import { useAccount, useConnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
-import Address from '@components/Address'
-import { useUser, UserStatus } from '@contexts/AuthProvider'
-import Button from '@components/Button'
+import Address from '@/components/Address'
+import Button from '@/components/Button'
+import { CHAIN } from '@/constants/chains'
+import { UserStatus, useUser } from '@/contexts/AuthProvider'
+import useTokenBalance from '@/hooks/useTokenBalance'
 import AddressAvatar from './AddressAvatar'
-import { CHAIN } from '@constants/chains'
-import useTokenBalance from '@hooks/useTokenBalance'
 
 const WalletStatus = () => {
   const { address } = useAccount()

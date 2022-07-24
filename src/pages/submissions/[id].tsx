@@ -1,14 +1,14 @@
-import { useRouter } from 'next/router'
 import { useQuery } from 'react-query'
-
-import Container from '@components/Layout/Container'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { PageWithLayout } from 'types'
-import { useApiClient } from '@contexts/AuthProvider'
 import Link from 'next/link'
-import Button from '@components/Button'
-import { countCorrectAnswers, QuizSubmission } from '@api/submissions'
-import SubmissionAnswerCard from '@components/SubmissionAnswerCard'
+import { useRouter } from 'next/router'
+
+import { countCorrectAnswers, QuizSubmission } from '@/api/submissions'
+import Button from '@/components/Button'
+import Container from '@/components/Layout/Container'
+import SubmissionAnswerCard from '@/components/SubmissionAnswerCard'
+import { useApiClient } from '@/contexts/AuthProvider'
+import { getDefaultLayout } from '@/layouts/DefaultLayout'
+import { PageWithLayout } from '@/types'
 
 const Submission = ({ submission }: { submission: QuizSubmission }) => {
   const count = countCorrectAnswers(

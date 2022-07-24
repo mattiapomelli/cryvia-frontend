@@ -1,4 +1,4 @@
-import { getToken, removeToken, setToken } from '@utils/tokens'
+import { getToken, removeToken, setToken } from '@/utils/tokens'
 import ApiService from './api-service'
 import { User } from './users'
 

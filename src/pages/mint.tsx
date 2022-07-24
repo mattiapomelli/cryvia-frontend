@@ -1,11 +1,11 @@
 import { ethers } from 'ethers'
 
-import Button from '@components/Button'
-import Container from '@components/Layout/Container'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { PageWithLayout } from 'types'
-import { useTokenContractWrite } from '@hooks/useContractWriteAndWait'
-import useTokenBalance from '@hooks/useTokenBalance'
+import Button from '@/components/Button'
+import Container from '@/components/Layout/Container'
+import { useTokenContractWrite } from '@/hooks/useContractWriteAndWait'
+import useTokenBalance from '@/hooks/useTokenBalance'
+import { getDefaultLayout } from '@/layouts/DefaultLayout'
+import { PageWithLayout } from '@/types'
 
 const MintPage: PageWithLayout = () => {
   const { refetch } = useTokenBalance()

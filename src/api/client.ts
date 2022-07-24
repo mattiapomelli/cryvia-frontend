@@ -1,10 +1,10 @@
-import Http from './http'
-import { ForbiddenError, UnauthorizedError, ValidationError } from './errors'
 import AuthService from './auth'
-import UserService from './users'
-import { ApiErrorResponse } from './types'
+import { ForbiddenError, UnauthorizedError, ValidationError } from './errors'
+import Http from './http'
 import QuizService from './quizzes'
 import SubmissionService from './submissions'
+import { ApiErrorResponse } from './types'
+import UserService from './users'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 

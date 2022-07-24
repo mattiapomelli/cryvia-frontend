@@ -1,13 +1,13 @@
-import { BigNumber } from 'ethers'
 import Link from 'next/link'
+import { BigNumber } from 'ethers'
 import { useAccount } from 'wagmi'
 
-import { Quiz } from '@api/quizzes'
-import Button from '@components/Button'
-import { useQuizContractRead } from '@hooks/useContractRead'
-import { useQuizContractWrite } from '@hooks/useContractWriteAndWait'
-import { formatAmount } from '@utils/math'
-import useTokenBalance from '@hooks/useTokenBalance'
+import { Quiz } from '@/api/quizzes'
+import Button from '@/components/Button'
+import { useQuizContractRead } from '@/hooks/useContractRead'
+import { useQuizContractWrite } from '@/hooks/useContractWriteAndWait'
+import useTokenBalance from '@/hooks/useTokenBalance'
+import { formatAmount } from '@/utils/math'
 
 interface QuizEndedProps {
   quiz: Quiz

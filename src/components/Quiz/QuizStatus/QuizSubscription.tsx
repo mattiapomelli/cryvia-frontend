@@ -1,23 +1,23 @@
 import { Dispatch, SetStateAction, useState } from 'react'
-import { ethers } from 'ethers'
+import Countdown from 'react-countdown'
 import { useMutation, useQueryClient } from 'react-query'
 import Link from 'next/link'
-import Countdown from 'react-countdown'
+import { ethers } from 'ethers'
 
-import Button from '@components/Button'
-import { Quiz, Subscription } from '@api/quizzes'
-import Modal, { BaseModalProps } from '@components/Modal'
-import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
-import useSubscriptionStatus, {
-  SubscriptionStatus,
-} from '@hooks/useSubscriptionStatus'
-import { QUIZ_CONTRACT_ADDRESS } from '@constants/addresses'
+import { Quiz, Subscription } from '@/api/quizzes'
+import Button from '@/components/Button'
+import Modal, { BaseModalProps } from '@/components/Modal'
+import { QUIZ_CONTRACT_ADDRESS } from '@/constants/addresses'
+import { CHAIN } from '@/constants/chains'
+import { useApiClient, UserStatus, useUser } from '@/contexts/AuthProvider'
 import {
   useQuizContractWrite,
   useTokenContractWrite,
-} from '@hooks/useContractWriteAndWait'
-import { CHAIN } from '@constants/chains'
-import useTokenBalance from '@hooks/useTokenBalance'
+} from '@/hooks/useContractWriteAndWait'
+import useSubscriptionStatus, {
+  SubscriptionStatus,
+} from '@/hooks/useSubscriptionStatus'
+import useTokenBalance from '@/hooks/useTokenBalance'
 
 interface SubscribeModalProps extends BaseModalProps {
   quiz: Quiz

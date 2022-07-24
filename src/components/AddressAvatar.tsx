@@ -1,5 +1,5 @@
-import jazzicon from '@metamask/jazzicon'
 import { useLayoutEffect, useMemo, useRef } from 'react'
+import jazzicon from '@metamask/jazzicon'
 
 interface AddressAvatarProps {
   address: string

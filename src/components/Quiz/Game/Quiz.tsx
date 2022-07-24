@@ -1,10 +1,10 @@
+import { useState } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 
-import Container from '@components/Layout/Container'
+import { Answer, Id } from '@/api/types'
+import Container from '@/components/Layout/Container'
+import PeopleIcon from '@/icons/people.svg'
 import { useQuiz } from './QuizProvider'
-import PeopleIcon from '@icons/people.svg'
-import { useState } from 'react'
-import { Answer, Id } from '@api/types'
 
 interface AnswerButtonProps {
   answer: Answer

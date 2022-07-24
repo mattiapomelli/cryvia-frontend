@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
 
-import { Quiz } from '@api/quizzes'
-import { parseAmount } from '@utils/math'
+import { Quiz } from '@/api/quizzes'
+import { parseAmount } from '@/utils/math'
 import { useQuizContractRead, useTokenContractRead } from './useContractRead'
-import { QUIZ_CONTRACT_ADDRESS } from '@constants/addresses'
-import { CHAIN } from '@constants/chains'
+import { QUIZ_CONTRACT_ADDRESS } from '@/constants/addresses'
+import { CHAIN } from '@/constants/chains'
 
 export enum SubscriptionStatus {
   Loading,

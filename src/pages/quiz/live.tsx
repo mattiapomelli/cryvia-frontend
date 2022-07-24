@@ -1,20 +1,20 @@
-import { useQuery } from 'react-query'
 import { useEffect } from 'react'
+import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 
+import Container from '@/components/Layout/Container'
+import FinalRoom from '@/components/Quiz/Game/FinalRoom'
+import Quiz from '@/components/Quiz/Game/Quiz'
 import QuizProvider, {
   QuizPlayingStatus,
   useQuiz,
-} from '@components/Quiz/Game/QuizProvider'
-import { useApiClient } from '@contexts/AuthProvider'
-import WaitingRoom from '@components/Quiz/Game/WaitingRoom'
-import Quiz from '@components/Quiz/Game/Quiz'
-import FinalRoom from '@components/Quiz/Game/FinalRoom'
-import { PageWithLayout } from 'types'
-import Container from '@components/Layout/Container'
+} from '@/components/Quiz/Game/QuizProvider'
+import WaitingRoom from '@/components/Quiz/Game/WaitingRoom'
+import { useApiClient } from '@/contexts/AuthProvider'
 import useSubscriptionStatus, {
   SubscriptionStatus,
-} from '@hooks/useSubscriptionStatus'
+} from '@/hooks/useSubscriptionStatus'
+import { PageWithLayout } from '@/types'
 
 // let done = false
 

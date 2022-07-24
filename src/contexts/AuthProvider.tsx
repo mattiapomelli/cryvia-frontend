@@ -8,11 +8,11 @@ import {
   useRef,
   useState,
 } from 'react'
-
-import ApiClient from '@api/client'
-import { ForbiddenError } from '@api/errors'
-import { User } from '@api/users'
 import { useAccount, useSignMessage } from 'wagmi'
+
+import ApiClient from '@/api/client'
+import { ForbiddenError } from '@/api/errors'
+import { User } from '@/api/users'
 
 const ApiClientContext = createContext<ApiClient | undefined>(undefined)
 

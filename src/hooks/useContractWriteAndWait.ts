@@ -1,12 +1,16 @@
+import {
+  Contract,
+  ContractInterface,
+  ContractTransaction,
+  providers,
+} from 'ethers'
 import { useContractWrite, useWaitForTransaction } from 'wagmi'
-import { Contract, ContractTransaction, providers } from 'ethers'
 
-import MyTokenAbi from '@abis/contracts/MyToken.json'
-import QuizContractAbi from '@abis/contracts/Quiz.json'
-import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
-import { CHAIN } from '@constants/chains'
-import { ContractInterface } from 'ethers'
-import { MyToken, Quiz } from '@abis/types'
+import MyTokenAbi from '@/abis/contracts/MyToken.json'
+import QuizContractAbi from '@/abis/contracts/Quiz.json'
+import { MyToken, Quiz } from '@/abis/types'
+import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@/constants/addresses'
+import { CHAIN } from '@/constants/chains'
 
 type Status = 'error' | 'success' | 'idle' | 'loading'
 

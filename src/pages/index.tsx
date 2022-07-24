@@ -1,11 +1,11 @@
 import { useQuery } from 'react-query'
 
-import Container from '@components/Layout/Container'
-import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { useApiClient } from '@contexts/AuthProvider'
-import { PageWithLayout } from 'types'
-import QuizCard from '@components/QuizCard'
-import NextQuizCard from '@components/NextQuizCard'
+import Container from '@/components/Layout/Container'
+import NextQuizCard from '@/components/NextQuizCard'
+import QuizCard from '@/components/QuizCard'
+import { useApiClient } from '@/contexts/AuthProvider'
+import { getDefaultLayout } from '@/layouts/DefaultLayout'
+import { PageWithLayout } from '@/types'
 
 const HomePage: PageWithLayout = () => {
   const apiClient = useApiClient()

@@ -1,12 +1,12 @@
-import { useContractRead } from 'wagmi'
 import { Contract, ContractTransaction } from 'ethers'
 import { Result } from 'ethers/lib/utils'
+import { useContractRead } from 'wagmi'
 
-import { Quiz, MyToken } from '@abis/types'
-import QuizContractAbi from '@abis/contracts/Quiz.json'
-import MyTokenAbi from '@abis/contracts/MyToken.json'
-import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
-import { CHAIN } from '@constants/chains'
+import MyTokenAbi from '@/abis/contracts/MyToken.json'
+import QuizContractAbi from '@/abis/contracts/Quiz.json'
+import { MyToken, Quiz } from '@/abis/types'
+import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@/constants/addresses'
+import { CHAIN } from '@/constants/chains'
 
 type ContractFunctions<T extends Contract> = T['functions']
 

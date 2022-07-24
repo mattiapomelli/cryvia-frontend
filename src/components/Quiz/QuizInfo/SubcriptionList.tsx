@@ -1,8 +1,9 @@
-import { Quiz } from '@api/quizzes'
-import Address from '@components/Address'
-import AddressAvatar from '@components/AddressAvatar'
-import { useApiClient } from '@contexts/AuthProvider'
 import { useQuery } from 'react-query'
+
+import { Quiz } from '@/api/quizzes'
+import Address from '@/components/Address'
+import AddressAvatar from '@/components/AddressAvatar'
+import { useApiClient } from '@/contexts/AuthProvider'
 
 interface SubscriptionListProps {
   quiz: Quiz

@@ -1,7 +1,7 @@
-import React, { ReactNode, ElementType, ButtonHTMLAttributes } from 'react'
+import React, { ButtonHTMLAttributes, ElementType, ReactNode } from 'react'
 import classNames from 'classnames'
 
-import SpinnerIcon from '@icons/spinner.svg'
+import SpinnerIcon from '@/icons/spinner.svg'
 
 const variantClassNames = {
   primary:

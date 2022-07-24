@@ -1,9 +1,10 @@
-import { Quiz } from '@api/quizzes'
-import Address from '@components/Address'
-import AddressAvatar from '@components/AddressAvatar'
-import { useApiClient, useUser } from '@contexts/AuthProvider'
-import Link from 'next/link'
 import { useQuery } from 'react-query'
+import Link from 'next/link'
+
+import { Quiz } from '@/api/quizzes'
+import Address from '@/components/Address'
+import AddressAvatar from '@/components/AddressAvatar'
+import { useApiClient, useUser } from '@/contexts/AuthProvider'
 
 interface LeaderboardProps {
   quiz: Quiz

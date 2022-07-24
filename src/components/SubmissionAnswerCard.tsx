@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { Answer, QuestionWithAnswers } from '@api/types'
+import { Answer, QuestionWithAnswers } from '@/api/types'
 
 interface AnswerCardProps {
   answer: Answer

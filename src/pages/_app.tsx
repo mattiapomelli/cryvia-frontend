@@ -1,15 +1,16 @@
 import '../styles/globals.css'
 
+import React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import type { AppProps } from 'next/app'
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
-import { InjectedConnector } from 'wagmi/connectors/injected'
-import { QueryClientProvider, QueryClient } from 'react-query'
 
-import { PageWithLayout } from 'types'
-import AuthProvider from '@contexts/AuthProvider'
-import { CHAIN } from '@constants/chains'
+import { CHAIN } from '@/constants/chains'
+import AuthProvider from '@/contexts/AuthProvider'
+import { PageWithLayout } from '@/types'
 
 const { chains, provider } = configureChains(
   [CHAIN],
