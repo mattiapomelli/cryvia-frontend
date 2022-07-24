@@ -3,6 +3,8 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useQuery } from 'react-query'
 import Countdown from 'react-countdown'
+import { BigNumber } from 'ethers'
+import { useAccount } from 'wagmi'
 
 import Container from '@components/Layout/Container'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
@@ -18,14 +20,13 @@ import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@hooks/useSubscriptionStatus'
 import { useQuizContract } from '@hooks/useContract'
-import { BigNumber } from 'ethers'
 import { formatAmount } from '@utils/math'
-import { useWeb3Context } from '@contexts/Web3Provider'
 
 const NUMBER_OF_WINNERS = 3
 
 const QuizStatusSection = ({ quiz }: { quiz: Quiz }) => {
-  const [status, setStatus] = useState(getQuizStatus(quiz))
+  // const [status, setStatus] = useState(getQuizStatus(quiz))
+  const [status, setStatus] = useState(QuizStatus.Subscription)
   const { status: subscriptionStatus } = useSubscriptionStatus(quiz)
 
   const onSubscriptionCountdownComplete = () => {
@@ -75,7 +76,7 @@ const QuizPage: PageWithLayout = () => {
   const router = useRouter()
   const id = router.query.id?.toString()
   const quizId = Number(id)
-  const { account } = useWeb3Context()
+  const { address } = useAccount()
 
   const apiClient = useApiClient()
   const { data: quiz } = useQuery(
@@ -145,7 +146,7 @@ const QuizPage: PageWithLayout = () => {
                     {NUMBER_OF_WINNERS}
                   </span>
                 </div>
-                {account && (
+                {address && (
                   <>
                     <div>
                       <span className="font-bold">Total prize: </span>

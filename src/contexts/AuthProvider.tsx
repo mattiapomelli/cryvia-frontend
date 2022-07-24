@@ -12,7 +12,7 @@ import {
 import ApiClient from '@api/client'
 import { ForbiddenError } from '@api/errors'
 import { User } from '@api/users'
-import { useWeb3Context } from './Web3Provider'
+import { useAccount, useSignMessage } from 'wagmi'
 
 const ApiClientContext = createContext<ApiClient | undefined>(undefined)
 
@@ -41,11 +41,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [status, setStatus] = useState(UserStatus.Loading)
 
   const {
-    account,
-    active,
-    loading: loadingAccount,
-    provider,
-  } = useWeb3Context()
+    address,
+    isConnected,
+    isConnecting,
+    isReconnecting,
+    status: accountStatus,
+  } = useAccount()
+  const { signMessageAsync } = useSignMessage()
+
+  console.log(accountStatus, isConnected, address)
 
   const handleUnauthorizedError = async () => {
     setUser(null)
@@ -63,16 +67,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   )
 
   useEffect(() => {
-    if (loadingAccount) return
+    if (isReconnecting || isConnecting) return
 
-    if (!active || !account) {
+    if (!isConnected || !address) {
       setStatus(UserStatus.Disconnected)
       return
     }
 
     const getUser = async () => {
       try {
-        const user = await apiClientRef.current.auth.getLoggedUser(account)
+        // Get logged user
+        const user = await apiClientRef.current.auth.getLoggedUser(address)
 
         if (user) {
           setUser(user)
@@ -80,8 +85,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           return
         }
 
-        // Create user if not exists
-        await apiClientRef.current.auth.login(account)
+        // Create user if doesn't exist
+        await apiClientRef.current.auth.login(address)
         setStatus(UserStatus.Connected)
       } catch (error) {
         setStatus(UserStatus.Connected)
@@ -89,24 +94,31 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
 
     getUser()
-  }, [loadingAccount, active, account])
+  }, [address, isConnected, isReconnecting, isConnecting])
 
   const verifyAddress = async () => {
-    if (!account) return
-    const { data } = await apiClientRef.current.auth.sign(account)
+    if (!address) return
 
-    const signer = provider?.getSigner()
-    if (!signer) return
+    try {
+      // Request message to sign
+      const { data } = await apiClientRef.current.auth.sign(address)
 
-    const signature = await signer.signMessage(data.message)
+      // Sign message
+      const signature = await signMessageAsync({
+        message: data.message,
+      })
 
-    const user = await apiClientRef.current.auth.verify({
-      address: account,
-      signature,
-    })
+      // Verify signature
+      const user = await apiClientRef.current.auth.verify({
+        address,
+        signature,
+      })
 
-    setUser(user)
-    setStatus(UserStatus.Logged)
+      setUser(user)
+      setStatus(UserStatus.Logged)
+    } catch (error) {
+      console.log('Error while trying to sign message')
+    }
   }
 
   return (

@@ -6,13 +6,14 @@ import Button from '@components/Button'
 import { Quiz, Subscription } from '@api/quizzes'
 import { useQuizContract, useTokenContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
-import { useWeb3Context } from '@contexts/Web3Provider'
 import Modal, { BaseModalProps } from '@components/Modal'
 import { useApiClient, UserStatus, useUser } from '@contexts/AuthProvider'
 import useApiRequest from '@hooks/useApiRequest'
 import useSubscriptionStatus from '@hooks/useSubscriptionStatus'
 import { useQueryClient } from 'react-query'
 import Link from 'next/link'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
+import { TOKEN_ADDRESS } from '@constants/addresses'
 
 enum SubscriptionStatus {
   NotApproved,
@@ -33,7 +34,13 @@ const SubscribeModal = ({
   status,
   setStatus,
 }: SubscribeModalProps) => {
-  const { updateBalance, balance } = useWeb3Context()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
+  const { data: balance, refetch } = useBalance({
+    addressOrName: address,
+    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
+    enabled: chain !== undefined,
+  })
 
   const quizContract = useQuizContract(true)
   const tokenContract = useTokenContract(true)
@@ -84,7 +91,7 @@ const SubscribeModal = ({
             ]
           },
         )
-        updateBalance()
+        refetch()
         setStatus(SubscriptionStatus.Subscribed)
       })
     }
@@ -103,9 +110,11 @@ const SubscribeModal = ({
     )
   }
 
-  const canPayFee = balance.gte(ethers.utils.parseEther(quiz.price.toString()))
+  const canPayQuizFee = balance?.value.gte(
+    ethers.utils.parseEther(quiz.price.toString()),
+  )
 
-  if (!canPayFee) {
+  if (!canPayQuizFee) {
     return (
       <Modal show={show} onClose={onClose}>
         <div>

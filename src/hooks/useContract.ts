@@ -1,59 +1,34 @@
-import { useMemo } from 'react'
-import { ContractInterface, ethers, providers } from 'ethers'
-import { Contract } from '@ethersproject/contracts'
+import { useContract, useProvider, useSigner } from 'wagmi'
 
 import { Quiz, MyToken } from '@abis/types'
 import QuizContractAbi from '@abis/contracts/Quiz.json'
 import MyTokenAbi from '@abis/contracts/MyToken.json'
-import {
-  AddressMap,
-  QUIZ_CONTRACT_ADDRESS,
-  TOKEN_ADDRESS,
-} from '@constants/addresses'
-import { useWeb3React } from '@web3-react/core'
+import { QUIZ_CONTRACT_ADDRESS, TOKEN_ADDRESS } from '@constants/addresses'
+import { CHAIN } from '@constants/chains'
 
-const useContract = <T extends Contract = Contract>(
-  addressOrAddressMap: string | AddressMap,
-  abi: ContractInterface,
-  withSigner = true,
-): T | null => {
-  const {
-    library: provider,
-    account,
-    chainId,
-  } = useWeb3React<providers.Web3Provider>()
+export const useQuizContract = (withSigner = true) => {
+  const { data: signer } = useSigner()
+  const provider = useProvider()
 
-  const contract = useMemo(() => {
-    if (!provider || !chainId) return null
-
-    const address =
-      typeof addressOrAddressMap === 'string'
-        ? addressOrAddressMap
-        : addressOrAddressMap[chainId]
-
-    const providerOrSigner =
-      withSigner && account ? provider.getSigner() : provider
-
-    try {
-      return new ethers.Contract(address, abi, providerOrSigner) as T
-    } catch (error) {
-      return null
-    }
-  }, [addressOrAddressMap, abi, provider, withSigner, account, chainId])
+  const contract = useContract<Quiz>({
+    addressOrName: QUIZ_CONTRACT_ADDRESS[CHAIN],
+    contractInterface: QuizContractAbi.abi,
+    signerOrProvider: withSigner ? signer : provider,
+  })
 
   return contract
 }
 
-export default useContract
-
-export const useQuizContract = (withSigner = true) => {
-  return useContract<Quiz>(
-    QUIZ_CONTRACT_ADDRESS,
-    QuizContractAbi.abi,
-    withSigner,
-  )
-}
-
 export const useTokenContract = (withSigner = true) => {
-  return useContract<MyToken>(TOKEN_ADDRESS, MyTokenAbi.abi, withSigner)
+  const { data: signer } = useSigner()
+  const provider = useProvider()
+
+  // TODO: replace with ERC20 for production
+  const contract = useContract<MyToken>({
+    addressOrName: TOKEN_ADDRESS[CHAIN],
+    contractInterface: MyTokenAbi.abi,
+    signerOrProvider: withSigner ? signer : provider,
+  })
+
+  return contract
 }

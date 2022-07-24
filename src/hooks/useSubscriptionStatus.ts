@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
 import { Quiz } from '@api/quizzes'
-import { useWeb3Context } from '@contexts/Web3Provider'
 import { parseAmount } from '@utils/math'
 import { useQuizContract, useTokenContract } from './useContract'
+import { useAccount } from 'wagmi'
 
 export enum SubscriptionStatus {
   NotApproved,
@@ -12,7 +12,7 @@ export enum SubscriptionStatus {
 }
 
 const useSubscriptionStatus = (quiz: Quiz) => {
-  const { account } = useWeb3Context()
+  const { address } = useAccount()
   const [loading, setLoading] = useState(true)
   const [status, setStatus] = useState(SubscriptionStatus.NotApproved)
 
@@ -20,20 +20,20 @@ const useSubscriptionStatus = (quiz: Quiz) => {
   const tokenContract = useTokenContract()
 
   useEffect(() => {
-    if (!quizContract || !tokenContract || !account) {
+    if (!quizContract || !tokenContract || !address) {
       setLoading(false)
       return
     }
 
     const getSubscriptionStatus = async () => {
       setLoading(true)
-      const isSubscribed = await quizContract.isSubscribed(quiz.id, account)
+      const isSubscribed = await quizContract.isSubscribed(quiz.id, address)
 
       if (isSubscribed) {
         setStatus(SubscriptionStatus.Subscribed)
       } else {
         const allowance = await tokenContract.allowance(
-          account,
+          address,
           quizContract.address,
         )
 
@@ -48,7 +48,7 @@ const useSubscriptionStatus = (quiz: Quiz) => {
     }
 
     getSubscriptionStatus()
-  }, [quizContract, tokenContract, account, quiz.id, quiz.price])
+  }, [quizContract, tokenContract, address, quiz.id, quiz.price])
 
   return {
     loading,

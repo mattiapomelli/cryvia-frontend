@@ -7,13 +7,13 @@ import QuizProvider, {
 import { useApiClient } from '@contexts/AuthProvider'
 import { useQuizContract } from '@hooks/useContract'
 import { useEffect } from 'react'
-import { useWeb3Context } from '@contexts/Web3Provider'
 import { useRouter } from 'next/router'
 import WaitingRoom from '@components/Quiz/Game/WaitingRoom'
 import Quiz from '@components/Quiz/Game/Quiz'
 import FinalRoom from '@components/Quiz/Game/FinalRoom'
 import { PageWithLayout } from 'types'
 import Container from '@components/Layout/Container'
+import { useAccount } from 'wagmi'
 
 // let done = false
 
@@ -32,7 +32,7 @@ const LiveQuizPageInner = () => {
 }
 
 const LiveQuizPage: PageWithLayout = () => {
-  const { account } = useWeb3Context()
+  const { address } = useAccount()
   const apiClient = useApiClient()
   const router = useRouter()
   const quizContract = useQuizContract(true)
@@ -54,16 +54,17 @@ const LiveQuizPage: PageWithLayout = () => {
       return
     }
 
-    if (!quiz?.id || !quizContract || !account) return
+    if (!quiz?.id || !quizContract || !address) return
 
+    // TODO: uncomment this for production
     // If quiz is not subscribed to the current qui, redirect to quiz page
-    const getIfSubscribed = async () => {
-      const isSubscribed = await quizContract.isSubscribed(quiz.id, account)
-      if (!isSubscribed) router.push(`/quiz/${quiz.id}`)
-    }
+    // const getIfSubscribed = async () => {
+    //   const isSubscribed = await quizContract.isSubscribed(quiz.id, account)
+    //   if (!isSubscribed) router.push(`/quiz/${quiz.id}`)
+    // }
 
-    getIfSubscribed()
-  }, [quiz, account, quizContract, router, isLoading])
+    // getIfSubscribed()
+  }, [quiz, address, quizContract, router, isLoading])
 
   if (!quiz) return null
 

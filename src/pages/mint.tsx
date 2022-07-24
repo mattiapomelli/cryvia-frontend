@@ -1,30 +1,31 @@
+import { ethers } from 'ethers'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
+
 import Button from '@components/Button'
 import Container from '@components/Layout/Container'
-import { useWeb3Context } from '@contexts/Web3Provider'
-import { useTokenContract } from '@hooks/useContract'
-import useTransaction from '@hooks/useTransaction'
+import { TOKEN_ADDRESS } from '@constants/addresses'
 import { getDefaultLayout } from '@layouts/DefaultLayout'
-import { ethers } from 'ethers'
-import { useState } from 'react'
 import { PageWithLayout } from 'types'
+import useTokenContractWrite from '@hooks/useTokenContractWrite'
 
 const MintPage: PageWithLayout = () => {
-  const { updateBalance } = useWeb3Context()
-  const tokenContract = useTokenContract()
-  const [success, setSuccess] = useState(false)
+  const { address } = useAccount()
+  const { chain } = useNetwork()
+  const { refetch } = useBalance({
+    addressOrName: address,
+    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
+    enabled: chain !== undefined,
+  })
 
-  const { handleTransaction, pending } = useTransaction()
+  const { data, write, status, error } = useTokenContractWrite({
+    functionName: 'mint',
+    onSuccess() {
+      refetch()
+    },
+  })
 
   const mint = async () => {
-    if (!tokenContract) return
-
-    const res = await handleTransaction(() =>
-      tokenContract.mint(ethers.utils.parseEther('20')),
-    )
-    if (res) {
-      setSuccess(true)
-      updateBalance()
-    }
+    write({ args: [ethers.utils.parseEther('20')] })
   }
 
   return (
@@ -35,14 +36,23 @@ const MintPage: PageWithLayout = () => {
           Here you can mint some free MTK tokens so you can test the platform.
           You will receive 20 MTK
         </p>
-        {success ? (
-          <div className="font-bold text-green-500">
-            Successfully minted 20 MTK! ✔️
+        {status === 'success' ? (
+          <div>
+            <p className="font-bold text-green-500">
+              Successfully minted 20 MTK! ✔️
+            </p>
+            <p>
+              Transaction hash:
+              {data?.transactionHash}
+            </p>
           </div>
         ) : (
-          <Button loading={pending} onClick={mint}>
+          <Button loading={status === 'loading'} onClick={mint}>
             Mint
           </Button>
+        )}
+        {status === 'error' && (
+          <p className="text-red-500">Error: {error?.message}</p>
         )}
       </div>
     </Container>

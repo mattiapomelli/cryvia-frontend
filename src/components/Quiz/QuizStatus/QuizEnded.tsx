@@ -1,34 +1,42 @@
 import { Quiz } from '@api/quizzes'
 import Button from '@components/Button'
-import { useWeb3Context } from '@contexts/Web3Provider'
+import { TOKEN_ADDRESS } from '@constants/addresses'
 import { useQuizContract } from '@hooks/useContract'
 import useTransaction from '@hooks/useTransaction'
 import { formatAmount } from '@utils/math'
 import { BigNumber } from 'ethers'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 interface QuizEndedProps {
   quiz: Quiz
 }
 
 const QuizEnded = ({ quiz }: QuizEndedProps) => {
-  const { account, updateBalance } = useWeb3Context()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
+  const { refetch } = useBalance({
+    addressOrName: address,
+    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
+    enabled: chain !== undefined,
+  })
+
   const quizContract = useQuizContract()
 
   const [winBalance, setWinBalance] = useState(BigNumber.from(0))
   const { handleTransaction, pending } = useTransaction()
 
   useEffect(() => {
-    if (!quizContract || !account) return
+    if (!quizContract || !address) return
 
     const getWinBalance = async () => {
-      const winBalance = await quizContract.winBalance(quiz.id, account)
+      const winBalance = await quizContract.winBalance(quiz.id, address)
       setWinBalance(winBalance)
     }
 
     getWinBalance()
-  }, [quizContract, account, quiz.id])
+  }, [quizContract, address, quiz.id])
 
   const redeem = async () => {
     if (!quizContract) return
@@ -36,7 +44,7 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
     const res = await handleTransaction(() => quizContract.redeem(quiz.id))
 
     if (res) {
-      updateBalance()
+      refetch()
       setWinBalance(BigNumber.from(0))
     }
   }

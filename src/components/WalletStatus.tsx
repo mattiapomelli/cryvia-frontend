@@ -1,55 +1,86 @@
 // import Link from 'next/link'
-import { UnsupportedChainIdError } from '@web3-react/core'
+import {
+  useAccount,
+  useBalance,
+  useConnect,
+  useNetwork,
+  useSwitchNetwork,
+} from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 
 import Address from '@components/Address'
-import { useWeb3Context } from '@contexts/Web3Provider'
 import { useUser, UserStatus } from '@contexts/AuthProvider'
 import Button from '@components/Button'
-import { ethers } from 'ethers'
 import AddressAvatar from './AddressAvatar'
+import { TOKEN_ADDRESS } from '@constants/addresses'
+import { CHAIN } from '@constants/chains'
 
 const WalletStatus = () => {
-  const { account, connect, error, balance } = useWeb3Context()
+  const { address } = useAccount()
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  })
+
+  const { chain } = useNetwork()
+  const { data: balance } = useBalance({
+    addressOrName: address,
+    token: chain ? TOKEN_ADDRESS[chain.id] : undefined,
+    enabled: chain !== undefined,
+  })
+  const { switchNetwork } = useSwitchNetwork()
+
   const { status, verifyAddress } = useUser()
 
   // Wrong network
-  if (error && error instanceof UnsupportedChainIdError) {
-    return <div className="text-red-500">Wrong network (switch to Mumbai)</div>
+  if (chain?.unsupported) {
+    return (
+      <Button
+        variant="danger"
+        size="small"
+        onClick={() => switchNetwork?.(CHAIN)}
+      >
+        Switch to Mumbai
+      </Button>
+    )
   }
 
   // Needs verification
-  if (status === UserStatus.Connected && account) {
+  if (status === UserStatus.Connected && address) {
     return (
       <div className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full cursor-pointer">
-        <span>{ethers.utils.formatEther(balance)} MTK</span>
         <span>
-          <Address address={account} className="font-semibold" />
+          {balance?.formatted} {balance?.symbol}
+        </span>
+        <span>
+          <Address address={address} className="font-semibold" />
           <button className="ml-2 text-sm font-medium" onClick={verifyAddress}>
             Verify address
           </button>
         </span>
-        <AddressAvatar address={account} />
+        <AddressAvatar address={address} />
       </div>
     )
   }
 
   // Logged in
-  if (status === UserStatus.Logged && account) {
+  if (status === UserStatus.Logged && address) {
     return (
       // <Link href="/profile">
       <div className="flex items-center gap-2 bg-gray-200 py-1.5 px-2 rounded-full">
-        <span>{ethers.utils.formatEther(balance)} MTK</span>
         <span>
-          <Address address={account} className="font-semibold" />
+          {balance?.formatted} {balance?.symbol}
         </span>
-        <AddressAvatar address={account} />
+        <span>
+          <Address address={address} className="font-semibold" />
+        </span>
+        <AddressAvatar address={address} />
       </div>
       // </Link>
     )
   }
 
   // Disconnected
-  return <Button onClick={connect}>Connect</Button>
+  return <Button onClick={() => connect()}>Connect</Button>
 }
 
 export default WalletStatus

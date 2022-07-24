@@ -8,6 +8,8 @@ const variantClassNames = {
     'text-white bg-primary hover:bg-primary-hover disabled:bg-primary disabled:opacity-50',
   secondary:
     'bg-secondary hover:bg-secondary-hover text-primary disabled:bg-secondary disabled:opacity-50',
+  danger:
+    'bg-red-600 hover:bg-red-700 text-white disabled: bg-red-600 disabled:opacity-50',
 }
 
 const sizeClassNames = {
