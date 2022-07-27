@@ -1,5 +1,7 @@
 import { chain } from 'wagmi'
 
+export type ChainMap = { [chainId: number]: string }
+
 const getChain = () => {
   if (!process.env.NEXT_PUBLIC_CHAIN) {
     throw new Error('NEXT_PUBLIC_CHAIN envinronment variable must be defined')

@@ -5,28 +5,35 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import type { AppProps } from 'next/app'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 import { CHAIN } from '@/constants/chains'
+import { ALCHEMY_KEY, ALCHEMY_RPC_URL } from '@/constants/urls'
 import AuthProvider from '@/contexts/AuthProvider'
 import { PageWithLayout } from '@/types'
 
 const { chains, provider } = configureChains(
   [CHAIN],
-  [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_KEY }),
-    publicProvider(),
-  ],
+  [alchemyProvider({ alchemyId: ALCHEMY_KEY }), publicProvider()],
 )
+
+const connectors = [
+  new InjectedConnector({
+    chains,
+  }),
+  new WalletConnectConnector({
+    chains,
+    options: {
+      rpc: { [CHAIN.id]: ALCHEMY_RPC_URL[CHAIN.id] },
+    },
+  }),
+]
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: [
-    new InjectedConnector({
-      chains,
-    }),
-  ],
+  connectors,
   provider,
 })
 
