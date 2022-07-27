@@ -9,6 +9,7 @@ import { UserStatus, useUser } from '@/contexts/AuthProvider'
 import useTokenBalance from '@/hooks/useTokenBalance'
 import AddressAvatar from './AddressAvatar'
 import ConnectModal from './ConnectModal'
+import WalletDropdown from './WalletDropdown'
 
 const WalletStatus = () => {
   const [showConnectModal, setShowConnectModal] = useState(false)
@@ -55,19 +56,20 @@ const WalletStatus = () => {
   // Logged in
   if (status === UserStatus.Logged && address) {
     return (
-      <Link href={`/${address}`}>
-        <a>
-          <div className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full">
-            <span>
-              {balance?.formatted} {balance?.symbol}
-            </span>
-            <span>
-              <Address address={address} className="font-semibold" />
-            </span>
-            <AddressAvatar address={address} />
-          </div>
-        </a>
-      </Link>
+      <WalletDropdown address={address} />
+      // <Link href={`/${address}`}>
+      //   <a>
+      //     <div className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full">
+      //       <span>
+      //         {balance?.formatted} {balance?.symbol}
+      //       </span>
+      //       <span>
+      //         <Address address={address} className="font-semibold" />
+      //       </span>
+      //       <AddressAvatar address={address} />
+      //     </div>
+      //   </a>
+      // </Link>
     )
   }
 
