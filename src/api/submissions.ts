@@ -1,4 +1,4 @@
-import ApiService from './api-service'
+import ApiService from './apiService'
 import { Quiz } from './quizzes'
 import { Id, QuestionWithAnswers } from './types'
 import { User } from './users'

@@ -1,5 +1,5 @@
 import { getToken, removeToken, setToken } from '@/utils/tokens'
-import ApiService from './api-service'
+import ApiService from './apiService'
 import { User } from './users'
 
 interface SignResponse {

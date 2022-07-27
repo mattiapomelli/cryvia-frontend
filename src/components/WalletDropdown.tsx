@@ -16,7 +16,7 @@ import CopyIcon from '@/icons/copy.svg'
 import DisconnectIcon from '@/icons/disconnect.svg'
 import ExternalLinkIcon from '@/icons/externallink.svg'
 import ProfileIcon from '@/icons/profile.svg'
-import copyToClipboard from '@/utils/copy-to-clipboard'
+import copyToClipboard from '@/utils/copyToClipboard'
 import Address from './Address'
 import AddressAvatar from './AddressAvatar'
 
