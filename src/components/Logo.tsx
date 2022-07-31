@@ -1,21 +1,22 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import classNames from 'classnames'
 
 interface LogoProps {
   href?: string
   className?: string
-  onClick?: () => void
 }
 
-const Logo = ({ href = '/', className, onClick }: LogoProps) => {
+const Logo = ({ href = '/', className }: LogoProps) => {
   return (
     <Link href={href}>
-      <a
-        role="none"
-        onClick={onClick}
-        className={classNames('text-2xl font-black', className)}
-      >
-        <h1>Cryvia</h1>
+      <a className={className}>
+        <Image
+          src="/images/logo.png"
+          width="132"
+          height="35"
+          alt="Cryvia"
+          priority
+        />
       </a>
     </Link>
   )

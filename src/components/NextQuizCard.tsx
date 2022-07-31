@@ -26,7 +26,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
   return (
     <div className="z-10 relative px-6 py-10 rounded-default mb-10 bg-gradient-to-tr from-[#E2D3FB] via-[#d8cced] to-[#e6def4]">
       <Image
-        src="/stars.png"
+        src="/images/stars.png"
         alt="stars"
         layout="fill"
         className="absolute z-0"
