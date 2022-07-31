@@ -3,6 +3,7 @@ import '../styles/globals.css'
 import React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import type { AppProps } from 'next/app'
+import { DefaultSeo } from 'next-seo'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
@@ -13,6 +14,7 @@ import { CHAIN } from '@/constants/chains'
 import { ALCHEMY_KEY, ALCHEMY_RPC_URL } from '@/constants/urls'
 import AuthProvider from '@/contexts/AuthProvider'
 import { PageWithLayout } from '@/types'
+import SEO from '../../next-seo.config'
 
 const { chains, provider } = configureChains(
   [CHAIN],
@@ -45,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <QueryClientProvider client={queryClient}>
+        <DefaultSeo {...SEO} />
         <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
       </QueryClientProvider>
     </WagmiConfig>
