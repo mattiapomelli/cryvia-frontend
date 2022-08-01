@@ -55,7 +55,11 @@ class QuizService extends ApiService {
   }
 
   async next() {
-    return await this.http.get<Quiz>(`${this.baseUrl}/next`)
+    return await this.http.get<Quiz | null>(`${this.baseUrl}/next`)
+  }
+
+  async nextOrLast() {
+    return await this.http.get<Quiz>(`${this.baseUrl}/next-or-last`)
   }
 
   async subscribe(id: Id) {

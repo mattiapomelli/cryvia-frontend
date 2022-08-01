@@ -1,47 +1,47 @@
-import { useQuery } from 'react-query'
+import { GetStaticProps } from 'next'
 
+import ApiClient from '@/api/client'
+import { Quiz } from '@/api/quizzes'
 import Container from '@/components/Layout/Container'
 import NextQuizCard from '@/components/NextQuizCard'
 import QuizCard from '@/components/QuizCard'
-import { useApiClient } from '@/contexts/AuthProvider'
 import { getDefaultLayout } from '@/layouts/DefaultLayout'
 import { PageWithLayout } from '@/types'
 
-const HomePage: PageWithLayout = () => {
-  const apiClient = useApiClient()
-  const { data: quizzes, isLoading: isLoadingQuizzes } = useQuery(
-    ['quizzes'],
-    () => apiClient.quizzes.list().then((data) => data.data),
-  )
+interface HomePageProps {
+  quizzes: Quiz[]
+  nextQuiz: Quiz
+}
 
-  const { data: nextQuiz, isLoading: isLoadingNextQuiz } = useQuery(
-    ['nextQuiz'],
-    () => apiClient.quizzes.next().then((data) => data.data),
-  )
-
-  const loading = isLoadingNextQuiz || isLoadingQuizzes
-
-  const filteredQuizzes = !loading
-    ? quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
-    : []
-
+const HomePage: PageWithLayout<HomePageProps> = ({ quizzes, nextQuiz }) => {
   return (
     <Container className="mt-8">
-      {!loading && (
-        <>
-          {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
-          <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
-          <div className="grid grid-cols-autofill gap-8">
-            {filteredQuizzes?.map((quiz) => (
-              <QuizCard quiz={quiz} key={quiz.id} />
-            ))}
-          </div>
-        </>
-      )}
+      {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
+      <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
+      <div className="grid grid-cols-autofill gap-8">
+        {quizzes?.map((quiz) => (
+          <QuizCard quiz={quiz} key={quiz.id} />
+        ))}
+      </div>
     </Container>
   )
 }
 
 HomePage.getLayout = getDefaultLayout
+
+export const getStaticProps: GetStaticProps = async () => {
+  const apiClient = new ApiClient()
+  const { data: nextQuiz } = await apiClient.quizzes.nextOrLast()
+  const { data: quizzes } = await apiClient.quizzes.list()
+
+  const filteredQuizzes = quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
+
+  return {
+    props: {
+      quizzes: filteredQuizzes,
+      nextQuiz,
+    },
+  }
+}
 
 export default HomePage
