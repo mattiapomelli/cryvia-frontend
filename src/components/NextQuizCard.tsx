@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 import Image from 'next/image'
 import Link from 'next/link'
+import classNames from 'classnames'
 
-import { Quiz } from '@/api/quizzes'
+import { getQuizStatus, Quiz, QuizStatus } from '@/api/quizzes'
+import useMounted from '@/hooks/useMounted'
 import Button from './Button'
 
 interface NextQuizCardProps {
@@ -10,6 +13,16 @@ interface NextQuizCardProps {
 }
 
 const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
+  const mounted = useMounted()
+  const [status, setStatus] = useState(getQuizStatus(quiz))
+
+  const isWaiting =
+    status === QuizStatus.WaitingStart || status === QuizStatus.Subscription
+
+  const onCountdownComplete = () => {
+    setStatus(QuizStatus.Playing)
+  }
+
   const renderer = ({
     days,
     hours,
@@ -17,7 +30,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
     seconds,
   }: CountdownRenderProps) => {
     return (
-      <span className="text-4xl font-bold mb-6 text-[#441491]">
+      <span className="text-4xl font-bold text-[#441491]">
         {days}:{hours}:{minutes}:{seconds}
       </span>
     )
@@ -33,15 +46,38 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
         objectFit="contain"
       />
       <div className="relative z-10 flex flex-col items-center text-center">
-        <p className="text-text-secondary text-lg uppercase mb-2">Next Quiz</p>
+        <p className="text-text-secondary text-lg uppercase mb-2">
+          {isWaiting ? 'Next Quiz' : 'Last Quiz'}
+        </p>
         <h2 className="text-5xl font-bold mb-6 max-w-[600px]">{quiz.title}</h2>
-        <p className="text-text-secondary text-lg mb-2">Starts in:</p>
-        <Countdown date={quiz.startTime} renderer={renderer} />
-        <Link href={`/quizzes/${quiz.id}`} passHref>
-          <Button className="min-w-[120px]" as="a">
-            Join
-          </Button>
-        </Link>
+        {isWaiting && (
+          <>
+            <p className="text-text-secondary text-lg mb-2">Starts in:</p>
+            <div className="h-10 mb-6">
+              {mounted && (
+                <Countdown
+                  date={quiz.startTime}
+                  renderer={renderer}
+                  onComplete={onCountdownComplete}
+                />
+              )}
+            </div>
+          </>
+        )}
+        {status === QuizStatus.Playing ? (
+          <p className="text-primary text-2xl font-bold mt-5">
+            In live right now...
+          </p>
+        ) : (
+          <Link href={`/quizzes/${quiz.id}`} passHref>
+            <Button
+              className={classNames('min-w-[120px]', { 'mt-5': !isWaiting })}
+              as="a"
+            >
+              {isWaiting ? 'Join' : 'Take for free'}
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   )
