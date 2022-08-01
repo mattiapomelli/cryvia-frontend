@@ -53,7 +53,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
         {isWaiting && (
           <>
             <p className="text-text-secondary text-lg mb-2">Starts in:</p>
-            <div className="h-10 mb-6">
+            <div className="h-10">
               {mounted && (
                 <Countdown
                   date={quiz.startTime}
@@ -64,20 +64,18 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
             </div>
           </>
         )}
-        {status === QuizStatus.Playing ? (
-          <p className="text-primary text-2xl font-bold mt-5">
+        {status === QuizStatus.Playing && (
+          <p className="text-primary text-2xl font-bold">
             In live right now...
           </p>
-        ) : (
-          <Link href={`/quizzes/${quiz.id}`} passHref>
-            <Button
-              className={classNames('min-w-[120px]', { 'mt-5': !isWaiting })}
-              as="a"
-            >
-              {isWaiting ? 'Join' : 'Take for free'}
-            </Button>
-          </Link>
         )}
+        <Link href={`/quizzes/${quiz.id}`} passHref>
+          <Button className={classNames('min-w-[120px] mt-6')} as="a">
+            {isWaiting && 'Join'}
+            {status === QuizStatus.Playing && 'See details'}
+            {status === QuizStatus.Ended && 'Take for free'}
+          </Button>
+        </Link>
       </div>
     </div>
   )

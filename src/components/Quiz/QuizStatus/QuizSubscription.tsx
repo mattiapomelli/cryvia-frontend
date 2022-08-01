@@ -14,6 +14,7 @@ import {
   useQuizContractWrite,
   useTokenContractWrite,
 } from '@/hooks/useContractWriteAndWait'
+import useMounted from '@/hooks/useMounted'
 import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@/hooks/useSubscriptionStatus'
@@ -181,6 +182,7 @@ const QuizSubscription = ({
 }: QuizSubscriptionProps) => {
   const { loading, status, setStatus } = useSubscriptionStatus(quiz)
   const [showSubscribeModal, setShowSubscribeModal] = useState(false)
+  const mounted = useMounted()
 
   // Subscription closes 10 minutes before the beginning of the quiz
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
@@ -188,11 +190,15 @@ const QuizSubscription = ({
   return (
     <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mb-10">
       Subscriptions close in:
-      <Countdown
-        date={subscriptionEnd}
-        onComplete={onCountdownComplete}
-        className="font-bold text-xl"
-      />
+      <div className="h-6">
+        {mounted && (
+          <Countdown
+            date={subscriptionEnd}
+            onComplete={onCountdownComplete}
+            className="font-bold text-xl"
+          />
+        )}
+      </div>
       {!loading && (
         <>
           {(status === SubscriptionStatus.NotApproved ||
