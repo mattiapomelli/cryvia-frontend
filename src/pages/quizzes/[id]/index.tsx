@@ -129,22 +129,19 @@ const QuizPage: PageWithLayout<QuizProp> = ({ quiz }) => {
               <span className="font-bold">Number of winners: </span>
               <span className="text-text-secondary">{NUMBER_OF_WINNERS}</span>
             </div>
-            {quizFund && (
-              <>
-                <div>
-                  <span className="font-bold">Total prize: </span>
-                  <span className="text-text-secondary">
-                    {formatAmount(quizFund)} MTK
-                  </span>
-                </div>
-                <div>
-                  <span className="font-bold">Prize per winner: </span>
-                  <span className="text-text-secondary">
-                    {formatAmount(quizFund.div(NUMBER_OF_WINNERS))} MTK
-                  </span>
-                </div>
-              </>
-            )}
+            <div>
+              <span className="font-bold">Total prize: </span>
+              <span className="text-text-secondary">
+                {quizFund && `${formatAmount(quizFund)} MTK`}
+              </span>
+            </div>
+            <div>
+              <span className="font-bold">Prize per winner: </span>
+              <span className="text-text-secondary">
+                {quizFund &&
+                  `${formatAmount(quizFund.div(NUMBER_OF_WINNERS))} MTK`}
+              </span>
+            </div>
           </div>
         </div>
         <QuizStatusSection quiz={quiz} />
