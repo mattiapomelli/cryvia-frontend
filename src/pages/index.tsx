@@ -41,6 +41,7 @@ export const getStaticProps: GetStaticProps = async () => {
       quizzes: filteredQuizzes,
       nextQuiz,
     },
+    revalidate: 60,
   }
 }
 
