@@ -44,6 +44,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
         layout="fill"
         className="absolute z-0"
         objectFit="contain"
+        priority
       />
       <div className="relative z-10 flex flex-col items-center text-center">
         <p className="text-text-secondary text-lg uppercase mb-2">
