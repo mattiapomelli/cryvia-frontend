@@ -22,7 +22,6 @@ const Navbar = () => {
           leave="transition-opacity duration-150"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          className="hidden md:block"
         >
           <WalletStatus />
         </Transition>
