@@ -11,14 +11,12 @@ import classNames from 'classnames'
 import { useDisconnect } from 'wagmi'
 
 import { getAddressExplorerLink } from '@/constants/urls'
-import useTokenBalance from '@/hooks/useTokenBalance'
 import CopyIcon from '@/icons/copy.svg'
 import DisconnectIcon from '@/icons/disconnect.svg'
 import ExternalLinkIcon from '@/icons/externallink.svg'
 import ProfileIcon from '@/icons/profile.svg'
 import copyToClipboard from '@/utils/copyToClipboard'
-import Address from './Address'
-import AddressAvatar from './AddressAvatar'
+import WalletButton from './WalletButton'
 
 interface WrappedLinkProps {
   href: string
@@ -73,21 +71,20 @@ const DropdownItem = ({
   )
 }
 
-const WalletDropdown = ({ address }: { address: string }) => {
-  const { balance } = useTokenBalance()
+interface WalletDropdownProps {
+  address: string
+  needsVerification: boolean
+}
+
+const WalletDropdown = ({
+  address,
+  needsVerification,
+}: WalletDropdownProps) => {
   const { disconnect } = useDisconnect()
 
   return (
     <Menu as="div" className="relative z-20">
-      <Menu.Button className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full">
-        <span>
-          {balance?.formatted} {balance?.symbol}
-        </span>
-        <span>
-          <Address address={address} className="font-bold" />
-        </span>
-        <AddressAvatar address={address} />
-      </Menu.Button>
+      <WalletButton address={address} needsVerification={needsVerification} />
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"

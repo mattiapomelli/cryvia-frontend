@@ -2,7 +2,7 @@ import { Transition } from '@headlessui/react'
 
 import Container from '@/components/Layout/Container'
 import Logo from '@/components/Logo'
-import WalletStatus from '@/components/WalletStatus'
+import WalletStatus from '@/components/Wallet/WalletStatus'
 import { UserStatus, useUser } from '@/contexts/AuthProvider'
 import useTransitionControl from '@/hooks/useTransitionControl'
 

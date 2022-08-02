@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import { Connector, useConnect } from 'wagmi'
 
+import Modal, { BaseModalProps } from '@/components/Modal'
 import MetamaskIcon from '@/icons/metamask.svg'
 import WalletConnectIcon from '@/icons/walletconnect.svg'
-import Modal, { BaseModalProps } from './Modal'
 
 interface ConnectorIconProps {
   name: string
