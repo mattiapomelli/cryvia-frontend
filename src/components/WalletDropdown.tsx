@@ -84,7 +84,7 @@ const WalletDropdown = ({ address }: { address: string }) => {
           {balance?.formatted} {balance?.symbol}
         </span>
         <span>
-          <Address address={address} className="font-semibold" />
+          <Address address={address} className="font-bold" />
         </span>
         <AddressAvatar address={address} />
       </Menu.Button>

@@ -44,7 +44,7 @@ const WalletStatus = () => {
           {balance?.formatted} {balance?.symbol}
         </span>
         <span>
-          <Address address={address} className="font-semibold" />
+          <Address address={address} className="font-bold" />
           <span className="ml-2 text-sm font-medium">Verify address</span>
         </span>
         <AddressAvatar address={address} />
