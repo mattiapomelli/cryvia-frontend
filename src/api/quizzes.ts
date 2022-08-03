@@ -19,6 +19,11 @@ export interface Subscription {
   user: Pick<User, 'id' | 'address' | 'username'>
 }
 
+interface SubmissionStatus {
+  submitted: true
+  submission: Pick<Submission, 'id' | 'score' | 'submittedAt'>
+}
+
 export enum QuizStatus {
   Subscription,
   WaitingStart,
@@ -75,6 +80,12 @@ class QuizService extends ApiService {
   async submissions(id: Id) {
     return await this.http.get<Omit<Submission, 'quiz'>[]>(
       `${this.baseUrl}/${id}/submissions`,
+    )
+  }
+
+  async submissionStatus(id: Id) {
+    return await this.http.get<SubmissionStatus>(
+      `${this.baseUrl}/${id}/submission-status`,
     )
   }
 

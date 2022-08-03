@@ -1,9 +1,11 @@
+import { useQuery } from 'react-query'
 import Link from 'next/link'
 import { BigNumber } from 'ethers'
 import { useAccount } from 'wagmi'
 
 import { Quiz } from '@/api/quizzes'
 import Button from '@/components/Button'
+import { useApiClient, useUser } from '@/contexts/AuthProvider'
 import { useQuizContractRead } from '@/hooks/useContractRead'
 import { useQuizContractWrite } from '@/hooks/useContractWriteAndWait'
 import useTokenBalance from '@/hooks/useTokenBalance'
@@ -15,8 +17,15 @@ interface QuizEndedProps {
 }
 
 const QuizEnded = ({ quiz }: QuizEndedProps) => {
+  const { user } = useUser()
   const { address } = useAccount()
   const { balance, refetch: refetchBalance } = useTokenBalance()
+
+  const apiClient = useApiClient()
+  const { data: submissionStatus, isLoading } = useQuery(
+    ['quiz-submission', quiz.id, user?.id],
+    () => apiClient.quizzes.submissionStatus(quiz.id).then((data) => data.data),
+  )
 
   const { data: winBalance, refetch: refetchWinBalance } =
     useQuizContractRead<BigNumber>({
@@ -45,6 +54,21 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
             <Button>Take for free</Button>
           </a>
         </Link>
+        {!isLoading && submissionStatus?.submitted && (
+          <div className="text-center mt-2">
+            <p>
+              Your score:{' '}
+              <span className="font-bold">
+                {submissionStatus.submission.score}
+              </span>
+            </p>
+            <Link href={`/submissions/${submissionStatus.submission.id}`}>
+              <a className="underline text-primary hover:text-primary-hover">
+                See your submission
+              </a>
+            </Link>
+          </div>
+        )}
       </QuizStatusCard>
       {winBalance?.gt(0) && (
         <QuizStatusCard className="bg-[#fdf9f1]">
