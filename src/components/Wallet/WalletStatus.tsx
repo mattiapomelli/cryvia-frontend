@@ -1,20 +1,16 @@
-import { useState } from 'react'
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
 import Button from '@/components/Button'
 import { CHAIN } from '@/constants/chains'
 import { UserStatus, useUser } from '@/contexts/AuthProvider'
-import ConnectModal from './ConnectModal'
 import WalletDropdown from './WalletDropdown'
 
 const WalletStatus = () => {
-  const [showConnectModal, setShowConnectModal] = useState(false)
   const { address } = useAccount()
-
   const { chain } = useNetwork()
   const { switchNetwork } = useSwitchNetwork()
 
-  const { status } = useUser()
+  const { status, openConnectModal } = useUser()
 
   // Wrong network
   if (chain?.unsupported) {
@@ -43,15 +39,7 @@ const WalletStatus = () => {
   }
 
   // Disconnected
-  return (
-    <>
-      <Button onClick={() => setShowConnectModal(true)}>Connect</Button>
-      <ConnectModal
-        show={showConnectModal}
-        onClose={() => setShowConnectModal(false)}
-      />
-    </>
-  )
+  return <Button onClick={openConnectModal}>Connect</Button>
 }
 
 export default WalletStatus

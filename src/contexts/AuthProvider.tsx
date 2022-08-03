@@ -13,6 +13,8 @@ import { useAccount, useSignMessage } from 'wagmi'
 import ApiClient from '@/api/client'
 import { ForbiddenError } from '@/api/errors'
 import { User } from '@/api/users'
+import ConnectModal from '@/components/Wallet/ConnectModal'
+import VerifyAddressModal from '@/components/Wallet/VerifyAddressModal'
 
 const ApiClientContext = createContext<ApiClient | undefined>(undefined)
 
@@ -28,6 +30,8 @@ interface UserContextValue {
   setUser: Dispatch<SetStateAction<User | null>>
   status: UserStatus
   verifyAddress: () => void
+  openConnectModal: () => void
+  openVerifyModal: () => void
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined)
@@ -39,6 +43,8 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [status, setStatus] = useState(UserStatus.Loading)
+  const [showConnectModal, setShowConnectModal] = useState(false)
+  const [showVerifyModal, setShowVerifyModal] = useState(false)
 
   const { address, isConnected, isConnecting, isReconnecting } = useAccount()
   const { signMessageAsync } = useSignMessage()
@@ -121,9 +127,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           setUser,
           status,
           verifyAddress,
+          openConnectModal: () => setShowConnectModal(true),
+          openVerifyModal: () => setShowVerifyModal(true),
         }}
       >
         {children}
+        <ConnectModal
+          show={showConnectModal}
+          onClose={() => setShowConnectModal(false)}
+        />
+        <VerifyAddressModal
+          show={showVerifyModal}
+          onClose={() => setShowVerifyModal(false)}
+        />
       </UserContext.Provider>
     </ApiClientContext.Provider>
   )

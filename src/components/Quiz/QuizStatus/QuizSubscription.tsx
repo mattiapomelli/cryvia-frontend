@@ -79,7 +79,7 @@ const SubscribeModal = ({
   })
 
   const queryClient = useQueryClient()
-  const { user, status: userStatus } = useUser()
+  const { user } = useUser()
 
   const approveSpending = () => {
     writeApprove({
@@ -94,19 +94,6 @@ const SubscribeModal = ({
     writeSubscribe({
       args: [quiz.id],
     })
-  }
-
-  if (userStatus !== UserStatus.Logged) {
-    return (
-      <Modal show={show} onClose={onClose}>
-        <div>
-          <p className="mb-4">
-            Please connect your wallet and verify your address in order to
-            subscribe to the quiz
-          </p>
-        </div>
-      </Modal>
-    )
   }
 
   const canPayQuizFee = balance?.value.gte(
@@ -184,9 +171,20 @@ const QuizSubscription = ({
   const { loading, status, setStatus } = useSubscriptionStatus(quiz)
   const [showSubscribeModal, setShowSubscribeModal] = useState(false)
   const mounted = useMounted()
+  const { status: userStatus, openConnectModal, openVerifyModal } = useUser()
 
   // Subscription closes 10 minutes before the beginning of the quiz
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
+
+  const onSubscribeButtonClick = () => {
+    if (userStatus === UserStatus.Logged) {
+      setShowSubscribeModal(true)
+    } else if (userStatus === UserStatus.Connected) {
+      openVerifyModal()
+    } else {
+      openConnectModal()
+    }
+  }
 
   return (
     <QuizStatusCard>
@@ -212,11 +210,7 @@ const QuizSubscription = ({
                 status={status}
                 setStatus={setStatus}
               />
-              {/* TODO: show connect modal on click if no user is connected */}
-              <Button
-                onClick={() => setShowSubscribeModal(true)}
-                className="mt-2"
-              >
+              <Button onClick={onSubscribeButtonClick} className="mt-2">
                 Subscribe
               </Button>
             </>

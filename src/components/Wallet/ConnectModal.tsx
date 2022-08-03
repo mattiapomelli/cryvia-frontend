@@ -20,11 +20,16 @@ const ConnectorIcon = ({ name, className }: ConnectorIconProps) => {
 }
 
 const ConnectModal = ({ show, onClose }: BaseModalProps) => {
-  const { connectors, connect, error } = useConnect()
+  const { connectors, connectAsync, error } = useConnect()
 
-  const onConnect = (connector: Connector) => {
+  const onConnect = async (connector: Connector) => {
     if (connector.ready) {
-      connect({ connector })
+      try {
+        await connectAsync({ connector })
+        onClose()
+      } catch (error) {
+        console.error('Error while connecting', error)
+      }
     }
   }
 
