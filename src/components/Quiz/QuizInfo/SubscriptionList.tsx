@@ -22,7 +22,7 @@ const SubscriptionList = ({ quiz }: SubscriptionListProps) => {
       <h4 className="font-bold text-lg mb-4">
         Subscriptions ({subscriptions?.length})
       </h4>
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-autofill gap-4">
         {subscriptions?.map(({ user }) => (
           <Link key={user.id} href={`/${user.address}`}>
             <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-default flex items-center gap-2">

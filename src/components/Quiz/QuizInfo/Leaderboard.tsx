@@ -1,17 +1,60 @@
 import { useQuery } from 'react-query'
 import Link from 'next/link'
+import classNames from 'classnames'
 
 import { Quiz } from '@/api/quizzes'
+import { Submission } from '@/api/submissions'
 import Address from '@/components/Address'
 import AddressAvatar from '@/components/AddressAvatar'
 import { useApiClient, useUser } from '@/contexts/AuthProvider'
+
+interface LeadeboardCardProps {
+  submission: Omit<Submission, 'quiz'>
+  position: number
+}
+
+const LeaderboardCard = ({ submission, position }: LeadeboardCardProps) => {
+  const { user } = useUser()
+
+  return (
+    <Link href={`/${submission.user.address}`} key={submission.id}>
+      <a
+        className={classNames(
+          'p-4 rounded-default flex items-center gap-2',
+          submission.user.address === user?.address
+            ? 'bg-secondary hover:bg-secondary-hover'
+            : 'bg-gray-100 hover:bg-gray-200',
+        )}
+      >
+        <span
+          className={classNames(
+            'font-bold w-6 h-6 inline-flex items-center justify-center mr-2 rounded-full',
+            {
+              'text-[#eac533] bg-white': position === 1,
+            },
+            {
+              'text-[#ababab] bg-white': position === 2,
+            },
+            {
+              'text-[#CD7F32] bg-white': position === 3,
+            },
+          )}
+        >
+          {position}
+        </span>
+        <AddressAvatar address={submission.user.address} size={26} />
+        <Address address={submission.user.address} className="font-medium" />
+        <span className="font-bold ml-auto">{submission.score}</span>
+      </a>
+    </Link>
+  )
+}
 
 interface LeaderboardProps {
   quiz: Quiz
 }
 
 const Leaderboard = ({ quiz }: LeaderboardProps) => {
-  const { user } = useUser()
   const apiClient = useApiClient()
   const { data: submissions } = useQuery(['quiz-submissions', quiz.id], () =>
     apiClient.quizzes.submissions(quiz.id).then((data) => data.data),
@@ -22,30 +65,13 @@ const Leaderboard = ({ quiz }: LeaderboardProps) => {
       <h4 className="font-bold text-lg mb-4">
         Leaderboard ({submissions?.length} submissions)
       </h4>
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-autofill gap-4">
         {submissions?.map((submission, index) => (
-          <Link href={`/${submission.user.address}`} key={submission.id}>
-            <a className="bg-gray-100 hover:bg-gray-200 p-4 rounded-default flex items-center gap-2">
-              <span className="font-bold text-center w-4 mr-2">
-                {index + 1}
-              </span>
-              <AddressAvatar address={submission.user.address} size={26} />
-              <Address
-                address={submission.user.address}
-                className="font-medium"
-              />
-              <div className="font-bold ml-auto flex">
-                {submission.user.address === user?.address && (
-                  <Link href={`/submissions/${submission.id}`}>
-                    <a className="flex justify-end underline text-primary hover:text-primary-hover ml-auto mr-2">
-                      See your submission
-                    </a>
-                  </Link>
-                )}
-                <span>{submission.score}</span>
-              </div>
-            </a>
-          </Link>
+          <LeaderboardCard
+            key={submission.id}
+            submission={submission}
+            position={index + 1}
+          />
         ))}
       </div>
     </div>

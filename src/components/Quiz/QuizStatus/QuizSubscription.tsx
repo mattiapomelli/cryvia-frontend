@@ -19,6 +19,7 @@ import useSubscriptionStatus, {
   SubscriptionStatus,
 } from '@/hooks/useSubscriptionStatus'
 import useTokenBalance from '@/hooks/useTokenBalance'
+import QuizStatusCard from './QuizStatusCard'
 
 interface SubscribeModalProps extends BaseModalProps {
   quiz: Quiz
@@ -188,14 +189,14 @@ const QuizSubscription = ({
   const subscriptionEnd = new Date(quiz.startTime).getTime() - 1000 * 60 * 10
 
   return (
-    <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center mb-10">
+    <QuizStatusCard>
       Subscriptions close in:
-      <div className="h-6">
+      <div className="h-[1.875rem]">
         {mounted && (
           <Countdown
             date={subscriptionEnd}
             onComplete={onCountdownComplete}
-            className="font-bold text-xl"
+            className="font-bold text-2xl"
           />
         )}
       </div>
@@ -212,7 +213,10 @@ const QuizSubscription = ({
                 setStatus={setStatus}
               />
               {/* TODO: show connect modal on click if no user is connected */}
-              <Button onClick={() => setShowSubscribeModal(true)}>
+              <Button
+                onClick={() => setShowSubscribeModal(true)}
+                className="mt-2"
+              >
                 Subscribe
               </Button>
             </>
@@ -224,7 +228,7 @@ const QuizSubscription = ({
           )}
         </>
       )}
-    </div>
+    </QuizStatusCard>
   )
 }
 

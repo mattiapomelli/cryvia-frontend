@@ -8,6 +8,7 @@ import { useQuizContractRead } from '@/hooks/useContractRead'
 import { useQuizContractWrite } from '@/hooks/useContractWriteAndWait'
 import useTokenBalance from '@/hooks/useTokenBalance'
 import { formatAmount } from '@/utils/math'
+import QuizStatusCard from './QuizStatusCard'
 
 interface QuizEndedProps {
   quiz: Quiz
@@ -36,23 +37,23 @@ const QuizEnded = ({ quiz }: QuizEndedProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 mb-10">
-      <div className="bg-tertiary flex flex-col gap-2 p-4 rounded-default items-center">
+    <div className="flex flex-col gap-4 w-full">
+      <QuizStatusCard>
         Quiz ended!
         <Link href={`/quizzes/${quiz.id}/play`}>
           <a>
             <Button>Take for free</Button>
           </a>
         </Link>
-      </div>
+      </QuizStatusCard>
       {winBalance?.gt(0) && (
-        <div className="bg-[#fdf9f1] flex flex-col gap-2 p-4 rounded-default items-center">
+        <QuizStatusCard className="bg-[#fdf9f1]">
           You won 🏆! You can redeem {formatAmount(winBalance)}{' '}
           {balance?.symbol}
           <Button onClick={redeem} loading={status === 'loading'}>
             Redeem
           </Button>
-        </div>
+        </QuizStatusCard>
       )}
     </div>
   )
