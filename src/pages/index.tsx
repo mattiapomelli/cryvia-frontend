@@ -15,7 +15,7 @@ interface HomePageProps {
 
 const HomePage: PageWithLayout<HomePageProps> = ({ quizzes, nextQuiz }) => {
   return (
-    <Container className="mt-8">
+    <Container className="mt-6">
       {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
       <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
       <div className="grid grid-cols-autofill gap-8">

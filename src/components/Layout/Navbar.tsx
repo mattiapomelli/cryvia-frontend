@@ -11,7 +11,7 @@ const Navbar = () => {
   const [show] = useTransitionControl(status === UserStatus.Loading)
 
   return (
-    <header className="flex items-center h-20">
+    <header className="flex items-center h-[76px]">
       <Container className="flex justify-between items-center w-full">
         <Logo />
         <Transition

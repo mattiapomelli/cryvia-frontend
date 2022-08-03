@@ -15,7 +15,7 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
       <Navbar />
       <main className="flex-grow pb-20">
         <Container>
-          <div className="mt-2 bg-blue-100 text-primary p-3 rounded-default text-center">
+          <div className="bg-blue-100 text-primary p-3 rounded-default text-center">
             Go{' '}
             <Link href="/mint">
               <a className="underline font-bold">here</a>
