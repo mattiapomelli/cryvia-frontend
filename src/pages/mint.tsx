@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 
 import Button from '@/components/Button'
 import Container from '@/components/Layout/Container'
+import { UserStatus, useUser } from '@/contexts/AuthProvider'
 import { useTokenContractWrite } from '@/hooks/useContractWriteAndWait'
 import useTokenBalance from '@/hooks/useTokenBalance'
 import { getDefaultLayout } from '@/layouts/DefaultLayout'
@@ -9,16 +10,23 @@ import { PageWithLayout } from '@/types'
 
 const MintPage: PageWithLayout = () => {
   const { refetch } = useTokenBalance()
+  const { status: userStatus, openConnectModal, openVerifyModal } = useUser()
 
-  const { data, write, status, error } = useTokenContractWrite({
+  const { write, status, error } = useTokenContractWrite({
     functionName: 'mint',
     onSuccess() {
       refetch()
     },
   })
 
-  const mint = async () => {
-    write({ args: [ethers.utils.parseEther('20')] })
+  const onMint = () => {
+    if (userStatus === UserStatus.Logged) {
+      write({ args: [ethers.utils.parseEther('20')] })
+    } else if (userStatus === UserStatus.Connected) {
+      openVerifyModal()
+    } else {
+      openConnectModal()
+    }
   }
 
   return (
@@ -34,13 +42,9 @@ const MintPage: PageWithLayout = () => {
             <p className="font-bold text-green-500">
               Successfully minted 20 MTK! ✔️
             </p>
-            <p>
-              Transaction hash:
-              {data?.transactionHash}
-            </p>
           </div>
         ) : (
-          <Button loading={status === 'loading'} onClick={mint}>
+          <Button loading={status === 'loading'} onClick={onMint}>
             Mint
           </Button>
         )}
