@@ -8,9 +8,7 @@ interface ContainerProps {
 
 const Container = ({ children, className }: ContainerProps) => {
   return (
-    <div
-      className={classNames('max-w-[76rem] mx-auto px-4 sm:px-6', className)}
-    >
+    <div className={classNames('max-w-6xl mx-auto px-4 sm:px-6', className)}>
       {children}
     </div>
   )
