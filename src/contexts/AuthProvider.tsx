@@ -65,7 +65,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   )
 
   useEffect(() => {
-    if (isReconnecting || isConnecting) return
+    if (isReconnecting || isConnecting) {
+      // TEMPORARY FIX for a Metamask bug (?) Should just return instead when its solved
+      setStatus(UserStatus.Disconnected)
+      return
+    }
 
     if (!isConnected || !address) {
       setStatus(UserStatus.Disconnected)
