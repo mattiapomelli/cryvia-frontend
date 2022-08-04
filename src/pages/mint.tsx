@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 
-import Button from '@/components/Button'
 import Container from '@/components/Layout/Container'
+import Button from '@/components/UI/Button'
 import { UserStatus, useUser } from '@/contexts/AuthProvider'
 import { useTokenContractWrite } from '@/hooks/useContractWriteAndWait'
 import useTokenBalance from '@/hooks/useTokenBalance'

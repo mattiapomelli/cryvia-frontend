@@ -5,8 +5,8 @@ import Link from 'next/link'
 import classNames from 'classnames'
 
 import { getQuizStatus, Quiz, QuizStatus } from '@/api/quizzes'
+import Button from '@/components/UI/Button'
 import useMounted from '@/hooks/useMounted'
-import Button from './Button'
 
 interface NextQuizCardProps {
   quiz: Quiz

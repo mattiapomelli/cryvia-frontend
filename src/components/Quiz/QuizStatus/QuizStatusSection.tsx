@@ -3,9 +3,9 @@ import Countdown from 'react-countdown'
 import Link from 'next/link'
 
 import { getQuizStatus, Quiz, QuizStatus } from '@/api/quizzes'
-import Button from '@/components/Button'
 import QuizEnded from '@/components/Quiz/QuizStatus/QuizEnded'
 import QuizSubscription from '@/components/Quiz/QuizStatus/QuizSubscription'
+import Button from '@/components/UI/Button'
 import useMounted from '@/hooks/useMounted'
 import useSubscriptionStatus, {
   SubscriptionStatus,

@@ -4,7 +4,7 @@ import { BigNumber } from 'ethers'
 import { useAccount } from 'wagmi'
 
 import { Quiz } from '@/api/quizzes'
-import Button from '@/components/Button'
+import Button from '@/components/UI/Button'
 import { useApiClient, useUser } from '@/contexts/AuthProvider'
 import { useQuizContractRead } from '@/hooks/useContractRead'
 import { useQuizContractWrite } from '@/hooks/useContractWriteAndWait'

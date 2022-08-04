@@ -1,6 +1,6 @@
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
-import Button from '@/components/Button'
+import Button from '@/components/UI/Button'
 import { CHAIN } from '@/constants/chains'
 import { UserStatus, useUser } from '@/contexts/AuthProvider'
 import WalletDropdown from './WalletDropdown'

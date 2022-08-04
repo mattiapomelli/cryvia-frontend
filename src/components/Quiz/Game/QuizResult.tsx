@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 import { countCorrectAnswers } from '@/api/submissions'
-import Button from '@/components/Button'
 import SubmissionAnswerCard from '@/components/SubmissionAnswerCard'
+import Button from '@/components/UI/Button'
 import { useQuiz } from './QuizProvider'
 
 const QuizResult = () => {

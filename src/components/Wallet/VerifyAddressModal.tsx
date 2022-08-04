@@ -1,6 +1,6 @@
-import Modal, { BaseModalProps } from '@/components/Modal'
+import Button from '@/components/UI/Button'
+import Modal, { BaseModalProps } from '@/components/UI/Modal'
 import { useUser } from '@/contexts/AuthProvider'
-import Button from '../Button'
 
 const VerifyAddressModal = ({ show, onClose }: BaseModalProps) => {
   const { verifyAddress } = useUser()
