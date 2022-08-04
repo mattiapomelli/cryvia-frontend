@@ -34,7 +34,7 @@ module.exports = {
         default: '0.7rem',
       },
       gridTemplateColumns: {
-        autofill: 'repeat(auto-fill, minmax(300px, 1fr))',
+        autofill: 'repeat(auto-fill, minmax(270px, 1fr))',
       },
     },
   },

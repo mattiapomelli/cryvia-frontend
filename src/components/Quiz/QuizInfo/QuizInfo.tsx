@@ -21,7 +21,7 @@ const QuizInfo = ({ quiz, className }: QuizInfoProps) => {
 
   return (
     <div className={classNames(className)}>
-      <h1 className="text-4xl font-bold mb-4">{quiz.title}</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold mb-4">{quiz.title}</h1>
       <p className="text-text-secondary mb-4">{quiz.description}</p>
       <div className="mb-6">
         {quiz.categories.map((category) => (

@@ -70,7 +70,10 @@ const ProfilePage: PageWithLayout<UserProp> = ({ user }) => {
       <div className="mb-10">
         <div className="flex gap-3 items-center mb-4">
           {mounted && <AddressAvatar address={user.address} size={34} />}
-          <Address address={user.address} className="text-3xl font-bold" />
+          <Address
+            address={user.address}
+            className="text-2xl sm:text-3xl font-bold"
+          />
         </div>
         <div>
           <span className="font-bold">Joined on: </span>

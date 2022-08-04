@@ -30,7 +30,7 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
     seconds,
   }: CountdownRenderProps) => {
     return (
-      <span className="text-4xl font-bold text-[#441491]">
+      <span className="text-3xl sm:text-4xl font-bold text-[#441491]">
         {days}:{hours}:{minutes}:{seconds}
       </span>
     )
@@ -50,7 +50,9 @@ const NextQuizCard = ({ quiz }: NextQuizCardProps) => {
         <p className="text-text-secondary text-lg uppercase mb-2">
           {isWaiting ? 'Next Quiz' : 'Last Quiz'}
         </p>
-        <h2 className="text-5xl font-bold mb-6 max-w-[600px]">{quiz.title}</h2>
+        <h2 className="text-3xl sm:text-5xl font-bold mb-6 max-w-[600px]">
+          {quiz.title}
+        </h2>
         {isWaiting && (
           <>
             <p className="text-text-secondary text-lg mb-2">Starts in:</p>

@@ -216,7 +216,7 @@ const QuizSubscription = ({
             </>
           )}
           {status === SubscriptionStatus.Subscribed && (
-            <p className="font-bold text-primary">
+            <p className="font-bold text-primary text-center">
               You are subscribed to this quiz! ✔️
             </p>
           )}
