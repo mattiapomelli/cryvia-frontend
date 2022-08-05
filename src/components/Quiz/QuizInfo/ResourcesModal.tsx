@@ -8,7 +8,7 @@ interface ResourcesModalProps extends BaseModalProps {
 const ResourcesModal = ({ show, onClose, resources }: ResourcesModalProps) => {
   return (
     <Modal show={show} onClose={onClose}>
-      <h4 className="font-bold text-xl mb-4">Resources</h4>
+      <h4 className="font-bold text-xl mb-4">Learning resources</h4>
       <p>
         Here are some recommended resources to study in order to prepare for the
         quiz:
