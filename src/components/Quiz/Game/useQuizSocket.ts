@@ -45,8 +45,18 @@ const useQuizSocket = () => {
       }
     }
 
+    // Ping every 30 sec to don't lose connection with server
+    const intervalId = setInterval(() => {
+      ws.current?.send(
+        JSON.stringify({
+          type: 'ping',
+        }),
+      )
+    }, 30000)
+
     return () => {
       ws.current?.close()
+      clearInterval(intervalId)
     }
   }, [dispatch, user])
 
