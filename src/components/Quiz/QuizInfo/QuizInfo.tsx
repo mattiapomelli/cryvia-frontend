@@ -4,8 +4,10 @@ import classNames from 'classnames'
 import { QuizWithResources } from '@/api/quizzes'
 import { useQuizContractRead } from '@/hooks/useContractRead'
 import DocumentIcon from '@/icons/document.svg'
+import QuestionMarkIcon from '@/icons/questionmark.svg'
 import { formatDateTime } from '@/utils/dates'
 import { formatAmount } from '@/utils/math'
+import InfoModal from './InfoModal'
 import ResourcesModal from './ResourcesModal'
 
 const NUMBER_OF_WINNERS = 3
@@ -17,6 +19,7 @@ interface QuizInfoProps {
 
 const QuizInfo = ({ quiz, className }: QuizInfoProps) => {
   const [showResourcesModal, setShowResourcesModal] = useState(false)
+  const [showInfoModal, setShowInfoModal] = useState(false)
 
   const { data: quizFund } = useQuizContractRead({
     functionName: 'quizFund',
@@ -38,11 +41,11 @@ const QuizInfo = ({ quiz, className }: QuizInfoProps) => {
           </span>
         ))}
         <span>·</span>
-        {quiz.resources.length && (
+        {quiz.resources.length > 0 && (
           <>
             <button
               onClick={() => setShowResourcesModal(true)}
-              className="bg-secondary hover:bg-secondary-hover text-primary w-8 h-8 p-1 -mt-1 rounded-full inline-flex justify-center items-center"
+              className="bg-secondary hover:bg-secondary-hover text-primary text-lg w-8 h-8 p-1 -mt-1 rounded-full inline-flex justify-center items-center"
             >
               <DocumentIcon />
             </button>
@@ -53,6 +56,18 @@ const QuizInfo = ({ quiz, className }: QuizInfoProps) => {
             />
           </>
         )}
+        <button
+          onClick={() => setShowInfoModal(true)}
+          className="bg-secondary hover:bg-secondary-hover text-primary text-lg w-8 h-8 p-1 -mt-1 rounded-full inline-flex justify-center items-center"
+        >
+          <QuestionMarkIcon />
+        </button>
+        <InfoModal
+          show={showInfoModal}
+          onClose={() => setShowInfoModal(false)}
+          winners={NUMBER_OF_WINNERS}
+          quiz={quiz}
+        />
       </div>
       <div className="">
         <div className="flex flex-wrap mb-2 gap-x-4 gap-y-2">
