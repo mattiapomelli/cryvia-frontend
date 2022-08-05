@@ -64,11 +64,13 @@ const quizReducer = (state: QuizState, action: QuizAction): QuizState => {
       const { questions, currentQuestion } = state
 
       // Prevent possible mistakes where a non-allowed ansers is being given for a question
-      const foundAnswer = questions[currentQuestion].answers.find(
-        (a) => a.id === action.answer,
-      )
-      if (!foundAnswer) {
-        return state
+      if (action.answer) {
+        const foundAnswer = questions[currentQuestion].answers.find(
+          (a) => a.id === action.answer,
+        )
+        if (!foundAnswer) {
+          return state
+        }
       }
 
       const answer = {
