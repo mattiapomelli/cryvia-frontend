@@ -29,7 +29,7 @@ const InfoModal = ({ show, onClose, winners, quiz }: InfoModalProps) => {
               .
             </p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 mb-6">
             <p>
               Each submission will get a score based on number of{' '}
               <span className="font-bold">correct answers</span> and{' '}
@@ -42,6 +42,10 @@ const InfoModal = ({ show, onClose, winners, quiz }: InfoModalProps) => {
               🏆!
             </p>
           </div>
+          <p className="text-sm">
+            The prize is the total amount paid for subscriptions, minus a fee
+            kept by the platform.
+          </p>
         </>
       )}
       {status === QuizStatus.WaitingStart && (
