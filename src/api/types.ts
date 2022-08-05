@@ -43,3 +43,9 @@ export interface Category {
   id: Id
   name: string
 }
+
+export interface Resource {
+  id: Id
+  title: string
+  url: string
+}

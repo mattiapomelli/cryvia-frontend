@@ -2,7 +2,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 
 import ApiClient from '@/api/client'
-import { getQuizStatus, Quiz, QuizStatus } from '@/api/quizzes'
+import { getQuizStatus, QuizStatus, QuizWithResources } from '@/api/quizzes'
 import Container from '@/components/Layout/Container'
 import Leaderboard from '@/components/Quiz/QuizInfo/Leaderboard'
 import QuizInfo from '@/components/Quiz/QuizInfo/QuizInfo'
@@ -11,7 +11,7 @@ import QuizStatusSection from '@/components/Quiz/QuizStatus/QuizStatusSection'
 import { getDefaultLayout } from '@/layouts/DefaultLayout'
 import { PageWithLayout } from '@/types'
 
-const QuizPage: PageWithLayout<{ quiz: Quiz }> = ({ quiz }) => {
+const QuizPage: PageWithLayout<{ quiz: QuizWithResources }> = ({ quiz }) => {
   const router = useRouter()
 
   if (router.isFallback) {

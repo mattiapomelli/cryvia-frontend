@@ -1,6 +1,6 @@
 import ApiService from './apiService'
 import { Submission } from './submissions'
-import { Category, Id, QuestionWithAnswers } from './types'
+import { Category, Id, QuestionWithAnswers, Resource } from './types'
 import { User } from './users'
 
 export interface Quiz {
@@ -13,6 +13,10 @@ export interface Quiz {
   image: string | null
   ended: boolean
   categories: Category[]
+}
+
+export interface QuizWithResources extends Quiz {
+  resources: Resource[]
 }
 
 export interface Subscription {
@@ -52,7 +56,7 @@ export const getQuizStatus = (quiz: Quiz) => {
 
 class QuizService extends ApiService {
   async read(id: Id) {
-    return await this.http.get<Quiz>(`${this.baseUrl}/${id}`)
+    return await this.http.get<QuizWithResources>(`${this.baseUrl}/${id}`)
   }
 
   async list() {
