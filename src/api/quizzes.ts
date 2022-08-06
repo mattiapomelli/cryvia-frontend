@@ -107,6 +107,16 @@ class QuizService extends ApiService {
       `${this.baseUrl}/${id}/questions`,
     )
   }
+
+  async winners(id: Id) {
+    return await this.http.get<Omit<Submission, 'quiz'>[]>(
+      `${this.baseUrl}/${id}/winners`,
+    )
+  }
+
+  async setEnded(id: Id) {
+    return await this.http.put<Quiz>(`${this.baseUrl}/${id}/ended`)
+  }
 }
 
 export default QuizService
