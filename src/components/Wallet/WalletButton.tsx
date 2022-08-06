@@ -20,7 +20,7 @@ const WalletButton = ({ address, needsVerification }: WalletButtonProps) => {
         onClick={verifyAddress}
         className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-0.5 px-2 rounded-full cursor-pointer"
       >
-        <span className="text-sm hidden sm:block">
+        <span className="hidden sm:block">
           {balance?.formatted} {balance?.symbol}
         </span>
         <div className="flex flex-col justify-center">
@@ -34,7 +34,7 @@ const WalletButton = ({ address, needsVerification }: WalletButtonProps) => {
 
   return (
     <Menu.Button className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 py-1.5 px-2 rounded-full">
-      <span className="text-sm hidden sm:block">
+      <span className="hidden sm:block">
         {balance?.formatted} {balance?.symbol}
       </span>
       <span>
