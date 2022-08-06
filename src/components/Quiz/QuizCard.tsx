@@ -13,7 +13,13 @@ interface QuizCardProps {
 const QuizCard = ({ quiz }: QuizCardProps) => {
   return (
     <Link key={quiz.id} href={`/quizzes/${quiz.id}`}>
-      <a className="p-6 rounded-default bg-tertiary hover:bg-tertiary-hover">
+      <a className="p-6 rounded-default bg-tertiary hover:bg-tertiary-hover relative">
+        {!quiz.ended && (
+          <span className="absolute bg-[#8183ff] text-white rounded-full py-1.5 px-3 text-xs -top-1.5 -right-1.5">
+            Upcoming
+          </span>
+        )}
+
         <h4 className="text-xl font-bold mb-2">{quiz.title}</h4>
         <p className="text-text-secondary mb-4">
           {quiz.description && <>{truncate(quiz.description, 100)}</>}

@@ -17,7 +17,7 @@ const HomePage: PageWithLayout<HomePageProps> = ({ quizzes, nextQuiz }) => {
   return (
     <Container className="mt-6">
       {nextQuiz && <NextQuizCard quiz={nextQuiz} />}
-      <h4 className="font-bold text-2xl mb-4">Past Quizzes</h4>
+      <h4 className="font-bold text-2xl mb-4 mt-10">Quizzes</h4>
       <div className="grid grid-cols-autofill gap-8">
         {quizzes?.map((quiz) => (
           <QuizCard quiz={quiz} key={quiz.id} />
@@ -34,11 +34,9 @@ export const getStaticProps: GetStaticProps = async () => {
   const { data: nextQuiz } = await apiClient.quizzes.nextOrLast()
   const { data: quizzes } = await apiClient.quizzes.list()
 
-  const filteredQuizzes = quizzes?.filter((quiz) => quiz.id !== nextQuiz?.id)
-
   return {
     props: {
-      quizzes: filteredQuizzes,
+      quizzes,
       nextQuiz,
     },
     revalidate: 60,
