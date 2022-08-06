@@ -3,12 +3,12 @@ import {
   Dispatch,
   ReactNode,
   useContext,
-  useEffect,
+  // useEffect,
   useReducer,
 } from 'react'
-import { useQueryClient } from 'react-query'
-import { useRouter } from 'next/router'
 
+// import { useQueryClient } from 'react-query'
+// import { useRouter } from 'next/router'
 import { Quiz } from '@/api/quizzes'
 import { Id, QuestionWithAnswers } from '@/api/types'
 import useQuizSocket from './useQuizSocket'
@@ -147,28 +147,28 @@ const QuizProvider = ({ quiz, isLive, children }: QuizProviderProps) => {
     previousTime: 0,
   })
 
-  const queryClient = useQueryClient()
-  const router = useRouter()
+  // const queryClient = useQueryClient()
+  // const router = useRouter()
 
-  useEffect(() => {
-    const endQuizAndRedirect = async () => {
-      await queryClient.setQueryData<Quiz | undefined>(
-        ['quiz', quiz.id],
-        (quiz) => {
-          if (!quiz) return undefined
-          return {
-            ...quiz,
-            ended: true,
-          }
-        },
-      )
-      router.push(`/quizzes/${quiz.id}`)
-    }
+  // useEffect(() => {
+  //   const endQuizAndRedirect = async () => {
+  //     await queryClient.setQueryData<Quiz | undefined>(
+  //       ['quiz', quiz.id],
+  //       (quiz) => {
+  //         if (!quiz) return undefined
+  //         return {
+  //           ...quiz,
+  //           ended: true,
+  //         }
+  //       },
+  //     )
+  //     router.push(`/quizzes/${quiz.id}`)
+  //   }
 
-    if (quizState.status === QuizPlayingStatus.ResultsAvailable) {
-      endQuizAndRedirect()
-    }
-  }, [quizState.status, quiz.id, router, queryClient])
+  //   if (quizState.status === QuizPlayingStatus.ResultsAvailable) {
+  //     endQuizAndRedirect()
+  //   }
+  // }, [quizState.status, quiz.id, router, queryClient])
 
   return (
     <QuizContext.Provider value={[quizState, dispatch]}>
