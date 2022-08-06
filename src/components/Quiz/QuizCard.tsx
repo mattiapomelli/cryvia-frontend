@@ -2,6 +2,10 @@ import Link from 'next/link'
 
 import { Quiz } from '@/api/quizzes'
 
+const truncate = (text: string, characters: number) => {
+  return text.length > characters ? text.slice(0, characters - 1) + '...' : text
+}
+
 interface QuizCardProps {
   quiz: Quiz
 }
@@ -11,7 +15,9 @@ const QuizCard = ({ quiz }: QuizCardProps) => {
     <Link key={quiz.id} href={`/quizzes/${quiz.id}`}>
       <a className="p-6 rounded-default bg-tertiary hover:bg-tertiary-hover">
         <h4 className="text-xl font-bold mb-2">{quiz.title}</h4>
-        <p className="text-text-secondary mb-4">{quiz.description}</p>
+        <p className="text-text-secondary mb-4">
+          {quiz.description && <>{truncate(quiz.description, 100)}</>}
+        </p>
         <div>
           {quiz.categories.map((category) => (
             <span
