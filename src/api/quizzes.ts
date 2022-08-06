@@ -1,6 +1,13 @@
+import getQueryString from '@/utils/getQueryString'
 import ApiService from './apiService'
 import { Submission } from './submissions'
-import { Category, Id, QuestionWithAnswers, Resource } from './types'
+import {
+  Category,
+  Id,
+  QueryParams,
+  QuestionWithAnswers,
+  Resource,
+} from './types'
 import { User } from './users'
 
 export interface Quiz {
@@ -59,8 +66,10 @@ class QuizService extends ApiService {
     return await this.http.get<QuizWithResources>(`${this.baseUrl}/${id}`)
   }
 
-  async list() {
-    return await this.http.get<Quiz[]>(this.baseUrl)
+  async list(queryParams: QueryParams = {}) {
+    return await this.http.get<Quiz[]>(
+      this.baseUrl + getQueryString(queryParams),
+    )
   }
 
   async next() {
