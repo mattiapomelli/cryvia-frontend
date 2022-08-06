@@ -16,11 +16,19 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
       <main className="flex-grow pb-20">
         <Container>
           <div className="bg-blue-100 text-primary p-3 rounded-default text-center">
-            Go{' '}
             <Link href="/mint">
-              <a className="underline font-bold">here</a>
+              <a className="underline font-bold">Mint free tokens</a>
             </Link>{' '}
-            to mint some free tokens to test the app
+            to test the app.{' '}
+            <a
+              className="underline font-bold"
+              href="https://mumbaifaucet.com/"
+              target="_blank"
+              rel="noopener nofererrer noreferrer"
+            >
+              Get free MATIC
+            </a>{' '}
+            to pay for transactions.
           </div>
         </Container>
         {children}
