@@ -47,7 +47,7 @@ const WinnersPage: PageWithLayout = () => {
     functionName: 'setWinners',
   })
 
-  const onMint = () => {
+  const onSetWinners = () => {
     if (userStatus === UserStatus.Logged) {
       const winners = winnerSubmissions?.map(
         (submission) => submission.user.address,
@@ -97,7 +97,7 @@ const WinnersPage: PageWithLayout = () => {
         ) : (
           <Button
             loading={status === 'loading'}
-            onClick={onMint}
+            onClick={onSetWinners}
             disabled={!isOwner}
           >
             Set winners
